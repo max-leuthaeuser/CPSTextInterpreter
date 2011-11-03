@@ -21,8 +21,11 @@ import role.{RoleConstraint, Role}
 import rule.ActivationRule
 import variable.VariableDecl
 
-case class Context(name: String, inner: List[Context], variables: List[VariableDecl],
-                   activation: ActivationRule, roles: List[Role],
+case class Context(name: String,
+                   inner: List[Context],
+                   variables: List[VariableDecl],
+                   activation: ActivationRule,
+                   roles: List[Role],
                    constraints: List[RoleConstraint]) {
-  // TODO use BuildPattern!
+  def this(name: String, inner: List[Context]) = this (name, inner, List[VariableDecl](), null, List[Role](), List[RoleConstraint]())
 }

@@ -63,7 +63,7 @@ object CPSTextDSL extends JavaTokenParsers {
   }
 
   def context: Parser[Context] = "context" ~ ident ~ "{" ~ optContexts ~ "}" ^^ {
-    case "context" ~ n ~ "{" ~ c ~ "}" => Context(n, c) // TODO
+    case "context" ~ n ~ "{" ~ c ~ "}" => new Context(n, c)
   }
 
   def optContexts: Parser[List[Context]] = opt(contexts) ^^ {
