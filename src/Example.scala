@@ -27,7 +27,7 @@ object Example {
       " } when { bla() && foo() } with bindings {" +
       "  a -> SomeRole; b -> OtherRole;" +
       " }" +
-      " var test : String = \"Hallo\"}"
+      " var a : String;}"
     println(CPSTextDSL.parse(p))
   }
 }

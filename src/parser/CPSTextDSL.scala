@@ -85,21 +85,13 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l
   }
 
-  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when {" ~ code ~ "} with bindings {" ~ activationRuleBindings ~ "}" ^^ {
-    case "activate for {" ~ av ~ "} when {" ~ c ~ "} with bindings {" ~ ab ~ "}" => ActivationRule(av, c, ab)
+  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when {" ~ code ~ "} with bindings {" ~ activationRuleBindings ^^ {
+    case "activate for {" ~ av ~ "} when {" ~ c ~ "} with bindings {" ~ ab => ActivationRule(av, c, ab)
   }
 
-  /**
-   * TODO contextContents doesnt work?!
-   */
-  def context: Parser[Context] = "context" ~ ident ~ "{" ~ activationRule ~ contextContents ~ "}" ^^ {
-    case "context" ~ n ~ "{" ~ a ~ c ~ "}" => Context.build(n, c, a)
+  def context: Parser[Context] = "context" ~ ident ~ "{" ~ activationRule ~ contextContents ^^ {
+    case "context" ~ n ~ "{" ~ a ~ c => Context.build(n, c, a)
   }
-
-  /*
-  def context: Parser[Context] = "context" ~ ident ~ "{" ~ activationRule ~ "}" ^^ {
-    case "context" ~ n ~ "{" ~ a ~ "}" => Context.build(n, null, a)
-  } */
 
   def eVariableDecl: Parser[EmptyVariableDecl] = ("var" | "val") ~ ident ~ ":" ~ ident ^^ {
     case "var" ~ n ~ ":" ~ t => EmptyVariableDecl(VariableDeclAccessType.modifiable, n, t)
@@ -116,7 +108,7 @@ object CPSTextDSL extends JavaTokenParsers {
     case i: InitVariableDecl => i
   }
 
-  def variableDecls: Parser[List[VariableDecl]] = rep1(variableDecl <~ ";") ^^ {
+  def variableDecls: Parser[List[VariableDecl]] = rep(variableDecl <~ ";") ^^ {
     case l => l
   }
 
@@ -124,7 +116,7 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l.getOrElse(List[VariableDecl]())
   }
 
-  def contextContent: Parser[List[AnyRef]] = (variableDecls | contexts | roles | constraints) ^^ {
+  def contextContent: Parser[List[AnyRef]] = "}" ~> (variableDecls | contexts | roles | constraints) <~ "}" ^^ {
     case l => l
   }
 

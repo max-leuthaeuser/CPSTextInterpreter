@@ -17,26 +17,32 @@
 
 package ast
 
-import role.{RoleConstraint, Role}
+import role._
 import rule.ActivationRule
-import variable.VariableDecl
+import variable.{InitVariableDecl, EmptyVariableDecl, VariableDecl}
 
 object Context {
   def build(name: String, contents: List[List[AnyRef]], activation: ActivationRule): Context = {
-    val inner: List[Context] = List[Context]()
-    val variables: List[VariableDecl] = List[VariableDecl]()
-    val roles: List[Role] = List[Role]()
-    val constraints: List[RoleConstraint] = List[RoleConstraint]()
+    var inner: List[Context] = List[Context]()
+    var variables: List[VariableDecl] = List[VariableDecl]()
+    var roles: List[Role] = List[Role]()
+    var constraints: List[RoleConstraint] = List[RoleConstraint]()
 
     // TODO
     if (contents == null)
       return Context(name, inner, variables, activation, roles, constraints)
 
     contents.foreach(l => {
-      if (l.isInstanceOf[::[Context]]) inner :: l
-      if (l.isInstanceOf[::[VariableDecl]]) variables :: l
-      if (l.isInstanceOf[::[Role]]) roles :: l
-      if (l.isInstanceOf[::[RoleConstraint]]) constraints :: l
+      l.foreach(e => e match {
+        case e: Context => inner ::= e.asInstanceOf[Context]
+        case e: EmptyVariableDecl => variables ::= e.asInstanceOf[EmptyVariableDecl]
+        case e: InitVariableDecl => variables ::= e.asInstanceOf[InitVariableDecl]
+        case e: Role => roles ::= e.asInstanceOf[Role]
+        case e: EquivalenceConstraint => constraints ::= e.asInstanceOf[EquivalenceConstraint]
+        case e: ImplicationConstraint => constraints ::= e.asInstanceOf[ImplicationConstraint]
+        case e: ProhibitionConstraint => constraints ::= e.asInstanceOf[ProhibitionConstraint]
+        case other => throw new Exception("Expression '" + other + "' is not allowed inside Context!")
+      })
     })
 
     Context(name, inner, variables, activation, roles, constraints)
