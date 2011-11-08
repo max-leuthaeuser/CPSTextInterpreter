@@ -27,7 +27,12 @@ object Example {
       " } when { bla() && foo() } with bindings {" +
       "  a -> SomeRole; b -> OtherRole;" +
       " }" +
-      " var a : String;}"
+      " var a : String = \"Hallo World!\";" +
+      " val b : List;" +
+      " var c : Int = 123;" +
+      "}"
+
+    // TODO: test roles (with/without methods, behavior, variables; test nested contexts
     println(CPSTextDSL.parse(p))
   }
 }

@@ -28,7 +28,7 @@ object Context {
     var roles: List[Role] = List[Role]()
     var constraints: List[RoleConstraint] = List[RoleConstraint]()
 
-    // TODO
+    // TODO: this might could be removed - needs to be tested
     if (contents == null)
       return Context(name, inner, variables, activation, roles, constraints)
 

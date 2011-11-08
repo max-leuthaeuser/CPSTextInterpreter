@@ -67,7 +67,7 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l
   }
 
-  def code: Parser[String] = """[^\{^\}]*""".r
+  def code: Parser[String] = """[^\{^\}^;]*""".r
 
   def activationRuleVariable: Parser[ActivationRuleVariable] = ident ~ ident ^^ {
     case r ~ n => ActivationRuleVariable(r, n)
@@ -93,19 +93,15 @@ object CPSTextDSL extends JavaTokenParsers {
     case "context" ~ n ~ "{" ~ a ~ c => Context.build(n, c, a)
   }
 
-  def eVariableDecl: Parser[EmptyVariableDecl] = ("var" | "val") ~ ident ~ ":" ~ ident ^^ {
-    case "var" ~ n ~ ":" ~ t => EmptyVariableDecl(VariableDeclAccessType.modifiable, n, t)
-    case "val" ~ n ~ ":" ~ t => EmptyVariableDecl(VariableDeclAccessType.unmodifiable, n, t)
+  def variableValue: Parser[String] = opt("=" ~> code) ^^ {
+    case c => c.getOrElse("")
   }
 
-  def iVariableDecl: Parser[InitVariableDecl] = ("var" | "val") ~ ident ~ ":" ~ ident ~ "=" ~ code ^^ {
-    case "var" ~ n ~ ":" ~ t ~ "=" ~ v => InitVariableDecl(VariableDeclAccessType.modifiable, n, t, v)
-    case "val" ~ n ~ ":" ~ t ~ "=" ~ v => InitVariableDecl(VariableDeclAccessType.unmodifiable, n, t, v)
-  }
-
-  def variableDecl: Parser[VariableDecl] = (eVariableDecl | iVariableDecl) ^^ {
-    case e: EmptyVariableDecl => e
-    case i: InitVariableDecl => i
+  def variableDecl: Parser[VariableDecl] = ("var" | "val") ~ ident ~ ":" ~ ident ~ variableValue ^^ {
+    case "var" ~ n ~ ":" ~ t ~ "" => EmptyVariableDecl(VariableDeclAccessType.modifiable, n, t)
+    case "var" ~ n ~ ":" ~ t ~ v => InitVariableDecl(VariableDeclAccessType.modifiable, n, t, v)
+    case "val" ~ n ~ ":" ~ t ~ "" => EmptyVariableDecl(VariableDeclAccessType.unmodifiable, n, t)
+    case "val" ~ n ~ ":" ~ t ~ v => InitVariableDecl(VariableDeclAccessType.unmodifiable, n, t, v)
   }
 
   def variableDecls: Parser[List[VariableDecl]] = rep(variableDecl <~ ";") ^^ {
