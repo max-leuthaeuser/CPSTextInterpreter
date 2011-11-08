@@ -17,6 +17,6 @@
 
 package ast.callable
 
-case class Operation(name: String, body: String) extends Callable {
+case class Operation(name: String, typ: String, body: String) extends Callable {
 
 }

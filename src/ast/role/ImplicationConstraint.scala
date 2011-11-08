@@ -17,6 +17,6 @@
 
 package ast.role
 
-case class ImplicationConstraint(source: Role, target: Role) extends RoleConstraint(source, target) {
+case class ImplicationConstraint(source: String, target: String) extends RoleConstraint(source, target) {
 
 }

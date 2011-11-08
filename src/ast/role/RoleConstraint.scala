@@ -17,6 +17,6 @@
 
 package ast.role
 
-abstract class RoleConstraint(source: Role, target: Role) {
+abstract class RoleConstraint(source: String, target: String) {
 
 }

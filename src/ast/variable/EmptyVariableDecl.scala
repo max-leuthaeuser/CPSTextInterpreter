@@ -19,6 +19,6 @@ package ast.variable
 
 import VariableDeclAccessType._
 
-case class EmptyVariableDecl(accessType: VariableDeclAccessType, name: String) extends VariableDecl(accessType, name) {
+case class EmptyVariableDecl(accessType: VariableDeclAccessType, name: String, typ: String) extends VariableDecl(accessType, name, typ) {
 
 }

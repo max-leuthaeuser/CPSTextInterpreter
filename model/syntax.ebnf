@@ -2,7 +2,8 @@
 
 Program ::= Robots Collaborations
 Robots ::= Robot ";" {Robot ";"}
-Robot ::= "CPS" Name "IP" Ip "PORT" Port
+Robot ::= CPS Name "IP" Ip "PORT" Port
+CPS ::= ("Nao" | "Mindstorm")
 Name ::= String
 RoleName ::= String
 Ip ::= 1{Digit}3 "." 1{Digit}3 "." 1{Digit}3 "." 1{Digit}3
@@ -31,7 +32,7 @@ ActivationRule ::= "activate for"
 						Variable "->" RoleName ";" {Variable "->" RoleName ";"}
 					"}"
 Roles ::= Role {Role}
-Role ::= "role" Name "{" Behavior {VariableDecls|Methods} "}"
+Role ::= "role" Name "playedBy" Name "{" Behavior {VariableDecls|Methods} "}"
 JavaCode ::= String
 Methods ::= Method {Method}
 Method ::= JavaCode

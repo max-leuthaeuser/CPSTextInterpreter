@@ -22,6 +22,11 @@ import scala.util.parsing.combinator._
 import ast.cps.CPSType._
 import ast.cps.{CPS, CPSType}
 import ast.{CPSProgram, Context}
+import ast.variable.{VariableDeclAccessType, EmptyVariableDecl, InitVariableDecl, VariableDecl}
+import ast.rule.{ActivationRuleBinding, ActivationRuleVariable, ActivationRule}
+import ast.role._
+import ast.callable.{Behavior, Operation}
+import scala.AnyRef
 
 /**
  * Parser for parsing CPSText and creating an instance of the AST.
@@ -32,7 +37,7 @@ object CPSTextDSL extends JavaTokenParsers {
   }
 
   def robots: Parser[List[CPS]] = rep(robot <~ ";") ^^ {
-    (l: List[CPS]) => l
+    case l => l
   }
 
   def robot: Parser[CPS] = cpstype ~ ident ~ "IP" ~ ip ~ "PORT" ~ port ^^ {
@@ -47,11 +52,11 @@ object CPSTextDSL extends JavaTokenParsers {
   def ip: Parser[String] = ipv4Address | ipv6Address
 
   def ipv4Address: Parser[String] = """[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}""".r ^^ {
-    s => InetAddress.getByName(s).toString
+    case s => InetAddress.getByName(s).toString
   }
 
   def ipv6Address: Parser[String] = """[:%a-z0-9]+""".r ^^ {
-    s => InetAddress.getByName(s).toString
+    case s => InetAddress.getByName(s).toString
   }
 
   def port: Parser[Int] = decimalNumber ^^ {
@@ -59,16 +64,106 @@ object CPSTextDSL extends JavaTokenParsers {
   }
 
   def contexts: Parser[List[Context]] = rep1(context) ^^ {
-    l: List[Context] => l
+    case l => l
   }
 
-  def context: Parser[Context] = "context" ~ ident ~ "{" ~ optContexts ~ "}" ^^ {
-    case "context" ~ n ~ "{" ~ c ~ "}" => new Context(n, c)
+  def code: Parser[String] = """[^\{^\}]*""".r
+
+  def activationRuleVariable: Parser[ActivationRuleVariable] = ident ~ ident ^^ {
+    case r ~ n => ActivationRuleVariable(r, n)
   }
 
-  def optContexts: Parser[List[Context]] = opt(contexts) ^^ {
-    case None => List[Context]()
-    case Some(contexts) => contexts
+  def activationRuleVariables: Parser[List[ActivationRuleVariable]] = rep1(activationRuleVariable <~ ";") ^^ {
+    case l => l
+  }
+
+  def activationRuleBinding: Parser[ActivationRuleBinding] = ident ~ "->" ~ ident ^^ {
+    case n ~ "->" ~ r => ActivationRuleBinding(n, r)
+  }
+
+  def activationRuleBindings: Parser[List[ActivationRuleBinding]] = rep1(activationRuleBinding <~ ";") ^^ {
+    case l => l
+  }
+
+  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when {" ~ code ~ "} with bindings {" ~ activationRuleBindings ~ "}" ^^ {
+    case "activate for {" ~ av ~ "} when {" ~ c ~ "} with bindings {" ~ ab ~ "}" => ActivationRule(av, c, ab)
+  }
+
+  /**
+   * TODO contextContents doesnt work?!
+   */
+  def context: Parser[Context] = "context" ~ ident ~ "{" ~ activationRule ~ contextContents ~ "}" ^^ {
+    case "context" ~ n ~ "{" ~ a ~ c ~ "}" => Context.build(n, c, a)
+  }
+
+  /*
+  def context: Parser[Context] = "context" ~ ident ~ "{" ~ activationRule ~ "}" ^^ {
+    case "context" ~ n ~ "{" ~ a ~ "}" => Context.build(n, null, a)
+  } */
+
+  def eVariableDecl: Parser[EmptyVariableDecl] = ("var" | "val") ~ ident ~ ":" ~ ident ^^ {
+    case "var" ~ n ~ ":" ~ t => EmptyVariableDecl(VariableDeclAccessType.modifiable, n, t)
+    case "val" ~ n ~ ":" ~ t => EmptyVariableDecl(VariableDeclAccessType.unmodifiable, n, t)
+  }
+
+  def iVariableDecl: Parser[InitVariableDecl] = ("var" | "val") ~ ident ~ ":" ~ ident ~ "=" ~ code ^^ {
+    case "var" ~ n ~ ":" ~ t ~ "=" ~ v => InitVariableDecl(VariableDeclAccessType.modifiable, n, t, v)
+    case "val" ~ n ~ ":" ~ t ~ "=" ~ v => InitVariableDecl(VariableDeclAccessType.unmodifiable, n, t, v)
+  }
+
+  def variableDecl: Parser[VariableDecl] = (eVariableDecl | iVariableDecl) ^^ {
+    case e: EmptyVariableDecl => e
+    case i: InitVariableDecl => i
+  }
+
+  def variableDecls: Parser[List[VariableDecl]] = rep1(variableDecl <~ ";") ^^ {
+    case l => l
+  }
+
+  def optVariableDecls: Parser[List[VariableDecl]] = opt(variableDecls) ^^ {
+    case l => l.getOrElse(List[VariableDecl]())
+  }
+
+  def contextContent: Parser[List[AnyRef]] = (variableDecls | contexts | roles | constraints) ^^ {
+    case l => l
+  }
+
+  def behavior: Parser[Behavior] = "behavior {" ~ code ~ "}" ^^ {
+    case "behavior {" ~ c ~ "}" => Behavior(c)
+  }
+
+  def method: Parser[Operation] = ident ~ ident ~ "() {" ~ code ~ "}" ^^ {
+    case t ~ n ~ "() {" ~ c ~ "}" => Operation(n, t, c)
+  }
+
+  def methods: Parser[List[Operation]] = rep(method) ^^ {
+    case l => l
+  }
+
+  def optMethods: Parser[List[Operation]] = opt(methods) ^^ {
+    case l => l.getOrElse(List[Operation]())
+  }
+
+  def role: Parser[Role] = "role" ~ ident ~ "playedBy" ~ ident ~ "{" ~ behavior ~ optVariableDecls ~ optMethods ~ "}" ^^ {
+    case "role" ~ n ~ "playedBy" ~ p ~ "{" ~ b ~ v ~ m ~ "}" => Role(n, b, v, m, p)
+  }
+
+  def roles: Parser[List[Role]] = rep(role) ^^ {
+    case l => l
+  }
+
+  def constraint: Parser[RoleConstraint] = ident ~ ("implies" | "prohibits" | "equals") ~ ident ^^ {
+    case ra ~ "implies" ~ rb => ImplicationConstraint(ra, rb)
+    case ra ~ "prohibits" ~ rb => ProhibitionConstraint(ra, rb)
+    case ra ~ "equals" ~ rb => EquivalenceConstraint(ra, rb)
+  }
+
+  def constraints: Parser[List[RoleConstraint]] = rep1(constraint <~ ";") ^^ {
+    case l => l
+  }
+
+  def contextContents: Parser[List[List[AnyRef]]] = rep(contextContent) ^^ {
+    case l => l
   }
 
   /**

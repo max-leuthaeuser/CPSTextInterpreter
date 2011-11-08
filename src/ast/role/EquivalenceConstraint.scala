@@ -17,6 +17,6 @@
 
 package ast.role
 
-case class EquivalenceConstraint(source: Role, target: Role) extends RoleConstraint(source, target) {
+case class EquivalenceConstraint(source: String, target: String) extends RoleConstraint(source, target) {
 
 }

@@ -17,6 +17,6 @@
 
 package ast.role
 
-case class ProhibitionConstraint(source: Role, target: Role) extends RoleConstraint(source, target) {
+case class ProhibitionConstraint(source: String, target: String) extends RoleConstraint(source, target) {
 
 }

@@ -19,7 +19,7 @@ package ast.variable
 
 import ast.variable.VariableDeclAccessType._
 
-case class InitVariableDecl(value: String, accessType: VariableDeclAccessType, name: String)
-  extends VariableDecl(accessType, name) {
+case class InitVariableDecl(accessType: VariableDeclAccessType, name: String, typ: String, value: String)
+  extends VariableDecl(accessType, name, typ) {
 
 }

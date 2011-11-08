@@ -19,6 +19,6 @@ package ast.variable
 
 import VariableDeclAccessType._
 
-abstract class VariableDecl(accessType: VariableDeclAccessType, name: String) {
+abstract class VariableDecl(accessType: VariableDeclAccessType, name: String, typ: String) {
 
 }

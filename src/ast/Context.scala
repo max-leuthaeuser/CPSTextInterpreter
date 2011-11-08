@@ -21,11 +21,32 @@ import role.{RoleConstraint, Role}
 import rule.ActivationRule
 import variable.VariableDecl
 
+object Context {
+  def build(name: String, contents: List[List[AnyRef]], activation: ActivationRule): Context = {
+    val inner: List[Context] = List[Context]()
+    val variables: List[VariableDecl] = List[VariableDecl]()
+    val roles: List[Role] = List[Role]()
+    val constraints: List[RoleConstraint] = List[RoleConstraint]()
+
+    // TODO
+    if (contents == null)
+      return Context(name, inner, variables, activation, roles, constraints)
+
+    contents.foreach(l => {
+      if (l.isInstanceOf[::[Context]]) inner :: l
+      if (l.isInstanceOf[::[VariableDecl]]) variables :: l
+      if (l.isInstanceOf[::[Role]]) roles :: l
+      if (l.isInstanceOf[::[RoleConstraint]]) constraints :: l
+    })
+
+    Context(name, inner, variables, activation, roles, constraints)
+  }
+}
+
 case class Context(name: String,
                    inner: List[Context],
                    variables: List[VariableDecl],
                    activation: ActivationRule,
                    roles: List[Role],
                    constraints: List[RoleConstraint]) {
-  def this(name: String, inner: List[Context]) = this (name, inner, List[VariableDecl](), null, List[Role](), List[RoleConstraint]())
 }
