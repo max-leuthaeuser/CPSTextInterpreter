@@ -60,7 +60,11 @@ object CPSTextDSL extends JavaTokenParsers {
   }
 
   def port: Parser[Int] = decimalNumber ^^ {
-    case s: String => s.toInt
+    case s: String => {
+      val p = s.toInt
+      if (p <= 0) throw new Exception("Invalid Port: " + s)
+      p
+    }
   }
 
   def contexts: Parser[List[Context]] = rep1(context) ^^ {

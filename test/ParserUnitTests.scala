@@ -89,7 +89,25 @@ class ParserUnitTests extends FunSuite {
   }
 
   test("Testing port parser") {
-    // port
+    val expResult: Int = 8080
+    val invalid1: String = "80aa"
+    val invalid2: String = "-1"
+    val invalid3: String = "0"
+    val invalid4: String = "2.2"
+
+    assert(expResult === ParserUtils.parse[Int](port, "8080"))
+    intercept[Exception] {
+      ParserUtils.parse[Int](port, invalid1)
+    }
+    intercept[Exception] {
+      ParserUtils.parse[Int](port, invalid2)
+    }
+    intercept[Exception] {
+      ParserUtils.parse[Int](port, invalid3)
+    }
+    intercept[Exception] {
+      ParserUtils.parse[Int](port, invalid4)
+    }
   }
 
   test("Testing contexts parser") {
