@@ -52,11 +52,11 @@ object CPSTextDSL extends JavaTokenParsers {
   def ip: Parser[String] = ipv4Address | ipv6Address
 
   def ipv4Address: Parser[String] = """[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}""".r ^^ {
-    case s => InetAddress.getByName(s).toString
+    case s => InetAddress.getByName(s).toString.replace("/", "")
   }
 
   def ipv6Address: Parser[String] = """[:%a-z0-9]+""".r ^^ {
-    case s => InetAddress.getByName(s).toString
+    case s => InetAddress.getByName(s).toString.replace("/", "")
   }
 
   def port: Parser[Int] = decimalNumber ^^ {
@@ -67,7 +67,9 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l
   }
 
-  def code: Parser[String] = """[^\{^\}^;]*""".r
+  def codeLine: Parser[String] = """[^\{^\}^;]*""".r
+
+  def codeBlock: Parser[String] = """[^\{^\}]*""".r
 
   def activationRuleVariable: Parser[ActivationRuleVariable] = ident ~ ident ^^ {
     case r ~ n => ActivationRuleVariable(r, n)
@@ -85,7 +87,7 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l
   }
 
-  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when {" ~ code ~ "} with bindings {" ~ activationRuleBindings ^^ {
+  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when {" ~ codeLine ~ "} with bindings {" ~ activationRuleBindings ^^ {
     case "activate for {" ~ av ~ "} when {" ~ c ~ "} with bindings {" ~ ab => ActivationRule(av, c, ab)
   }
 
@@ -93,7 +95,7 @@ object CPSTextDSL extends JavaTokenParsers {
     case "context" ~ n ~ "{" ~ a ~ c => Context.build(n, c, a)
   }
 
-  def variableValue: Parser[String] = opt("=" ~> code) ^^ {
+  def variableValue: Parser[String] = opt("=" ~> codeLine) ^^ {
     case c => c.getOrElse("")
   }
 
@@ -116,11 +118,11 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l
   }
 
-  def behavior: Parser[Behavior] = "behavior {" ~ code ~ "}" ^^ {
+  def behavior: Parser[Behavior] = "behavior {" ~ codeBlock ~ "}" ^^ {
     case "behavior {" ~ c ~ "}" => Behavior(c)
   }
 
-  def method: Parser[Operation] = ident ~ ident ~ "() {" ~ code ~ "}" ^^ {
+  def method: Parser[Operation] = ident ~ ident ~ "() {" ~ codeBlock ~ "}" ^^ {
     case t ~ n ~ "() {" ~ c ~ "}" => Operation(n, t, c)
   }
 
