@@ -26,7 +26,6 @@ import ast.variable.{VariableDeclAccessType, EmptyVariableDecl, InitVariableDecl
 import ast.rule.{ActivationRuleBinding, ActivationRuleVariable, ActivationRule}
 import ast.role._
 import ast.callable.{Behavior, Operation}
-import scala.AnyRef
 
 /**
  * Parser for parsing CPSText and creating an instance of the AST.
@@ -91,12 +90,12 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l
   }
 
-  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when {" ~ codeLine ~ "} with bindings {" ~ activationRuleBindings ^^ {
-    case "activate for {" ~ av ~ "} when {" ~ c ~ "} with bindings {" ~ ab => ActivationRule(av, c, ab)
+  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when {" ~ codeLine ~ "} with bindings {" ~ activationRuleBindings ~ "}" ^^ {
+    case "activate for {" ~ av ~ "} when {" ~ c ~ "} with bindings {" ~ ab ~ "}" => ActivationRule(av, c, ab)
   }
 
-  def context: Parser[Context] = "context" ~ ident ~ "{" ~ activationRule ~ contextContents ^^ {
-    case "context" ~ n ~ "{" ~ a ~ c => Context.build(n, c, a)
+  def context: Parser[Context] = "context" ~ ident ~ "{" ~ activationRule ~ contextContent ~ "}" ^^ {
+    case "context" ~ n ~ "{" ~ a ~ c ~ "}" => Context.build(n, c, a)
   }
 
   def variableValue: Parser[String] = opt("=" ~> codeLine) ^^ {
@@ -118,8 +117,20 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l.getOrElse(List[VariableDecl]())
   }
 
-  def contextContent: Parser[List[AnyRef]] = "}" ~> (variableDecls | contexts | roles | constraints) <~ "}" ^^ {
-    case l => l
+  def optRoles: Parser[List[Role]] = opt(roles) ^^ {
+    case l => l.getOrElse(List[Role]())
+  }
+
+  def optContexts: Parser[List[Context]] = opt(contexts) ^^ {
+    case l => l.getOrElse(List[Context]())
+  }
+
+  def optConstraints: Parser[List[RoleConstraint]] = opt(constraints) ^^ {
+    case l => l.getOrElse(List[RoleConstraint]())
+  }
+
+  def contextContent: Parser[(List[VariableDecl], List[RoleConstraint], List[Role], List[Context])] = optVariableDecls ~ optConstraints ~ optRoles ~ optContexts ^^ {
+    case a ~ b ~ c ~ d => (a, b, c, d)
   }
 
   def behavior: Parser[Behavior] = "behavior {" ~ codeBlock ~ "}" ^^ {
@@ -153,10 +164,6 @@ object CPSTextDSL extends JavaTokenParsers {
   }
 
   def constraints: Parser[List[RoleConstraint]] = rep1(constraint <~ ";") ^^ {
-    case l => l
-  }
-
-  def contextContents: Parser[List[List[AnyRef]]] = rep(contextContent) ^^ {
     case l => l
   }
 

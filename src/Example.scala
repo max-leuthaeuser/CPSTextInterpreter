@@ -27,9 +27,13 @@ object Example {
       " } when { bla() && foo() } with bindings {" +
       "  a -> SomeRole; b -> OtherRole;" +
       " }" +
-      " var a : String = \"Hallo World!\";" +
-      " val b : List;" +
-      " var c : Int = 123;" +
+      " var test: Int = 10;" +
+      " val blub: Int = 11;" +
+      " role Keeper playedBy Chuck {" +
+      "  behavior {" +
+      "   while(true) watchTheGoal()" +
+      "  }" +
+      " }" +
       "}"
 
     // TODO: test roles (with/without methods, behavior, variables; test nested contexts

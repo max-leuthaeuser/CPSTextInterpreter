@@ -50,6 +50,10 @@ class ParserUnitTests extends FunSuite {
     val expResult: (CPSType, CPSType) = (CPSType.Nao, CPSType.Mindstorm)
     assert(expResult._1 === ParserUtils.parse[CPSType](cpstype, "Nao"))
     assert(expResult._2 === ParserUtils.parse[CPSType](cpstype, "Mindstorm"))
+
+    intercept[Exception] {
+      ParserUtils.parse[CPSType](cpstype, "ABC") // invalid robot type
+    }
   }
 
   test("Testing ip parser") {
