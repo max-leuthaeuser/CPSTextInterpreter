@@ -167,7 +167,7 @@ object CPSTextDSL extends JavaTokenParsers {
     case ra ~ "equals" ~ rb => EquivalenceConstraint(ra, rb)
   }
 
-  def constraints: Parser[List[RoleConstraint]] = rep1(constraint <~ ";") ^^ {
+  def constraints: Parser[List[RoleConstraint]] = rep(constraint <~ ";") ^^ {
     case l => l
   }
 

@@ -29,6 +29,7 @@ object Example {
       " }" +
       " var test: Int = 10;" +
       " val blub: Int = 11;" +
+      " FieldPlayer prohibits Keeper;" +
       " role FieldPlayer playedBy Hans {" +
       "  behavior {" +
       "   // not implemented yet" +
@@ -54,6 +55,8 @@ object Example {
       "  } when { passPossible() } with bindings {" +
       "   r -> Reciever; s -> Sender;" +
       "  }" +
+      "  Sender prohibits Reciever;" +
+      "  Reciever prohibits Sender;" +
       " }" +
       "}"
 

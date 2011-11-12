@@ -20,5 +20,7 @@ package ast
 import cps.CPS
 
 case class CPSProgram(robots: List[CPS], contexts: List[Context]) {
-
+  override def toString = {
+    robots.map(_.toString).mkString("\n") + "\n\n" + contexts.map(_.toString).mkString("\n")
+  }
 }

@@ -38,4 +38,33 @@ case class Context(name: String,
                    activation: ActivationRule,
                    roles: List[Role],
                    constraints: List[RoleConstraint]) {
+
+  def prettyPrint(identLevel: Int): String = {
+    var ident = ""
+    (1 to identLevel).foreach(e => {
+      ident += "\t"
+    })
+
+    var v = ""
+    var a = ident + "\t" + activation.toString + "\n"
+    if (!(constraints.isEmpty && roles.isEmpty && inner.isEmpty)) a += "\n"
+
+    var c = ""
+    var r = ""
+    var i = ""
+
+    if (!variables.isEmpty) v = variables.map(_.toString).mkString("\t" + ident, "\n\t" + ident, "\n\n")
+
+    if (!constraints.isEmpty) c = constraints.map(_.toString).mkString("\t" + ident, "\n\t" + ident, "\n")
+    if (!constraints.isEmpty && !(roles.isEmpty && inner.isEmpty)) c += "\n"
+
+    if (!roles.isEmpty) r = roles.map(_.toString).mkString("\t" + ident, "\n\t" + ident, "\n\n")
+    if (!inner.isEmpty) i = inner.map(_.prettyPrint(identLevel + 1)).mkString("\t" + ident, "\n\t" + ident, "\n")
+
+    "context " + name + " {\n" + v + a + c + r + i + ident + "}"
+  }
+
+  override def toString = {
+    prettyPrint(0)
+  }
 }
