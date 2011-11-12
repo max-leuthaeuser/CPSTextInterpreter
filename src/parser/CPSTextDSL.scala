@@ -70,9 +70,13 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l
   }
 
-  def codeLine: Parser[String] = """[^\{^\}^;]*""".r
+  def codeLine: Parser[String] = """[^\{^\}^;]*""".r ^^ {
+    case line => line.trim
+  }
 
-  def codeBlock: Parser[String] = """[^\{^\}]*""".r
+  def codeBlock: Parser[String] = """[^\{^\}]*""".r ^^ {
+    case lines => lines.split("\n").map(_.trim).mkString("\n")
+  }
 
   def activationRuleVariable: Parser[ActivationRuleVariable] = ident ~ ident ^^ {
     case r ~ n => ActivationRuleVariable(r, n)

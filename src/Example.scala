@@ -29,14 +29,35 @@ object Example {
       " }" +
       " var test: Int = 10;" +
       " val blub: Int = 11;" +
+      " role FieldPlayer playedBy Hans {" +
+      "  behavior {" +
+      "   // not implemented yet" +
+      "  }" +
+      "  var x: Float;" +
+      "  var y: Float;" +
+      " }" +
       " role Keeper playedBy Chuck {" +
       "  behavior {" +
       "   while(true) watchTheGoal()" +
       "  }" +
+      "  void watchTheBall() {" +
+      "    // some code here" +
+      "    magic();" +
+      "  }" +
+      "  void anotherMedthod() {" +
+      "   bla();" +
+      "  }" +
+      " }" +
+      " context Pass {" +
+      "  activate for {" +
+      "   Nao r; Nao s;" +
+      "  } when { passPossible() } with bindings {" +
+      "   r -> Reciever; s -> Sender;" +
+      "  }" +
       " }" +
       "}"
 
-    // TODO: test roles (with/without methods, behavior, variables; test nested contexts
+    // TODO: test roles in nested contexts
     println(CPSTextDSL.parse(p))
   }
 }
