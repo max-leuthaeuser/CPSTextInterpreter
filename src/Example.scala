@@ -42,7 +42,7 @@ object Example {
       "   while(true) watchTheGoal()" +
       "  }" +
       "  void watchTheBall() {" +
-      "    // some code here" +
+      "    // some code here\n" +
       "    magic();" +
       "  }" +
       "  void anotherMedthod() {" +
@@ -57,6 +57,25 @@ object Example {
       "  }" +
       "  Sender prohibits Reciever;" +
       "  Reciever prohibits Sender;" +
+      "  role Sender playedBy Chuck {" +
+      "   behavior {" +
+      "    if(possible()) pass()" +
+      "   }" +
+      "   void pass() {" +
+      "    shootTheBall();" +
+      "   }" +
+      "   void look() {" +
+      "    // magic or so" +
+      "   }" +
+      "  }" +
+      "  role Receiver playedBy Hans {" +
+      "   behavior {" +
+      "    while(true) waitForPass()" +
+      "   }" +
+      "   void waitForPass() {" +
+      "    // waiting here" +
+      "   }" +
+      "  }" +
       " }" +
       "}"
 

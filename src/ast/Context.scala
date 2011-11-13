@@ -46,7 +46,7 @@ case class Context(name: String,
     })
 
     var v = ""
-    var a = ident + "\t" + activation.toString + "\n"
+    var a = ident + "\t" + activation.prettyPrint(identLevel) + "\n"
     if (!(constraints.isEmpty && roles.isEmpty && inner.isEmpty)) a += "\n"
 
     var c = ""
@@ -58,7 +58,9 @@ case class Context(name: String,
     if (!constraints.isEmpty) c = constraints.map(_.toString).mkString("\t" + ident, "\n\t" + ident, "\n")
     if (!constraints.isEmpty && !(roles.isEmpty && inner.isEmpty)) c += "\n"
 
-    if (!roles.isEmpty) r = roles.map(_.toString).mkString("\t" + ident, "\n\t" + ident, "\n\n")
+    if (!roles.isEmpty) r = roles.map(_.prettyPrint(identLevel)).mkString("\t" + ident, "\n\n\t" + ident, "\n")
+    if (!roles.isEmpty && !inner.isEmpty) r += "\n"
+
     if (!inner.isEmpty) i = inner.map(_.prettyPrint(identLevel + 1)).mkString("\t" + ident, "\n\t" + ident, "\n")
 
     "context " + name + " {\n" + v + a + c + r + i + ident + "}"

@@ -22,4 +22,10 @@ import ast.variable.VariableDeclAccessType._
 case class InitVariableDecl(accessType: VariableDeclAccessType, name: String, typ: String, value: String)
   extends VariableDecl(accessType, name, typ) {
 
+  override def toString = {
+    var at = "val"
+    if (accessType == VariableDeclAccessType.modifiable) at = "var"
+
+    at + " " + name + ": " + typ + " = " + value + ";"
+  }
 }

@@ -18,5 +18,5 @@
 package ast.role
 
 case class ProhibitionConstraint(source: String, target: String) extends RoleConstraint(source, target) {
-
+  override def toString = source + " prohibits " + target + ";"
 }

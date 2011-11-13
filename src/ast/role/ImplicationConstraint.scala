@@ -18,5 +18,5 @@
 package ast.role
 
 case class ImplicationConstraint(source: String, target: String) extends RoleConstraint(source, target) {
-
+  override def toString = source + " implies " + target + ";"
 }

@@ -18,5 +18,16 @@
 package ast.callable
 
 case class Operation(name: String, typ: String, body: String) extends Callable {
+  def prettyPrint(identLevel: Int): String = {
+    var ident = ""
+    (1 to identLevel).foreach(e => {
+      ident += "\t"
+    })
 
+    val b = body.replaceAll("\n", "\n\t\t\t" + ident)
+
+    typ + " " + name + "() {\n\t\t\t" + ident + b + "\n\t\t" + ident + "}"
+  }
+
+  override def toString = prettyPrint(0)
 }

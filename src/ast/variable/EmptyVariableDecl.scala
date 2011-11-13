@@ -20,5 +20,10 @@ package ast.variable
 import VariableDeclAccessType._
 
 case class EmptyVariableDecl(accessType: VariableDeclAccessType, name: String, typ: String) extends VariableDecl(accessType, name, typ) {
+  override def toString = {
+    var at = "val"
+    if (accessType == VariableDeclAccessType.modifiable) at = "var"
 
+    at + " " + name + ": " + typ + ";"
+  }
 }

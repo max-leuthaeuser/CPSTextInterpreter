@@ -18,5 +18,5 @@
 package ast.rule
 
 case class ActivationRuleVariable(roleName: String, variableName: String) {
-
+  override def toString = roleName + " " + variableName + ";"
 }

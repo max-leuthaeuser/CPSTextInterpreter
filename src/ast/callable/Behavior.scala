@@ -18,5 +18,14 @@
 package ast.callable
 
 case class Behavior(body: String) extends Callable {
+  def prettyPrint(identLevel: Int): String = {
+    var ident = ""
+    (1 to identLevel).foreach(e => {
+      ident += "\t"
+    })
 
+    "\tbehavior {\n\t\t\t" + ident + body + "\n\t\t" + ident + "}"
+  }
+
+  override def toString = prettyPrint(0)
 }

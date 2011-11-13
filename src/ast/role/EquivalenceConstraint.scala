@@ -18,5 +18,5 @@
 package ast.role
 
 case class EquivalenceConstraint(source: String, target: String) extends RoleConstraint(source, target) {
-
+  override def toString = source + " equals " + target + ";"
 }
