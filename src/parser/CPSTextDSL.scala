@@ -31,13 +31,14 @@ import ast.callable.{Behavior, Operation}
  * Parser for parsing CPSText and creating an instance of the AST.
  */
 object CPSTextDSL extends JavaTokenParsers {
+  // ignore whitespaces and all c-style comments
+  protected override val whiteSpace = """(\s|//.*|(?m)/\*(\*(?!/)|[^*])*\*/)+""".r
+
   def cpsprogram: Parser[CPSProgram] = robots ~ contexts ^^ {
     case robots ~ contexts => CPSProgram(robots, contexts)
   }
 
-  def robots: Parser[List[CPS]] = rep(robot <~ ";") ^^ {
-    case l => l
-  }
+  def robots: Parser[List[CPS]] = rep(robot <~ ";")
 
   def robot: Parser[CPS] = cpstype ~ ident ~ "IP" ~ ip ~ "PORT" ~ port ^^ {
     case t ~ n ~ "IP" ~ i ~ "PORT" ~ p => CPS(t, n, i, p)
@@ -66,9 +67,7 @@ object CPSTextDSL extends JavaTokenParsers {
     }
   }
 
-  def contexts: Parser[List[Context]] = rep1(context) ^^ {
-    case l => l
-  }
+  def contexts: Parser[List[Context]] = rep1(context)
 
   def codeLine: Parser[String] = """[^\{^\}^;]*""".r ^^ {
     case line => line.trim
@@ -82,17 +81,13 @@ object CPSTextDSL extends JavaTokenParsers {
     case r ~ n => ActivationRuleVariable(r, n)
   }
 
-  def activationRuleVariables: Parser[List[ActivationRuleVariable]] = rep1(activationRuleVariable <~ ";") ^^ {
-    case l => l
-  }
+  def activationRuleVariables: Parser[List[ActivationRuleVariable]] = rep1(activationRuleVariable <~ ";")
 
   def activationRuleBinding: Parser[ActivationRuleBinding] = ident ~ "->" ~ ident ^^ {
     case n ~ "->" ~ r => ActivationRuleBinding(n, r)
   }
 
-  def activationRuleBindings: Parser[List[ActivationRuleBinding]] = rep1(activationRuleBinding <~ ";") ^^ {
-    case l => l
-  }
+  def activationRuleBindings: Parser[List[ActivationRuleBinding]] = rep1(activationRuleBinding <~ ";")
 
   def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when {" ~ codeLine ~ "} with bindings {" ~ activationRuleBindings ~ "}" ^^ {
     case "activate for {" ~ av ~ "} when {" ~ c ~ "} with bindings {" ~ ab ~ "}" => ActivationRule(av, c, ab)
@@ -113,9 +108,7 @@ object CPSTextDSL extends JavaTokenParsers {
     case "val" ~ n ~ ":" ~ t ~ v => InitVariableDecl(VariableDeclAccessType.unmodifiable, n, t, v)
   }
 
-  def variableDecls: Parser[List[VariableDecl]] = rep(variableDecl <~ ";") ^^ {
-    case l => l
-  }
+  def variableDecls: Parser[List[VariableDecl]] = rep(variableDecl <~ ";")
 
   def optVariableDecls: Parser[List[VariableDecl]] = opt(variableDecls) ^^ {
     case l => l.getOrElse(List[VariableDecl]())
@@ -134,9 +127,9 @@ object CPSTextDSL extends JavaTokenParsers {
   }
 
   def contextContent: Parser[List[ScalaObject]] = rep((variableDecl <~ ";")
-                            | (constraint <~ ";")
-                            | role
-                            | context)
+    | (constraint <~ ";")
+    | role
+    | context)
 
   def behavior: Parser[Behavior] = "behavior {" ~ codeBlock ~ "}" ^^ {
     case "behavior {" ~ c ~ "}" => Behavior(c)
@@ -146,9 +139,7 @@ object CPSTextDSL extends JavaTokenParsers {
     case t ~ n ~ "() {" ~ c ~ "}" => Operation(n, t, c)
   }
 
-  def methods: Parser[List[Operation]] = rep(method) ^^ {
-    case l => l
-  }
+  def methods: Parser[List[Operation]] = rep(method)
 
   def optMethods: Parser[List[Operation]] = opt(methods) ^^ {
     case l => l.getOrElse(List[Operation]())
@@ -160,9 +151,7 @@ object CPSTextDSL extends JavaTokenParsers {
 
   def roleContent: Parser[List[ScalaObject]] = rep((variableDecl <~ ";") | method)
 
-  def roles: Parser[List[Role]] = rep(role) ^^ {
-    case l => l
-  }
+  def roles: Parser[List[Role]] = rep(role)
 
   def constraint: Parser[RoleConstraint] = ident ~ ("implies" | "prohibits" | "equals") ~ ident ^^ {
     case ra ~ "implies" ~ rb => ImplicationConstraint(ra, rb)
@@ -170,9 +159,7 @@ object CPSTextDSL extends JavaTokenParsers {
     case ra ~ "equals" ~ rb => EquivalenceConstraint(ra, rb)
   }
 
-  def constraints: Parser[List[RoleConstraint]] = rep(constraint <~ ";") ^^ {
-    case l => l
-  }
+  def constraints: Parser[List[RoleConstraint]] = rep(constraint <~ ";")
 
   /**
    * Will parse the String s and return an instance of the CPS AST.
