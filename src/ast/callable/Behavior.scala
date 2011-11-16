@@ -24,7 +24,10 @@ case class Behavior(body: String) extends Callable {
       ident += "\t"
     })
 
-    "\tbehavior {\n\t\t\t" + ident + body + "\n\t\t" + ident + "}"
+    var b = body.replaceAll("\n", "\n\t\t\t" + ident)
+    b = b.subSequence(0, (b.length-3-identLevel)).toString
+
+    "\tbehavior {\n\t\t\t" + ident + b + "\t\t" + ident + "}"
   }
 
   override def toString = prettyPrint(0)

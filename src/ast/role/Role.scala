@@ -18,7 +18,22 @@
 package ast.role
 
 import ast.callable.{Operation, Behavior}
-import ast.variable.VariableDecl
+import ast.variable.{InitVariableDecl, EmptyVariableDecl, VariableDecl}
+
+object Role {
+  def build(name: String, behavior: Behavior, content: List[ScalaObject], playedBy: String): Role = {
+    var variables: List[VariableDecl] = Nil
+    var ops: List[Operation] = Nil
+
+    content.foreach(_ match {
+      case e:EmptyVariableDecl => variables = e.asInstanceOf[EmptyVariableDecl] :: variables
+      case e:InitVariableDecl => variables = e.asInstanceOf[InitVariableDecl] :: variables
+      case e:Operation => ops = e.asInstanceOf[Operation] :: ops
+    })
+
+    Role(name, behavior, variables, ops, playedBy)
+  }
+}
 
 case class Role(name: String, behavior: Behavior, variables: List[VariableDecl], operations: List[Operation], playedBy: String) {
   def prettyPrint(identLevel: Int): String = {

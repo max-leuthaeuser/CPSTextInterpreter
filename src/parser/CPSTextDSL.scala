@@ -133,9 +133,10 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l.getOrElse(List[RoleConstraint]())
   }
 
-  def contextContent: Parser[(List[VariableDecl], List[RoleConstraint], List[Role], List[Context])] = optVariableDecls ~ optConstraints ~ optRoles ~ optContexts ^^ {
-    case a ~ b ~ c ~ d => (a, b, c, d)
-  }
+  def contextContent: Parser[List[ScalaObject]] = rep((variableDecl <~ ";")
+                            | (constraint <~ ";")
+                            | role
+                            | context)
 
   def behavior: Parser[Behavior] = "behavior {" ~ codeBlock ~ "}" ^^ {
     case "behavior {" ~ c ~ "}" => Behavior(c)
@@ -153,9 +154,11 @@ object CPSTextDSL extends JavaTokenParsers {
     case l => l.getOrElse(List[Operation]())
   }
 
-  def role: Parser[Role] = "role" ~ ident ~ "playedBy" ~ ident ~ "{" ~ behavior ~ optVariableDecls ~ optMethods ~ "}" ^^ {
-    case "role" ~ n ~ "playedBy" ~ p ~ "{" ~ b ~ v ~ m ~ "}" => Role(n, b, v, m, p)
+  def role: Parser[Role] = "role" ~ ident ~ "playedBy" ~ ident ~ "{" ~ behavior ~ roleContent ~ "}" ^^ {
+    case "role" ~ n ~ "playedBy" ~ p ~ "{" ~ b ~ c ~ "}" => Role.build(n, b, c, p)
   }
+
+  def roleContent: Parser[List[ScalaObject]] = rep((variableDecl <~ ";") | method)
 
   def roles: Parser[List[Role]] = rep(role) ^^ {
     case l => l

@@ -24,9 +24,10 @@ case class Operation(name: String, typ: String, body: String) extends Callable {
       ident += "\t"
     })
 
-    val b = body.replaceAll("\n", "\n\t\t\t" + ident)
+    var b = body.replaceAll("\n", "\n\t\t\t" + ident)
+    b = b.subSequence(0, (b.length-3-identLevel)).toString
 
-    typ + " " + name + "() {\n\t\t\t" + ident + b + "\n\t\t" + ident + "}"
+    typ + " " + name + "() {\n\t\t\t" + ident + b + "\t\t" + ident + "}"
   }
 
   override def toString = prettyPrint(0)

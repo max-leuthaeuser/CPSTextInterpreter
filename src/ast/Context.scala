@@ -19,14 +19,25 @@ package ast
 
 import role._
 import rule.ActivationRule
-import variable.VariableDecl
+import variable.{InitVariableDecl, EmptyVariableDecl, VariableDecl}
 
 object Context {
-  def build(name: String, contents: (List[VariableDecl], List[RoleConstraint], List[Role], List[Context]), activation: ActivationRule): Context = {
-    val inner: List[Context] = contents._4
-    val variables: List[VariableDecl] = contents._1
-    val roles: List[Role] = contents._3
-    val constraints: List[RoleConstraint] = contents._2
+  def build(name: String, contents: List[ScalaObject], activation: ActivationRule): Context = {
+    var inner: List[Context] = Nil
+    var variables: List[VariableDecl] = Nil
+    var roles: List[Role] = Nil
+    var constraints: List[RoleConstraint] = Nil
+
+    contents.foreach(_ match {
+      case e:Context => inner = e.asInstanceOf[Context] :: inner
+      case e:Role => roles = e.asInstanceOf[Role] :: roles
+      case e:EmptyVariableDecl => variables = e.asInstanceOf[EmptyVariableDecl] :: variables
+      case e:InitVariableDecl => variables = e.asInstanceOf[InitVariableDecl] :: variables
+      case e:EquivalenceConstraint => constraints = e.asInstanceOf[EquivalenceConstraint] :: constraints
+      case e:ImplicationConstraint => constraints = e.asInstanceOf[ImplicationConstraint] :: constraints
+      case e:ProhibitionConstraint => constraints = e.asInstanceOf[ProhibitionConstraint] :: constraints
+      case e => throw new Exception("Unexpected type: " + e.getClass)
+    })
 
     Context(name, inner, variables, activation, roles, constraints)
   }
