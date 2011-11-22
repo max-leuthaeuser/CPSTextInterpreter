@@ -18,7 +18,7 @@
 package interpreter
 
 import ast.CPSProgram
-import parser.{CPSChecks, CPSTextParser}
+import parser.CPSTextParser
 
 /**
  * Interpreter for CPSText containing static methods for interpreting CPSText code and programs.
