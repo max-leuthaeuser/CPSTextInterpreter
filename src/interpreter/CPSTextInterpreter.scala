@@ -18,7 +18,7 @@
 package interpreter
 
 import ast.CPSProgram
-import parser.CPSTextParser
+import parser.{CPSChecks, CPSTextParser}
 
 /**
  * Interpreter for CPSText containing static methods for interpreting CPSText code and programs.
@@ -27,7 +27,7 @@ import parser.CPSTextParser
  * @date 22.11.2011
  */
 object CPSTextInterpreter {
-  val debug = false
+  var debug = true
 
   /**
    * Interprets a CPSProgram representing a piece of CPSText code.
@@ -36,7 +36,20 @@ object CPSTextInterpreter {
    * @param db: optional boolean flag, set to true if you want additional debug information printed to stdout. (predefined: false)
    * @return true if interpretation was successful, false otherwise.
    */
-  def interpret(cst: CPSProgram, db: Boolean = false): Boolean = {
+  def interpretCST(cst: CPSProgram, db: Boolean = false): Boolean = {
+    // Some static checks before starting the actual interpretation.
+    if (debug) {
+      println("Running static checks...")
+      println("\t1) Checking names")
+    }
+    CPSChecks.checkNames(cst)
+    if (debug) println("\t2) Checking role bindings")
+    CPSChecks.checkBindings(cst)
+    if (debug) println("\t3) Checking roles")
+    CPSChecks.checkRoles(cst)
+    if (debug) println("\t4) Checking CPS objects")
+    CPSChecks.checkCPSObjects(cst)
+
     false
   }
 
@@ -47,7 +60,7 @@ object CPSTextInterpreter {
    * @param db: optional boolean flag, set to true if you want additional debug information printed to stdout. (predefined: false)
    * @return true if parsing and interpretation was successful, false otherwise.
    */
-  def interpret(code: String, db: Boolean = false): Boolean = {
-    interpret(CPSTextParser.parse(code), debug)
+  def interpretCode(code: String, db: Boolean = false): Boolean = {
+    interpretCST(CPSTextParser.parse(code), debug)
   }
 }
