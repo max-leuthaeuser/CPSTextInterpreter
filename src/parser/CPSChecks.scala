@@ -17,7 +17,7 @@
 
 package parser
 
-import ast.CPSProgram
+import ast.{CPSProgram, Context}
 
 /**
  *  Object containing some methods for checking a CPSProgram statically.
@@ -27,13 +27,54 @@ import ast.CPSProgram
  */
 object CPSChecks {
   /**
-   * Check if names are used more than once and hiding or shadowing is possible to
+   * Check if names are used more than once and hiding is possible to
    * generate warnings.
    *
    * @param cst: CPSProgram to check
+   * @throws DuplicateNameException if the same name is used multiple times at one specific level.
    */
   def checkNames(cst: CPSProgram) {
+    var contextNames = List[String]()
+    var roleNames = List[String]()
 
+    def checkContextNames(c: List[Context]) {
+      c.foreach(e => {
+        if (contextNames.contains(e.name))
+          throw new DuplicateNameException("Context '" + e.name + "' is already defined!")
+        else
+          contextNames = e.name :: contextNames
+      })
+      c.foreach(e => {
+        checkContextNames(e.inner)
+      })
+    }
+
+    def checkRoleNames(c: List[Context]) {
+      c.foreach(e => {
+        e.roles.foreach(r => {
+          if (roleNames.contains(r.name))
+            throw new DuplicateNameException("Role '" + e.name + "' is already defined!")
+          else
+            roleNames = r.name :: roleNames
+        })
+      })
+      c.foreach(e => {
+        checkRoleNames(e.inner)
+      })
+    }
+
+    /**
+     * Algorithm:
+     *  - run through all contexts and
+     *  - run through all roles
+     * and check if their names and embedded variables are unique.
+     *
+     * Same name for role or contexts generates error, same name for variables on top level
+     * generate error, same name for variables in embedded contexts/roles will generate hiding warning.
+     */
+    checkContextNames(cst.contexts)
+    checkRoleNames(cst.contexts)
+    // TODO check variables
   }
 
   /**
