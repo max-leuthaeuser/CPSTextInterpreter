@@ -28,9 +28,12 @@ import ast.role._
 import ast.callable.{Behavior, Operation}
 
 /**
- * Parser for parsing CPSText and creating an instance of the AST.
+ * Parser for parsing CPSText and creating an instance of the corresponding AST.
+ *
+ * @author Max Leuthaeuser
+ * @date 22.11.2011
  */
-object CPSTextDSL extends JavaTokenParsers {
+object CPSTextParser extends JavaTokenParsers {
   // ignore whitespaces and all c-style comments
   protected override val whiteSpace = """(\s|//.*|(?m)/\*(\*(?!/)|[^*])*\*/)+""".r
 
@@ -162,11 +165,14 @@ object CPSTextDSL extends JavaTokenParsers {
   def constraints: Parser[List[RoleConstraint]] = rep(constraint <~ ";")
 
   /**
-   * Will parse the String s and return an instance of the CPS AST.
+   * Will parse a String and return an instance of the CPS AST.
+   *
+   * @param p: a String representing a piece of CPSText code.
+   * @return an instance of CPSProgram representing the concrete syntax tree for a given CPSText program.
    */
-  def parse(p: String) = {
+  def parse(p: String): CPSProgram = {
     parseAll(cpsprogram, p) match {
-      case Success(r, _) => r
+      case Success(r, _) => r.asInstanceOf[CPSProgram]
       case e => throw new Exception(e.toString)
     }
   }

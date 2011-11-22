@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import parser.CPSTextDSL._
+import parser.CPSTextParser._
 import org.scalatest.FunSuite
 
 object ParserUtils {
