@@ -25,6 +25,7 @@ context Football {
 		behavior {
 			while(true) watchTheGoal()
 		}
+		
 
 		void watchTheBall() {
 			// some code here
@@ -54,6 +55,8 @@ context Football {
 					pass()
 			}
 			
+			var test: Int = 10;
+			
 			void pass() {
 				shootTheBall();
 			}
@@ -71,6 +74,8 @@ context Football {
 				while(true)
 					waitForPass()
 			}
+			
+			var test: Int = 10;
 			
 			void waitForPass() {
 				// waiting here

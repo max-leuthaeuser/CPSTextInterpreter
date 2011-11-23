@@ -18,6 +18,9 @@
 package interpreter
 
 import ast.{CPSProgram, Context}
+import ast.variable.{InitVariableDecl, EmptyVariableDecl}
+import ast.role.Role
+import collection.mutable.Map
 
 /**
  *  Object containing some methods for checking a CPSProgram statically.
@@ -36,6 +39,7 @@ object CPSChecks {
   def checkNames(cst: CPSProgram) {
     var contextNames = List[String]()
     var roleNames = List[String]()
+    val varNames = Map[Int, String]()
 
     def checkContextNames(c: List[Context]) {
       c.foreach(e => {
@@ -63,6 +67,94 @@ object CPSChecks {
       })
     }
 
+    def checkVariableNames(c: List[Context], level: Int = 0) {
+      def matches(o: ScalaObject) {
+        o match {
+          case c: Context => {
+            var vl = List[String]()
+            c.variables.foreach(_ match {
+              case va: EmptyVariableDecl => {
+                val name = va.asInstanceOf[EmptyVariableDecl].name
+                if (level > 0) {
+                  varNames.foreach(p => {
+                    if (p._1 < level && p._2.equals(name))
+                      println("\t\tHiding Warning: Variable '" + name + "' is defined more than once.")
+                  })
+                }
+                if (vl.contains(name))
+                  throw new DuplicateNameException("Variable '" + name + "' is already defined!")
+                else
+                  vl = name :: vl
+                varNames(level) = name
+              }
+              case va: InitVariableDecl => {
+                val name = va.asInstanceOf[InitVariableDecl].name
+                if (level > 0) {
+                  varNames.foreach(p => {
+                    if (p._1 < level && p._2.equals(name))
+                      println("\t\tHiding Warning: Variable '" + name + "' is defined more than once.")
+                  })
+                }
+                if (vl.contains(name))
+                  throw new DuplicateNameException("Variable '" + name + "' is already defined!")
+                else
+                  vl = name :: vl
+                varNames(level) = name
+              }
+            })
+          }
+          case r: Role => {
+            var vl = List[String]()
+            r.variables.foreach(_ match {
+              case va: EmptyVariableDecl => {
+                val name = va.asInstanceOf[EmptyVariableDecl].name
+                if (level > 0) {
+                  varNames.foreach(p => {
+                    if (p._1 < level && p._2.equals(name))
+                      println("\t\tHiding Warning: Variable '" + name + "' is defined more than once.")
+                  })
+                }
+                if (vl.contains(name))
+                  throw new DuplicateNameException("Variable '" + name + "' is already defined!")
+                else
+                  vl = name :: vl
+                varNames(level) = name
+              }
+              case va: InitVariableDecl => {
+                val name = va.asInstanceOf[InitVariableDecl].name
+                if (level > 0) {
+                  varNames.foreach(p => {
+                    if (p._1 < level && p._2.equals(name))
+                      println("\t\tHiding Warning: Variable '" + name + "' is defined more than once.")
+                  })
+                }
+                if (vl.contains(name))
+                  throw new DuplicateNameException("Variable '" + name + "' is already defined!")
+                else
+                  vl = name :: vl
+                varNames(level) = name
+              }
+            })
+          }
+        }
+      }
+
+      // in contexts first:
+      c.foreach(e => {
+        matches(e)
+      })
+      c.foreach(e => {
+        checkVariableNames(e.inner, level + 1)
+      })
+
+      // roles now:
+      c.foreach(e => {
+        e.roles.foreach(r => {
+          matches(r)
+        })
+      })
+    }
+
     /**
      * Algorithm:
      *  - run through all contexts and
@@ -74,11 +166,13 @@ object CPSChecks {
      */
     checkContextNames(cst.contexts)
     checkRoleNames(cst.contexts)
-    // TODO check variables
+    checkVariableNames(cst.contexts)
   }
 
   /**
-   * Check if all given bindings from CPS object to roles are well formed.
+   * Check if all given bindings from CPS object to roles are well formed,
+   * hence the same assignment is not allowed to be defined more than once
+   * and no binding should be left without definition and visa versa.
    *
    * @param cst: CPSProgram to check
    */
