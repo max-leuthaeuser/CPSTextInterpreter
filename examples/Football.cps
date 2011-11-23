@@ -55,8 +55,6 @@ context Football {
 					pass()
 			}
 			
-			var test: Int = 10;
-			
 			void pass() {
 				shootTheBall();
 			}

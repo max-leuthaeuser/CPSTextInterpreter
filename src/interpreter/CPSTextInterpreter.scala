@@ -49,6 +49,8 @@ object CPSTextInterpreter {
     CPSChecks.checkRoles(cst)
     if (debug) println("\t4) Checking CPS objects")
     CPSChecks.checkCPSObjects(cst)
+    if (debug) println("\t5) Checking role constrains")
+    CPSChecks.checkConstrains(cst)
 
     false
   }
