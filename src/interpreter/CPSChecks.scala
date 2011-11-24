@@ -220,7 +220,39 @@ object CPSChecks {
    * @param cst: CPSProgram to check
    */
   def checkRoles(cst: CPSProgram) {
+    def getRoles(c: List[Context]): Map[String, Role] = {
+      var l = Map[String, Role]()
+      c.foreach(e => {
+        e.roles.foreach(r => {
+          l(r.name) = r
+        })
+        l = l ++ getRoles(e.inner)
+      })
+      l
+    }
 
+    // collect all roles
+    val rl = getRoles(cst.contexts)
+    var pl = List[String]()
+
+    // calculate played by reference list recursively
+    def playedBy(r: Role) {
+      if (r != null && !pl.contains(r.playedBy)) {
+        val elem = rl.getOrElse(r.playedBy, null)
+        pl = r.playedBy :: pl
+        playedBy(elem)
+      }
+    }
+
+    rl.foreach(e => {
+      if (e._1.equals(e._2.playedBy))
+        throw new InvalidPlayedByException("Role '" + e._1 + "' cannot played by itself!")
+
+      playedBy(e._2)
+      if (pl.contains(e._2.playedBy))
+        throw new InvalidPlayedByException("Cyclid playedBy definition found! [" + pl.reverse.mkString("", "->", "->") + e._2.playedBy + "]")
+      pl = List[String]()
+    })
   }
 
   /**
