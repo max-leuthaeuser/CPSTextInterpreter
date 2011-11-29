@@ -237,10 +237,12 @@ object CPSChecks {
 
     // calculate played by reference list recursively
     def playedBy(r: Role) {
-      if (r != null && !pl.contains(r.playedBy)) {
+      if (!pl.contains(r.playedBy)) {
         val elem = rl.getOrElse(r.playedBy, null)
-        pl = r.playedBy :: pl
-        playedBy(elem)
+        if (elem != null) {
+          pl = r.playedBy :: pl
+          playedBy(elem)
+        }
       }
     }
 
@@ -261,7 +263,9 @@ object CPSChecks {
    * @param cst: CPSProgram to check
    */
   def checkConstrains(cst: CPSProgram) {
-
+    // the same role name before and after the constraints is not valid
+    // role A cant imply role B if it is prohibited somewhere else
+    // role A cant be equivalent to role B if it is prohibited somewhere else
   }
 
   /**
@@ -270,6 +274,14 @@ object CPSChecks {
    * @param cst: CPSProgram to check
    */
   def checkCPSObjects(cst: CPSProgram) {
-
+    var ipportList = List[String]()
+    cst.robots.foreach(r => {
+      val ipport = r.ip + ":" + r.port
+      if (!ipportList.contains(ipport)) {
+        ipportList = ipport :: ipportList
+      } else {
+        throw new DuplicateCPSDeviceException("IP:PORT of CPS device '" + r.name + "' is already used!")
+      }
+    })
   }
 }
