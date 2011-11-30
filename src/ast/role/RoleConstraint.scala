@@ -17,6 +17,12 @@
 
 package ast.role
 
-abstract class RoleConstraint(source: String, target: String) {
+abstract class RoleConstraint {
+  def source: String
 
+  def source_=(s: String): Unit
+
+  def target: String
+
+  def target_=(s: String): Unit
 }

@@ -8,8 +8,6 @@ context Football {
 		a -> SomeRole; b -> OtherRole;
 	}
 	
-	var test: Int = 10;
-	
 	FieldPlayer prohibits Keeper;
 	
 	role FieldPlayer playedBy Hans {
@@ -64,8 +62,8 @@ context Football {
 			}
 		}
 		
-		Sender prohibits Reciever;
-		Reciever prohibits Sender;
+		Sender prohibits Receiver;
+		Receiver prohibits Sender;
 		
 		role Receiver playedBy Hans {
 			behavior {

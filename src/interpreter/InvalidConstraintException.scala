@@ -15,8 +15,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ast.role
+package interpreter
 
-case class EquivalenceConstraint(var source: String, var target: String) extends RoleConstraint {
-  override def toString = source + " equals " + target + ";"
-}
+case class InvalidConstraintException(errorMsg: String) extends Exception(errorMsg)

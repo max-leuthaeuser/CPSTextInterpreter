@@ -19,8 +19,8 @@ package interpreter
 
 import ast.{CPSProgram, Context}
 import ast.variable.{InitVariableDecl, EmptyVariableDecl}
-import ast.role.Role
 import collection.mutable.Map
+import ast.role._
 
 /**
  *  Object containing some methods for checking a CPSProgram statically.
@@ -214,23 +214,34 @@ object CPSChecks {
     check(cst.contexts)
   }
 
+  private def getRoles(c: List[Context]): Map[String, Role] = {
+    var l = Map[String, Role]()
+    c.foreach(e => {
+      e.roles.foreach(r => {
+        l(r.name) = r
+      })
+      l = l ++ getRoles(e.inner)
+    })
+    l
+  }
+
+  private def getConstraints(c: List[Context]): List[RoleConstraint] = {
+    var l = List[RoleConstraint]()
+    c.foreach(e => {
+      e.constraints.foreach(r => {
+        l = r :: l
+      })
+      l = l ++ getConstraints(e.inner)
+    })
+    l
+  }
+
   /**
    * Check if all role definitions are well formed, hence no cyclic playedBy definitions.
    *
    * @param cst: CPSProgram to check
    */
   def checkRoles(cst: CPSProgram) {
-    def getRoles(c: List[Context]): Map[String, Role] = {
-      var l = Map[String, Role]()
-      c.foreach(e => {
-        e.roles.foreach(r => {
-          l(r.name) = r
-        })
-        l = l ++ getRoles(e.inner)
-      })
-      l
-    }
-
     // collect all roles
     val rl = getRoles(cst.contexts)
     var pl = List[String]()
@@ -263,9 +274,45 @@ object CPSChecks {
    * @param cst: CPSProgram to check
    */
   def checkConstrains(cst: CPSProgram) {
-    // the same role name before and after the constraints is not valid
-    // role A cant imply role B if it is prohibited somewhere else
-    // role A cant be equivalent to role B if it is prohibited somewhere else
+    // collect all roles
+    val rl = getRoles(cst.contexts)
+    // every role in every constraint needs to be actually defined
+    // so we first collect all roles from all constraints
+    val cstrs = getConstraints(cst.contexts)
+    cstrs.foreach(e => {
+      if (!rl.contains(e.source)) {
+        throw new InvalidConstraintException("Role '" + e.source + "' from constraint '" + e + "' is not defined!")
+      }
+      if (!rl.contains(e.target)) {
+        throw new InvalidConstraintException("Role '" + e.target + "' from constraint '" + e + "' is not defined!")
+      }
+      // the same role name before and after the constraints is not valid
+      if (e.source.equals(e.target)) {
+        throw new InvalidConstraintException("Constraint '" + e + "' is invalid. Same role for source and target are not allowed!")
+      }
+
+      e match {
+        // role A cant imply role B if it is prohibited somewhere else
+        case x: ImplicationConstraint => {
+          val pc1 = ProhibitionConstraint(x.source, x.target)
+          val pc2 = ProhibitionConstraint(x.target, x.source)
+          if (cstrs.contains(pc1))
+            throw new InvalidConstraintException("Role '" + x.source + "' can not imply role '" + x.target + "' if it is prohibited in constraint '" + pc1 + "'!")
+          if (cstrs.contains(pc2))
+            throw new InvalidConstraintException("Role '" + x.source + "' can not imply role '" + x.target + "' if it is prohibited in constraint '" + pc2 + "'!")
+        }
+        // role A cant be equivalent to role B if it is prohibited somewhere else
+        case x: EquivalenceConstraint => {
+          val pc1 = ProhibitionConstraint(x.source, x.target)
+          val pc2 = ProhibitionConstraint(x.target, x.source)
+          if (cstrs.contains(pc1))
+            throw new InvalidConstraintException("Role '" + x.source + "' can not be equivalent to role '" + x.target + "' if it is prohibited in constraint '" + pc1 + "'!")
+          if (cstrs.contains(pc2))
+            throw new InvalidConstraintException("Role '" + x.source + "' can not be equivalent to role '" + x.target + "' if it is prohibited in constraint '" + pc2 + "'!")
+        }
+        case _ => // can be ignored
+      }
+    })
   }
 
   /**
