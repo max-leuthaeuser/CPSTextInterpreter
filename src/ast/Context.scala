@@ -22,31 +22,31 @@ import rule.ActivationRule
 import variable.{InitVariableDecl, EmptyVariableDecl, VariableDecl}
 
 object Context {
-  def build(name: String, contents: List[ScalaObject], activation: ActivationRule): Context = {
-    var inner: List[Context] = Nil
-    var variables: List[VariableDecl] = Nil
-    var roles: List[Role] = Nil
-    var constraints: List[RoleConstraint] = Nil
+  def build(name: String, contents: List[ScalaObject], activations: List[ActivationRule]): Context = {
+    var inner = List[Context]()
+    var variables = List[VariableDecl]()
+    var roles = List[Role]()
+    var constraints = List[RoleConstraint]()
 
     contents.foreach(_ match {
-      case e:Context => inner = e.asInstanceOf[Context] :: inner
-      case e:Role => roles = e.asInstanceOf[Role] :: roles
-      case e:EmptyVariableDecl => variables = e.asInstanceOf[EmptyVariableDecl] :: variables
-      case e:InitVariableDecl => variables = e.asInstanceOf[InitVariableDecl] :: variables
-      case e:EquivalenceConstraint => constraints = e.asInstanceOf[EquivalenceConstraint] :: constraints
-      case e:ImplicationConstraint => constraints = e.asInstanceOf[ImplicationConstraint] :: constraints
-      case e:ProhibitionConstraint => constraints = e.asInstanceOf[ProhibitionConstraint] :: constraints
+      case e: Context => inner = e.asInstanceOf[Context] :: inner
+      case e: Role => roles = e.asInstanceOf[Role] :: roles
+      case e: EmptyVariableDecl => variables = e.asInstanceOf[EmptyVariableDecl] :: variables
+      case e: InitVariableDecl => variables = e.asInstanceOf[InitVariableDecl] :: variables
+      case e: EquivalenceConstraint => constraints = e.asInstanceOf[EquivalenceConstraint] :: constraints
+      case e: ImplicationConstraint => constraints = e.asInstanceOf[ImplicationConstraint] :: constraints
+      case e: ProhibitionConstraint => constraints = e.asInstanceOf[ProhibitionConstraint] :: constraints
       case e => throw new Exception("Unexpected type: " + e.getClass)
     })
 
-    Context(name, inner, variables, activation, roles, constraints)
+    Context(name, inner, variables, activations, roles, constraints)
   }
 }
 
 case class Context(name: String,
                    inner: List[Context],
                    variables: List[VariableDecl],
-                   activation: ActivationRule,
+                   activations: List[ActivationRule],
                    roles: List[Role],
                    constraints: List[RoleConstraint]) {
 
@@ -57,7 +57,7 @@ case class Context(name: String,
     })
 
     var v = ""
-    var a = ident + "\t" + activation.prettyPrint(identLevel) + "\n"
+    var a = activations.map(_.prettyPrint(identLevel)).mkString(ident + "\t", "\n\n" + ident + "\t", "\n")
     if (!(constraints.isEmpty && roles.isEmpty && inner.isEmpty)) a += "\n"
 
     var c = ""

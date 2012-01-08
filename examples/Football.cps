@@ -7,7 +7,7 @@ context Football {
 	} when { bla() && foo() } with bindings {
 		a -> SomeRole; b -> OtherRole;
 	}
-	
+
 	FieldPlayer prohibits Keeper;
 	
 	role FieldPlayer playedBy Hans {
@@ -46,6 +46,12 @@ context Football {
 			r -> Reciever;
 			s -> Sender;
 		}
+
+        activate for {
+            Nao a; Nao b;
+        } when { !other() } with bindings {
+            a -> AnotherRole; b -> SomeOtherRole;
+        }
 		
 		role Sender playedBy Chuck {
 			behavior {

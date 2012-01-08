@@ -179,36 +179,38 @@ object CPSChecks {
   def checkBindings(cst: CPSProgram) {
     def check(c: List[Context]) {
       c.foreach(co => {
-        var v = List[String]()
-        var b = List[String]()
+        co.activations.foreach(ac => {
+          var v = List[String]()
+          var b = List[String]()
 
-        co.activation.activateFor.foreach(va => {
-          if (v.contains((va.variableName)))
-            throw new InvalidActivationRuleException("[Context '" + co.name + "'] Activation rule variable '" + va.variableName + "' is already defined.")
-          else
-            v = va.variableName :: v
+          ac.activateFor.foreach(va => {
+            if (v.contains((va.variableName)))
+              throw new InvalidActivationRuleException("[Context '" + co.name + "'] Activation rule variable '" + va.variableName + "' is already defined.")
+            else
+              v = va.variableName :: v
+          })
+          ac.bindings.foreach(vb => {
+            if (b.contains((vb.variableName)))
+              throw new InvalidActivationRuleException("[Context '" + co.name + "'] Activation rule variable '" + vb.variableName + "' is already defined.")
+            else
+              b = vb.variableName :: b
+          })
+
+          if (v.length != b.length)
+            throw new InvalidActivationRuleException("[Context '" + co.name + "'] It seems that not every activation rule variable is bound to a role or visa versa.")
+
+          v.foreach(va => {
+            if (!b.contains(va))
+              throw new InvalidActivationRuleException("[Context '" + co.name + "'] Activation rule variable '" + va + "' is not bound to any role.")
+          })
+
+          b.foreach(vb => {
+            if (!v.contains(vb))
+              throw new InvalidActivationRuleException("[Context '" + co.name + "'] Activation rule binding '" + vb + "' is not defined by any variable.")
+          })
+
+          check(co.inner)
         })
-        co.activation.bindings.foreach(vb => {
-          if (b.contains((vb.variableName)))
-            throw new InvalidActivationRuleException("[Context '" + co.name + "'] Activation rule variable '" + vb.variableName + "' is already defined.")
-          else
-            b = vb.variableName :: b
-        })
-
-        if (v.length != b.length)
-          throw new InvalidActivationRuleException("[Context '" + co.name + "'] It seems that not every activation rule variable is bound to a role or visa versa.")
-
-        v.foreach(va => {
-          if (!b.contains(va))
-            throw new InvalidActivationRuleException("[Context '" + co.name + "'] Activation rule variable '" + va + "' is not bound to any role.")
-        })
-
-        b.foreach(vb => {
-          if (!v.contains(vb))
-            throw new InvalidActivationRuleException("[Context '" + co.name + "'] Activation rule binding '" + vb + "' is not defined by any variable.")
-        })
-
-        check(co.inner)
       })
     }
     check(cst.contexts)

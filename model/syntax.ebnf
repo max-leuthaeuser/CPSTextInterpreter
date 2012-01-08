@@ -12,7 +12,7 @@ Port ::= Digit {Digit}
 Collaborations ::= Collaboration {Collaboration}
 Collaboration ::= "context" Name
 					"{"
-						{ [VariableDecls | Collaboration | Roles | Constraints | ActivationRule] }
+						{ [VariableDecls | Collaboration | Roles | Constraints | ActivationRules ] }
 					"}"
 Variable ::= String
 VariableDecls ::= VariableDecl ";" {VariableDecl ";"}
@@ -23,6 +23,7 @@ Type ::= String
 Value ::= String
 Constraints ::= Constraint ";" {Contraint ";"}
 Constraint ::= RoleName ["equals" | "implies" | "prohibits"] RoleName
+ActivationRules ::= ActivationRule {ActivationRule}
 ActivationRule ::= "activate for"
 					"{"
 						RoleName Variable ";" {RoleName Variable ";"}

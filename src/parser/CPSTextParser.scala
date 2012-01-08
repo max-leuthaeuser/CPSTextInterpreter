@@ -96,7 +96,7 @@ object CPSTextParser extends JavaTokenParsers {
     case "activate for {" ~ av ~ "} when {" ~ c ~ "} with bindings {" ~ ab ~ "}" => ActivationRule(av, c, ab)
   }
 
-  def context: Parser[Context] = "context" ~ ident ~ "{" ~ activationRule ~ contextContent ~ "}" ^^ {
+  def context: Parser[Context] = "context" ~ ident ~ "{" ~ rep1(activationRule) ~ contextContent ~ "}" ^^ {
     case "context" ~ n ~ "{" ~ a ~ c ~ "}" => Context.build(n, c, a)
   }
 
