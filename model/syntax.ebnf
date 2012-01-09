@@ -1,6 +1,8 @@
 ﻿* NaoText Syntax Definition *
 
-Program ::= Robots Collaborations
+Program ::= [Imports] Robots Collaborations
+Imports ::= "import {" ImportItems "}"
+ImportItems ::= String ";" {String ";"}
 Robots ::= Robot ";" {Robot ";"}
 Robot ::= CPS Name "IP" Ip "PORT" Port
 CPS ::= ("Nao" | "Mindstorm")

@@ -36,6 +36,10 @@ class ParserUnitTests extends FunSuite {
     // cpsprogram
   }
 
+  test("Testing imports parser") {
+    // imports
+  }
+
   test("Testing robots parser") {
     // robots
   }

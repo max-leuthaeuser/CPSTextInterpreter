@@ -37,8 +37,16 @@ object CPSTextParser extends JavaTokenParsers {
   // ignore whitespaces and all c-style comments
   protected override val whiteSpace = """(\s|//.*|(?m)/\*(\*(?!/)|[^*])*\*/)+""".r
 
-  def cpsprogram: Parser[CPSProgram] = robots ~ contexts ^^ {
-    case robots ~ contexts => CPSProgram(robots, contexts)
+  def cpsprogram: Parser[CPSProgram] = imports ~ robots ~ contexts ^^ {
+    case imports ~ robots ~ contexts => CPSProgram(imports, robots, contexts)
+  }
+
+  def imports: Parser[List[String]] = opt("import {" ~> rep1(importitem) <~ "}") ^^ {
+    case l => l.getOrElse(List[String]())
+  }
+
+  def importitem: Parser[String] = """[a-zA-Z_\.\*]+""".r <~ ";" ^^ {
+    case s: String => s
   }
 
   def robots: Parser[List[CPS]] = rep(robot <~ ";")

@@ -1,3 +1,5 @@
+package interpreter
+
 /**
  * CPSTextInterpreter - parses and interprets the CPSText DSL.
  * Copyright (C) 2011 Max Leuthaeuser
@@ -15,12 +17,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package ast
-
-import cps.CPS
-
-case class CPSProgram(imports: List[String], robots: List[CPS], contexts: List[Context]) {
-  override def toString = {
-    robots.map(_.toString).mkString("\n") + "\n\n" + contexts.map(_.toString).mkString("\n")
-  }
-}
+case class DuplicateImportException(errorMsg: String) extends Exception(errorMsg)

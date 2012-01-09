@@ -333,4 +333,20 @@ object CPSChecks {
       }
     })
   }
+
+  /**
+   * Check if all import statements are wellformed, hence no statement appears more than once.
+   *
+   * @param cst: CPSProgram to check
+   */
+  def checkImports(cst: CPSProgram) {
+    var l = List[String]()
+    cst.imports.foreach(i => {
+      if (l.contains(i)) {
+        throw new DuplicateImportException("The import statement '" + i + "' can not be declared multiple times!")
+      } else {
+        l = i :: l
+      }
+    })
+  }
 }

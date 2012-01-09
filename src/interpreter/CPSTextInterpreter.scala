@@ -43,6 +43,8 @@ object CPSTextInterpreter {
       println("\t1) Checking names")
     }
     CPSChecks.checkNames(cst)
+    if (debug) println("\t2) Checking imports")
+    CPSChecks.checkImports(cst)
     if (debug) println("\t2) Checking role bindings")
     CPSChecks.checkBindings(cst)
     if (debug) println("\t3) Checking roles")
