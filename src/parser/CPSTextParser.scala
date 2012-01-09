@@ -100,8 +100,12 @@ object CPSTextParser extends JavaTokenParsers {
 
   def activationRuleBindings: Parser[List[ActivationRuleBinding]] = rep1(activationRuleBinding <~ ";")
 
-  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when {" ~ codeLine ~ "} with bindings {" ~ activationRuleBindings ~ "}" ^^ {
-    case "activate for {" ~ av ~ "} when {" ~ c ~ "} with bindings {" ~ ab ~ "}" => ActivationRule(av, c, ab)
+  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when" ~ interval ~ "{" ~ codeLine ~ "} with bindings {" ~ activationRuleBindings ~ "}" ^^ {
+    case "activate for {" ~ av ~ "} when" ~ i ~ "{" ~ c ~ "} with bindings {" ~ ab ~ "}" => ActivationRule(av, c, ab, i)
+  }
+
+  def interval: Parser[Int] = opt("(" ~> decimalNumber <~ ")") ^^ {
+    case s => s.getOrElse("100").toInt
   }
 
   def context: Parser[Context] = "context" ~ ident ~ "{" ~ rep1(activationRule) ~ contextContent ~ "}" ^^ {

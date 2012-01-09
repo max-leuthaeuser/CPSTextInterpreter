@@ -29,7 +29,7 @@ ActivationRules ::= ActivationRule {ActivationRule}
 ActivationRule ::= "activate for"
 					"{"
 						RoleName Variable ";" {RoleName Variable ";"}
-					"} when {" JavaCode "}"
+					"} when" ["(" Number ")"] "{" JavaCode "}"
 					"with bindings"
 					"{"
 						Variable "->" RoleName ";" {Variable "->" RoleName ";"}

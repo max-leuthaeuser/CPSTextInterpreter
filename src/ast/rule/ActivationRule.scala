@@ -17,7 +17,7 @@
 
 package ast.rule
 
-case class ActivationRule(activateFor: List[ActivationRuleVariable], when: String, bindings: List[ActivationRuleBinding]) {
+case class ActivationRule(activateFor: List[ActivationRuleVariable], when: String, bindings: List[ActivationRuleBinding], interval: Int = 100) {
   def prettyPrint(identLevel: Int): String = {
     var ident = ""
     (1 to identLevel).foreach(e => {
@@ -26,7 +26,7 @@ case class ActivationRule(activateFor: List[ActivationRuleVariable], when: Strin
 
     "activate for {\n" +
       activateFor.map(_.toString).mkString("\t\t" + ident, "\n\t\t" + ident, "\n\t" + ident) +
-      "when { " + when + " } with bindings {\n" +
+      "when(" + interval + ") { " + when + " } with bindings {\n" +
       bindings.map(_.toString).mkString("\t\t" + ident, "\n\t\t" + ident, "\n\t" + ident) + "}"
   }
 

@@ -11,7 +11,7 @@ Mindstorm Hans IP 192.168.1.1 PORT 8090;
 context Football {
 	activate for {
 		Nao a; Nao b;
-	} when { bla() && foo() } with bindings {
+	} when(200) { bla() && foo() } with bindings {
 		a -> SomeRole; b -> OtherRole;
 	}
 
