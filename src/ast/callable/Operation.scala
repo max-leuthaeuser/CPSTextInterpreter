@@ -27,14 +27,9 @@ case class Operation(name: String, typ: String, body: String) extends Callable {
     var b = ""
     if (body.matches("\\s*"))
       b = " }"
-    else {
-      b = body.replaceAll("\n", "\n\t\t\t" + ident)
-      if (b.length >= 3)
-        b = b.subSequence(0, (b.length - 3 - identLevel)).toString
-      b = "\n\t\t\t" + ident + b + "\t\t" + ident + "}"
-    }
-
-    typ + " " + name + "() {" + b
+    else
+      b = body + "\n\t\t" + ident + "}"
+    typ + " " + name + "() {\n\t\t\t" + ident + b
   }
 
   override def toString = prettyPrint(0)

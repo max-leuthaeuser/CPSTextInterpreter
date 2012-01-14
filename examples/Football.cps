@@ -28,9 +28,13 @@ context Football {
 	
 	role Keeper playedBy Chuck {
 		behavior {
-			while(true) watchTheGoal()
+			while(true) {
+			    watchTheGoal()
+			    bla()
+			    foo()
+			    if(true) { print() }
+			}
 		}
-		
 
 		void watchTheBall() {
 			// some code here
@@ -39,8 +43,10 @@ context Football {
 
 		val dis: Int = 10;
 
-		void anotherMedthod() {
-			bla();
+		void anotherMethod() {
+		    if(true) {
+			    bla();
+			}
 		}
 	}
 	

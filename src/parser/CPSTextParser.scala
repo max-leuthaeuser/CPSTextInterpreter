@@ -84,9 +84,21 @@ object CPSTextParser extends JavaTokenParsers {
     case line => line.trim
   }
 
-  def codeBlock: Parser[String] = """[^\{^\}]*""".r ^^ {
-    case lines => lines.split("\n").map(_.trim).mkString("\n")
+
+  def codeBlock: Parser[String] = "{" ~> expr <~ "}" | "{}"
+
+  def expr: Parser[String] = """[^\{^\}]*;{0,1}""".r ~ opt(parens) ^^ {
+    case a ~ b => {
+      val body = b.getOrElse("")
+      if (body.isEmpty) {
+        a
+      } else {
+        a + "{" + body + "}"
+      }
+    }
   }
+
+  def parens: Parser[String] = "{" ~> expr <~ "}"
 
   def activationRuleVariable: Parser[ActivationRuleVariable] = ident ~ ident ^^ {
     case r ~ n => ActivationRuleVariable(r, n)
@@ -146,12 +158,12 @@ object CPSTextParser extends JavaTokenParsers {
     | role
     | context)
 
-  def behavior: Parser[Behavior] = "behavior {" ~ codeBlock ~ "}" ^^ {
-    case "behavior {" ~ c ~ "}" => Behavior(c)
+  def behavior: Parser[Behavior] = "behavior " ~ codeBlock ^^ {
+    case "behavior " ~ c => Behavior(c)
   }
 
-  def method: Parser[Operation] = ident ~ ident ~ "() {" ~ codeBlock ~ "}" ^^ {
-    case t ~ n ~ "() {" ~ c ~ "}" => Operation(n, t, c)
+  def method: Parser[Operation] = ident ~ ident ~ "() " ~ codeBlock ^^ {
+    case t ~ n ~ "() " ~ c => Operation(n, t, c)
   }
 
   def methods: Parser[List[Operation]] = rep(method)
