@@ -17,10 +17,17 @@
 
 package interpreter
 
+import ast.CPSProgram
+
 /**
  * User: Max Leuthaeuser
- * Date: 18.01.12
+ * Date: 19.01.12
  */
-abstract class ASTElementInterpreter {
-  def apply[E <: AnyRef](s: EvaluableString, elem: E): EvaluableString
+class CPSProgramInterpreter extends ASTElementInterpreter {
+  override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
+    elem match {
+      case c: CPSProgram => s // TODO handle CPSProgram interpretation
+      case _ => throw new IllegalArgumentException("Unknown CPSProgram type!")
+    }
+  }
 }

@@ -27,8 +27,6 @@ import parser.CPSTextParser
  * @date 22.11.2011
  */
 object CPSTextInterpreter {
-  var debug = true
-
   /**
    * Interprets a CPSProgram representing a piece of CPSText code.
    *
@@ -38,20 +36,20 @@ object CPSTextInterpreter {
    */
   def interpretCST(cst: CPSProgram, db: Boolean = false): Boolean = {
     // Some static checks before starting the actual interpretation.
-    if (debug) {
+    if (db) {
       println("Running static checks...")
       println("\t1) Checking names")
     }
     CPSChecks.checkNames(cst)
-    if (debug) println("\t2) Checking imports")
+    if (db) println("\t2) Checking imports")
     CPSChecks.checkImports(cst)
-    if (debug) println("\t2) Checking role bindings")
+    if (db) println("\t2) Checking role bindings")
     CPSChecks.checkBindings(cst)
-    if (debug) println("\t3) Checking roles")
+    if (db) println("\t3) Checking roles")
     CPSChecks.checkRoles(cst)
-    if (debug) println("\t4) Checking CPS objects")
+    if (db) println("\t4) Checking CPS objects")
     CPSChecks.checkCPSObjects(cst)
-    if (debug) println("\t5) Checking role constrains")
+    if (db) println("\t5) Checking role constrains")
     CPSChecks.checkConstrains(cst)
 
     false
@@ -65,6 +63,6 @@ object CPSTextInterpreter {
    * @return true if parsing and interpretation was successful, false otherwise.
    */
   def interpretCode(code: String, db: Boolean = false): Boolean = {
-    interpretCST(CPSTextParser.parse(code), debug)
+    interpretCST(CPSTextParser.parse(code), db)
   }
 }

@@ -15,17 +15,27 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+import scala.io.Source._
 import interpreter.CPSTextInterpreter
 import parser.CPSTextParser
-import scala.io.Source._
 
-object Example {
+object Main {
+  private val help = """Usage:
+    -p filename : parses the given CPSText file
+    -i filename : parses and interpretes the given CPSText file
+    -h : show this help"""
+
   def main(args: Array[String]) {
     if (args.isEmpty) {
-      throw new Exception("You need to provide an file containing CPSText source code!")
+      println(help)
+      exit(1)
     }
-    val p = fromFile(args(0)).mkString
-    println(CPSTextParser.parse(p))
-    println(CPSTextInterpreter.interpretCode(p))
+    val option = args(0)
+    val code = fromFile(args.toList(1)).mkString
+    option match {
+      case "-p" => println(CPSTextParser.parse(code))
+      case "-i" => println(CPSTextInterpreter.interpretCode(code))
+      case _ => println(help)
+    }
   }
 }
