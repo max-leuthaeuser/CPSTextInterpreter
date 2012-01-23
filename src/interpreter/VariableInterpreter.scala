@@ -29,8 +29,8 @@ import ast.variable.VariableDeclAccessType._
 class VariableInterpreter extends ASTElementInterpreter {
   private def getAccessTypeModifier(t: VariableDeclAccessType): String = {
     t match {
-      case VariableDeclAccessType.modifiable => "var"
-      case VariableDeclAccessType.unmodifiable => "val"
+      case VariableDeclAccessType.modifiable => "var "
+      case VariableDeclAccessType.unmodifiable => "val "
       case _ => throw new IllegalArgumentException("Unknown VariableDeclAccessType!")
     }
   }
