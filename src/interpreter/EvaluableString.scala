@@ -24,13 +24,30 @@ package interpreter
  * @author Max Leuthaeuser
  * @date 18.01.2012
  */
-
 class EvaluableString {
   lazy private val wrapped = new StringBuilder()
 
-  def +(s: String) = wrapped.append(s)
+  /**
+   * Adds a String.
+   *
+   * @param s: the String to add
+   * @return this
+   */
+  def +(s: String): EvaluableString = {
+    wrapped.append(s)
+    this
+  }
 
-  def ++(l: List[String]) = l.map(wrapped.append(_))
+  /**
+   * Adds a List of Strings.
+   *
+   * @param l: the List of Strings to add
+   * @return this
+   */
+  def ++(l: List[String]): EvaluableString = {
+    l.map(wrapped.append(_))
+    this
+  }
 
   override def toString = wrapped.toString()
 }

@@ -17,17 +17,20 @@
 
 package interpreter
 
-import ast.callable.{Behavior, Operation}
+import ast.callable.{Callable, Behavior, Operation}
+
 
 /**
  * User: Max Leuthaeuser
  * Date: 18.01.12
  */
 class CallableInterpreter extends ASTElementInterpreter {
+  private def callableToString(c: Callable) = "def " + c.toString.replaceAll("\t", "")
+
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
-      case b: Behavior => s // TODO handle Behavior interpretation
-      case o: Operation => s // TODO handle Operation interpretation
+      case b: Behavior => s + callableToString(b)
+      case o: Operation => s + callableToString(o)
       case _ => throw new IllegalArgumentException("Unknown Callable type!")
     }
   }

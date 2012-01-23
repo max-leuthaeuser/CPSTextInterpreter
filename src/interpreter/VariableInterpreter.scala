@@ -18,16 +18,27 @@
 package interpreter
 
 import ast.variable.{EmptyVariableDecl, InitVariableDecl}
+import ast.variable.VariableDeclAccessType
+import ast.variable.VariableDeclAccessType._
+
 
 /**
  * User: Max Leuthaeuser
  * Date: 18.01.12
  */
 class VariableInterpreter extends ASTElementInterpreter {
+  private def getAccessTypeModifier(t: VariableDeclAccessType): String = {
+    t match {
+      case VariableDeclAccessType.modifiable => "var"
+      case VariableDeclAccessType.unmodifiable => "val"
+      case _ => throw new IllegalArgumentException("Unknown VariableDeclAccessType!")
+    }
+  }
+
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
-      case ev: EmptyVariableDecl => s // TODO handle EmptyVariableDecl interpretation
-      case iv: InitVariableDecl => s // TODO handle InitVariableDecl interpretation
+      case ev: EmptyVariableDecl => s + (getAccessTypeModifier(ev.accessType) + ev.name + ":" + ev.typ + "\n")
+      case iv: InitVariableDecl => s + (getAccessTypeModifier(iv.accessType) + iv.name + ":" + iv.typ + "=" + iv.value + "\n")
       case _ => throw new IllegalArgumentException("Unknown Variable type!")
     }
   }
