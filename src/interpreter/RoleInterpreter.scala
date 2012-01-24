@@ -26,7 +26,16 @@ import ast.role.{Role, EquivalenceConstraint, ImplicationConstraint, Prohibition
 class RoleInterpreter extends ASTElementInterpreter {
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
-      case r: Role => s // TODO handle Role interpretation
+      case r: Role => {
+        s + "trait " + r.name + " extends Role[" + r.playedBy + "] {\n"
+        // variables:
+        r.variables.map(new VariableInterpreter()(s, _))
+        // behavior:
+        new CallableInterpreter()(s, r.behavior)
+        // methods:
+        r.operations.map(new CallableInterpreter()(s, _))
+        s + "\n}\n"
+      }
       case ec: EquivalenceConstraint => s // TODO handle EquivalenceConstraint interpretation
       case ic: ImplicationConstraint => s // TODO handle ImplicationConstraint interpretation
       case pc: ProhibitionConstraint => s // TODO handle ProhibitionConstraint interpretation

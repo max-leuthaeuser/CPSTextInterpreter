@@ -25,7 +25,7 @@ import ast.callable.{Callable, Behavior, Operation}
  * Date: 18.01.12
  */
 class CallableInterpreter extends ASTElementInterpreter {
-  private def callableToString(c: Callable) = "def " + c.toString.replaceAll("\t", "")
+  private def callableToString(c: Callable) = "def " + c.toString.replaceAll("\t", "") + "\n"
 
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {

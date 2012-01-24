@@ -26,7 +26,32 @@ import ast.Context
 class ContextInterpreter extends ASTElementInterpreter {
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
-      case c: Context => s // TODO handle Context interpretation
+      case c: Context => {
+        /**
+         * TODO Context activation
+         * All contexts have to be stored somewhere and should be
+         * activated if the corresponding activation record is triggered.
+         */
+
+        s + ("trait " + c.name + " extends TransientCollaboration {\n")
+
+        // activation records
+        c.activations.map(new ActivationRuleInterpreter()(s, _))
+
+        // constraints
+        c.constraints.map(new RoleInterpreter()(s, _))
+
+        // variables
+        c.variables.map(new VariableInterpreter()(s, _))
+
+        // roles
+        c.roles.map(new RoleInterpreter()(s, _))
+
+        // inner contexts
+        c.inner.map(new ContextInterpreter()(s, _))
+
+        s + "\n}\n"
+      }
       case _ => throw new IllegalArgumentException("Unknown Context type!")
     }
   }

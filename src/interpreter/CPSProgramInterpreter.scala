@@ -26,7 +26,20 @@ import ast.CPSProgram
 class CPSProgramInterpreter extends ASTElementInterpreter {
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
-      case c: CPSProgram => s // TODO handle CPSProgram interpretation
+      case c: CPSProgram => {
+        // imports
+        s ++ c.imports.map(_ + "\n")
+
+        // cps
+        c.robots.map(new CPSTypeInterpreter()(s, _))
+
+        // contexts
+        c.contexts.map(new ContextInterpreter()(s, _))
+
+        // TODO handle control flow
+
+        s
+      } // TODO handle CPSProgram interpretation
       case _ => throw new IllegalArgumentException("Unknown CPSProgram type!")
     }
   }
