@@ -37,7 +37,7 @@ class VariableInterpreter extends ASTElementInterpreter {
 
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
-      case ev: EmptyVariableDecl => s + (getAccessTypeModifier(ev.accessType) + ev.name + ":" + ev.typ + "\n")
+      case ev: EmptyVariableDecl => s + (getAccessTypeModifier(ev.accessType) + ev.name + ":" + ev.typ + "=_\n")
       case iv: InitVariableDecl => s + (getAccessTypeModifier(iv.accessType) + iv.name + ":" + iv.typ + "=" + iv.value + "\n")
       case _ => throw new IllegalArgumentException("Unknown Variable type!")
     }

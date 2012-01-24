@@ -28,10 +28,13 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
     elem match {
       case c: CPSProgram => {
         // imports
-        s ++ c.imports.map(_ + "\n")
+        // some standard imports first, they are always needed
+        s + "import scalaroles.roles.TransientCollaboration\nimport scalaroles.roles.Basics._\nimport scalaroles.players.NaoRobot\nimport scalaroles.players.NaoRobot._\n"
+        s ++ c.imports.map("import " + _ + "\n") + "\n"
 
         // cps
         c.robots.map(new CPSTypeInterpreter()(s, _))
+        s + "\n"
 
         // contexts
         c.contexts.map(new ContextInterpreter()(s, _))

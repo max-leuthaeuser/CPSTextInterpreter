@@ -6,7 +6,7 @@ import {
 }
 
 Nao Chuck IP 192.234.1.22 PORT 8080;
-Mindstorm Hans IP 192.168.1.1 PORT 8090;
+Nao Hans IP 192.168.1.1 PORT 8090;
 
 context Football {
 	activate for {

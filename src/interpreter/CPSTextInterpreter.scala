@@ -52,6 +52,8 @@ object CPSTextInterpreter {
     if (db) println("\t5) Checking role constrains")
     CPSChecks.checkConstrains(cst)
 
+    // TODO start actual interpretation
+    println(new CPSProgramInterpreter()(new EvaluableString(), cst))
     false
   }
 

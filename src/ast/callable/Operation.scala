@@ -29,7 +29,13 @@ case class Operation(name: String, typ: String, body: String) extends Callable {
       b = " }"
     else
       b = body + "\n\t\t" + ident + "}"
-    name + "(): " + typ + " {\n\t\t\t" + ident + b
+
+    var t = ""
+    if (!typ.toLowerCase.equals("void")) {
+      t = ": " + typ
+    }
+
+    name + "()" + t + " {\n\t\t\t" + ident + b
   }
 
   override def toString = prettyPrint(0)
