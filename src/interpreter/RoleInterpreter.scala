@@ -27,13 +27,14 @@ class RoleInterpreter extends ASTElementInterpreter {
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
       case r: Role => {
-        s + "trait " + r.name + " extends Role[" + r.playedBy + "] {\n"
+        // TODO handle Actor act() method; role's behaviour method has to be called when the context the role belongs to gets activated
+        s + "trait " + r.name + " extends Role[" + r.playedBy + "] with Actor {\n"
         // variables:
-        r.variables.map(new VariableInterpreter()(s, _))
+        r.variables.foreach(new VariableInterpreter()(s, _))
         // behavior:
         new CallableInterpreter()(s, r.behavior)
         // methods:
-        r.operations.map(new CallableInterpreter()(s, _))
+        r.operations.foreach(new CallableInterpreter()(s, _))
         s + "\n}\n"
       }
       case ec: EquivalenceConstraint => s // TODO handle EquivalenceConstraint interpretation

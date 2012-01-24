@@ -45,7 +45,7 @@ class EvaluableString {
    * @return this
    */
   def ++(l: List[String]): EvaluableString = {
-    l.map(wrapped.append(_))
+    l.foreach(wrapped.append(_))
     this
   }
 

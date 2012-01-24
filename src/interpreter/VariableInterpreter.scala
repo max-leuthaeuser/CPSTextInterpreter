@@ -29,8 +29,10 @@ import ast.variable.VariableDeclAccessType._
 class VariableInterpreter extends ASTElementInterpreter {
   private def getAccessTypeModifier(t: VariableDeclAccessType): String = {
     t match {
-      case VariableDeclAccessType.modifiable => "var "
-      case VariableDeclAccessType.unmodifiable => "val "
+      // we using the volatile annotation by default here because
+      // concurrent access from several contexts might be possible
+      case VariableDeclAccessType.modifiable => "@volatile var "
+      case VariableDeclAccessType.unmodifiable => "@volatile val "
       case _ => throw new IllegalArgumentException("Unknown VariableDeclAccessType!")
     }
   }

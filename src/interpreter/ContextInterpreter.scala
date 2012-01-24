@@ -36,19 +36,19 @@ class ContextInterpreter extends ASTElementInterpreter {
         s + ("trait " + c.name + " extends TransientCollaboration {\n")
 
         // activation records
-        c.activations.map(new ActivationRuleInterpreter()(s, _))
+        c.activations.foreach(new ActivationRuleInterpreter()(s, _))
 
         // constraints
-        c.constraints.map(new RoleInterpreter()(s, _))
+        c.constraints.foreach(new RoleInterpreter()(s, _))
 
         // variables
-        c.variables.map(new VariableInterpreter()(s, _))
+        c.variables.foreach(new VariableInterpreter()(s, _))
 
         // roles
-        c.roles.map(new RoleInterpreter()(s, _))
+        c.roles.foreach(new RoleInterpreter()(s, _))
 
         // inner contexts
-        c.inner.map(new ContextInterpreter()(s, _))
+        c.inner.foreach(new ContextInterpreter()(s, _))
 
         s + "\n}\n"
       }
