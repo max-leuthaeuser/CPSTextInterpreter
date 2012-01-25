@@ -24,11 +24,18 @@ import ast.role.{Role, EquivalenceConstraint, ImplicationConstraint, Prohibition
  * Date: 18.01.12
  */
 class RoleInterpreter extends ASTElementInterpreter {
+  private def buildActMethod(name: String) = {
+    "def act() { loop { react { case " + name + " => behavior() } } }\n"
+  }
+
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
       case r: Role => {
-        // TODO handle Actor act() method; role's behaviour method has to be called when the context the role belongs to gets activated
         s + "trait " + r.name + " extends Role[" + r.playedBy + "] with Actor {\n"
+        // act method to start the behaviour method when the context the role belongs to gets activated
+        // TODO pass the token if context gets activated
+        s + buildActMethod(r.name + "_token")
+
         // variables:
         r.variables.foreach(new VariableInterpreter()(s, _))
         // behavior:
