@@ -21,6 +21,7 @@ import ast.{CPSProgram, Context}
 import ast.variable.{InitVariableDecl, EmptyVariableDecl}
 import collection.mutable.Map
 import ast.role._
+import exceptions._
 
 /**
  *  Object containing some methods for checking a CPSProgram statically.

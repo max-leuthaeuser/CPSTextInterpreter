@@ -1,3 +1,5 @@
+package interpreter.exceptions
+
 /**
  * CPSTextInterpreter - parses and interprets the CPSText DSL.
  * Copyright (C) 2011 Max Leuthaeuser
@@ -15,6 +17,4 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package interpreter
-
-case class InvalidConstraintException(errorMsg: String) extends Exception(errorMsg)
+case class DuplicateNameException(errorMsg: String) extends Exception(errorMsg)

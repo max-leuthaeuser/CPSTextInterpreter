@@ -1,4 +1,4 @@
-package interpreter
+package interpreter.exceptions
 
 /**
  * CPSTextInterpreter - parses and interprets the CPSText DSL.
@@ -17,4 +17,4 @@ package interpreter
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-case class DuplicateImportException(errorMsg: String) extends Exception(errorMsg)
+case class InvalidPlayedByException(errorMsg: String) extends Exception(errorMsg)

@@ -1,3 +1,5 @@
+package interpreter.exceptions
+
 /**
  * CPSTextInterpreter - parses and interprets the CPSText DSL.
  * Copyright (C) 2011 Max Leuthaeuser
@@ -14,7 +16,5 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package interpreter
 
 case class DuplicateCPSDeviceException(errorMsg: String) extends Exception(errorMsg)

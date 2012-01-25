@@ -18,7 +18,6 @@
 package interpreter
 
 import ast.cps.{CPS, CPSType}
-import scalaroles.players.NaoRobot._
 
 /**
  * User: Max Leuthaeuser
@@ -29,7 +28,7 @@ class CPSTypeInterpreter extends ASTElementInterpreter {
     elem match {
       case c: CPS => {
         c.cpsType match {
-          case CPSType.Nao => s + ("val nao_" + c.name + "=\"" + c.name + "\" IP \"" + c.ip + "\" PORT " + c.port + "\n")
+          case CPSType.Nao => s + ("@volatile val " + c.name + "=\"" + c.name + "\" IP \"" + c.ip + "\" PORT " + c.port + "\n")
           case CPSType.Mindstorm => throw new IllegalArgumentException("Interpretation for CPSType Mindstorm is not implemented yet.")
         }
       }
