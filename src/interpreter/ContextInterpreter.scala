@@ -18,12 +18,17 @@
 package interpreter
 
 import ast.Context
+import ast.role.Role
 
 /**
  * User: Max Leuthaeuser
  * Date: 18.01.12
  */
 class ContextInterpreter extends ASTElementInterpreter {
+  private def buildDoActivationMethod(r: List[Role]) = {
+    "def do_activate() {" + r.map(x => x.name + " ! " + "token_" + x.name).mkString("\n") + "}\n" // TODO handle role bindings
+  }
+
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
       case c: Context => {
@@ -34,6 +39,7 @@ class ContextInterpreter extends ASTElementInterpreter {
          */
 
         s + ("trait " + c.name + " extends TransientCollaboration {\n")
+        s + buildDoActivationMethod(c.roles)
 
         // activation records
         c.activations.foreach(new ActivationRuleInterpreter()(s, _))

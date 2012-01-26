@@ -31,6 +31,8 @@ class RoleInterpreter extends ASTElementInterpreter {
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
       case r: Role => {
+        s + ("case object token_" + r.name + "\n")
+
         s + ("var " + r.name + " = new role_" + r.name + " {}\n")
 
         s + "trait role_" + r.name + " extends Role[" + r.playedBy + "] with Actor {\n"
