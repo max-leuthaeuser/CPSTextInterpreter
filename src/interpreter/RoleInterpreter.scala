@@ -31,10 +31,12 @@ class RoleInterpreter extends ASTElementInterpreter {
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
       case r: Role => {
+        s + ("var " + r.name + " = new role_" + r.name + " {}")
+
         s + "trait role_" + r.name + " extends Role[" + r.playedBy + "] with Actor {\n"
         // act method to start the behaviour method when the context the role belongs to gets activated
-        // TODO pass the token if context gets activated
-        s + buildActMethod(r.name + "_token")
+        // TODO pass the token if context and the corresponding activation record gets activated
+        s + buildActMethod("token_" + r.name)
 
         // variables:
         r.variables.foreach(new VariableInterpreter()(s, _))
