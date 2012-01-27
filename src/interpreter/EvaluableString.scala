@@ -20,12 +20,20 @@ package interpreter
 /**
  * Represents an evaluable String that are generated from CPSText program.
  * It simply adopts a StringBuilder an adds helper methods.
+ * Additionally a field for storing all information for activation blocks is provided.
  *
  * @author Max Leuthaeuser
  * @date 18.01.2012
  */
 class EvaluableString {
   lazy private val wrapped = new StringBuilder()
+  private val activationBlocks = new scala.collection.mutable.LinkedList[String]()
+
+  def addActivation(s: String) {
+    activationBlocks :+ s
+  }
+
+  def getActivations = activationBlocks
 
   /**
    * Adds a String.

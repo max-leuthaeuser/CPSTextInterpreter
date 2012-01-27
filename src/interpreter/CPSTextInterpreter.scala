@@ -52,8 +52,14 @@ object CPSTextInterpreter {
     if (db) println("\t5) Checking role constrains")
     CPSChecks.checkConstrains(cst)
 
+    // build all the initial components
+    val s = new EvaluableString()
+    val interpreter = new ScalaInterpreter()
+    println(new CPSProgramInterpreter()(s, cst))
     // TODO start actual interpretation
-    println(new CPSProgramInterpreter()(new EvaluableString(), cst))
+    // interpreter ! new CPSProgramInterpreter().apply(s, cst)
+    // s.getActivations.foreach(x => interpreter != (x + ".start"))
+
     false
   }
 

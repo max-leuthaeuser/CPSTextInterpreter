@@ -19,14 +19,15 @@ package interpreter
 
 import ast.Context
 import ast.role.Role
+import ast.rule.ActivationRule
 
 /**
  * User: Max Leuthaeuser
  * Date: 18.01.12
  */
 class ContextInterpreter extends ASTElementInterpreter {
-  private def buildDoActivationMethod(r: List[Role]) = {
-    "def do_activate() {" + r.map(x => x.name + " ! " + "token_" + x.name).mkString("\n") + "}\n" // TODO handle role bindings
+  private def buildDoActivationMethod(a: ActivationRule, r: List[Role]) = {
+    "def do_activate_" + a.name + "() {" + r.map(x => x.name + " ! " + "token_" + x.name).mkString("\n") + "}\n" // TODO handle role bindings
   }
 
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
@@ -39,10 +40,11 @@ class ContextInterpreter extends ASTElementInterpreter {
          */
 
         s + ("trait " + c.name + " extends TransientCollaboration {\n")
-        s + buildDoActivationMethod(c.roles)
-
         // activation records
-        c.activations.foreach(new ActivationRuleInterpreter()(s, _))
+        c.activations.foreach(a => {
+          new ActivationRuleInterpreter()(s, (a, c.name))
+          s + buildDoActivationMethod(a, c.roles)
+        })
 
         // constraints
         c.constraints.foreach(new RoleInterpreter()(s, _))

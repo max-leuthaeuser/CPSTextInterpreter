@@ -33,4 +33,8 @@ case class ActivationRule(activateFor: List[ActivationRuleVariable], when: Strin
   override def toString = {
     prettyPrint(0)
   }
+
+  def name = {
+    hashCode().abs
+  }
 }

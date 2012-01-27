@@ -17,8 +17,7 @@
 
 package interpreter
 
-import ast.rule.{ActivationRuleBinding, ActivationRuleVariable, ActivationRule}
-
+import ast.rule.ActivationRule
 
 /**
  * User: Max Leuthaeuser
@@ -27,9 +26,21 @@ import ast.rule.{ActivationRuleBinding, ActivationRuleVariable, ActivationRule}
 class ActivationRuleInterpreter extends ASTElementInterpreter {
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
-      case ar: ActivationRule => s // TODO handle ActivationRule interpretation
-      case ab: ActivationRuleBinding => s // TODO handle ActivationRuleBinding interpretation
-      case av: ActivationRuleVariable => s // TODO handle ActivationRuleVariable interpretation
+      case ar: (ActivationRule, String) => {
+        // 1) build activation check method inside of a separate actor
+        val actorName = "context_activator_" + ar._1.name
+        val actorSleep = "Thread.sleep(" + ar._1.interval + ")\n"
+        s + ("val " + actorName.toLowerCase + " = new " + actorName + "()")
+        s + ("class " + actorName + " extends Actor {\ndef act() {\n")
+        s + actorSleep
+        s + ("while(!(" + ar._1.when + ")) {" + actorSleep + "} do_activate_" + ar._1.name + "()\n")
+        s + ("\n}\n")
+
+        // 2) add instance of this actor and pass its path + name to the EvaluableString
+        s.addActivation(ar._2 + actorName.toLowerCase)
+
+        s
+      }
       case _ => throw new IllegalArgumentException("Unknown ActivationRule type!")
     }
   }
