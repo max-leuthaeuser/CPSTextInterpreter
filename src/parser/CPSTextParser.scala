@@ -23,7 +23,7 @@ import ast.cps.CPSType._
 import ast.cps.{CPS, CPSType}
 import ast.{CPSProgram, Context}
 import ast.variable.{VariableDeclAccessType, EmptyVariableDecl, InitVariableDecl, VariableDecl}
-import ast.rule.{ActivationRuleBinding, ActivationRuleVariable, ActivationRule}
+import ast.rule.{ActivationRuleBinding, ActivationRuleVariable, ActivationRule, Settings}
 import ast.role._
 import ast.callable.{Behavior, Operation}
 
@@ -112,12 +112,26 @@ object CPSTextParser extends JavaTokenParsers {
 
   def activationRuleBindings: Parser[List[ActivationRuleBinding]] = rep1(activationRuleBinding <~ ";")
 
-  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when" ~ interval ~ "{" ~ codeLine ~ "} with bindings {" ~ activationRuleBindings ~ "}" ^^ {
-    case "activate for {" ~ av ~ "} when" ~ i ~ "{" ~ c ~ "} with bindings {" ~ ab ~ "}" => ActivationRule(av, c, ab, i)
+  def activationRule: Parser[ActivationRule] = "activate for {" ~ activationRuleVariables ~ "} when" ~ "{" ~ codeLine ~ "} with bindings {" ~ activationRuleBindings ~ "}" ~ settings ^^ {
+    case "activate for {" ~ av ~ "} when" ~ "{" ~ c ~ "} with bindings {" ~ ab ~ "}" ~ s => ActivationRule(av, c, ab, s)
   }
 
-  def interval: Parser[Int] = opt("(" ~> decimalNumber <~ ")") ^^ {
+  def settings: Parser[Settings] = "with settings {" ~> (settingA | settingB) <~ "}"
+
+  def settingA: Parser[Settings] = interval ~ timeout ^^ {
+    case i ~ t => Settings(i, t)
+  }
+
+  def settingB: Parser[Settings] = timeout ~ interval ^^ {
+    case t ~ i => Settings(i, t)
+  }
+
+  def interval: Parser[Int] = opt("interval " ~> decimalNumber <~ ";") ^^ {
     case s => s.getOrElse("100").toInt
+  }
+
+  def timeout: Parser[Int] = opt("timeout " ~> decimalNumber <~ ";") ^^ {
+    case s => s.getOrElse("0").toInt
   }
 
   def context: Parser[Context] = "context" ~ ident ~ "{" ~ rep1(activationRule) ~ contextContent ~ "}" ^^ {

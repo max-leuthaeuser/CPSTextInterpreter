@@ -29,11 +29,11 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
       case ar: (ActivationRule, String) => {
         // 1) build activation check method inside of a separate actor
         val actorName = "context_activator_" + ar._1.name
-        val actorSleep = "Thread.sleep(" + ar._1.interval + ")\n"
-        s + ("val " + actorName.toLowerCase + " = new " + actorName + "()")
+        s + ("val " + actorName.toLowerCase + " = new " + actorName + "()\n")
         s + ("class " + actorName + " extends Actor {\ndef act() {\n")
-        s + actorSleep
-        s + ("while(!(" + ar._1.when + ")) {" + actorSleep + "} do_activate_" + ar._1.name + "()\n")
+        if (ar._1.settings.timeout > 0)
+          s + ("Thread.sleep(" + ar._1.settings.timeout + ")\n")
+        s + ("while(!(" + ar._1.when + ")) {" + "Thread.sleep(" + ar._1.settings.interval + ")\n" + "} do_activate_" + ar._1.name + "()\n")
         s + ("\n}\n")
 
         // 2) add instance of this actor and pass its path + name to the EvaluableString

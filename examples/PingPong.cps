@@ -4,14 +4,21 @@ Nao Hans IP 192.168.130.2 PORT 8090;
 context PingPong {
 	activate for {
 		Nao Chuck; Nao Hans;
-	} when(500) { true /* start immediately */} with bindings {
+	} when { true /* start immediately */} with bindings {
 		Chuck -> Ping; Hans -> Pong;
-	}
+	} with settings {
+        interval 500;
+        // timeout can be left out, standard is 0
+    }
 
 	activate for {
         Nao Chuck; Nao Hans;
-    } when(10000) { true /* stop immediately after 10sec*/} with bindings {
+    } when { true } with bindings {
         Chuck -> Stop; Hans -> Stop;
+    } with settings {
+        interval 500;
+        /* stop immediately after 10sec */
+        timeout 10000;
     }
 
 	Ping prohibits Pong;
