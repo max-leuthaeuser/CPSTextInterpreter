@@ -37,7 +37,6 @@ class RoleInterpreter extends ASTElementInterpreter {
 
         s + "trait role_" + r.name + " extends Role[" + r.playedBy + "] with Actor {\n"
         // act method to start the behaviour method when the context the role belongs to gets activated
-        // TODO pass the token if context and the corresponding activation record gets activated
         s + buildActMethod("token_" + r.name)
 
         // variables:

@@ -1,6 +1,5 @@
 package scalaroles.examples.robotCollaboration
 
-import scalaroles.roles.Basics._
 import scalaroles.players.NaoRobot._
 
 object RobotCollaborationTestApp {
@@ -11,13 +10,15 @@ object RobotCollaborationTestApp {
     val hans = "Hans" IP "192.169.0.2"
 
     // chuck as goalkeeper
-    (chuck as game.goalkeeper).catchBallWithHands
+    (chuck -: game.goalkeeper).catchBallWithHands
     // now the same as fieldplayer
-    (chuck as game.fieldplayer).catchBallWithHands
+    (chuck -: game.fieldplayer).catchBallWithHands
 
 
     val pass = game.pass
-    (chuck as pass.sender).playAPass
-    (chuck as pass.receiver).playAPass
+    (chuck -: pass.sender).playAPass
+    (chuck -: pass.receiver).playAPass
+
+    ((chuck -: game.fieldplayer) -: game.goalkeeper).catchBallWithHands
   }
 }
