@@ -18,7 +18,7 @@
 package interpreter
 
 /**
- * Small adapter class which wraps around Twitters Eval 
+ * Small class which wraps around Twitters Eval
  * and does nothing else than adding some shortcut functions.
  * 
  * User: Max Leuthaeuser

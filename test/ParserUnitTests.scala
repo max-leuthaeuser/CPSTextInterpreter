@@ -52,11 +52,11 @@ class ParserUnitTests extends FunSuite {
     import ast.cps.CPSType
     import ast.cps.CPSType._
     val expResult: (CPSType, CPSType) = (CPSType.Nao, CPSType.Mindstorm)
-    assert(expResult._1 === ParserUtils.parse[CPSType](cpstype, "Nao"))
-    assert(expResult._2 === ParserUtils.parse[CPSType](cpstype, "Mindstorm"))
+    assert(expResult._1 === ParserUtils.parse[CPSType](cpsType, "Nao"))
+    assert(expResult._2 === ParserUtils.parse[CPSType](cpsType, "Mindstorm"))
 
     intercept[Exception] {
-      ParserUtils.parse[CPSType](cpstype, "ABC") // invalid robot type
+      ParserUtils.parse[CPSType](cpsType, "ABC") // invalid robot type
     }
   }
 

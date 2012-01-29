@@ -37,25 +37,23 @@ object CPSTextParser extends JavaTokenParsers {
   // ignore whitespaces and all c-style comments
   protected override val whiteSpace = """(\s|//.*|(?m)/\*(\*(?!/)|[^*])*\*/)+""".r
 
-  def cpsprogram: Parser[CPSProgram] = imports ~ robots ~ contexts ^^ {
-    case imports ~ robots ~ contexts => CPSProgram(imports, robots, contexts)
+  def cpsProgram: Parser[CPSProgram] = imports ~ robots ~ contexts ^^ {
+    case i ~ r ~ c => CPSProgram(i, r, c)
   }
 
-  def imports: Parser[List[String]] = opt("import {" ~> rep1(importitem) <~ "}") ^^ {
+  def imports: Parser[List[String]] = opt("import {" ~> rep1(importItem) <~ "}") ^^ {
     case l => l.getOrElse(List[String]())
   }
 
-  def importitem: Parser[String] = """[a-zA-Z_\.\*]+""".r <~ ";" ^^ {
-    case s: String => s
-  }
+  def importItem: Parser[String] = """[a-zA-Z_\.\*]+""".r <~ ";"
 
   def robots: Parser[List[CPS]] = rep(robot <~ ";")
 
-  def robot: Parser[CPS] = cpstype ~ ident ~ "IP" ~ ip ~ "PORT" ~ port ^^ {
+  def robot: Parser[CPS] = cpsType ~ ident ~ "IP" ~ ip ~ "PORT" ~ port ^^ {
     case t ~ n ~ "IP" ~ i ~ "PORT" ~ p => CPS(t, n, i, p)
   }
 
-  def cpstype: Parser[CPSType] = ("Nao" | "Mindstorm") ^^ {
+  def cpsType: Parser[CPSType] = ("Nao" | "Mindstorm") ^^ {
     case "Nao" => CPSType.Nao
     case "Mindstorm" => CPSType.Mindstorm
   }
@@ -83,7 +81,6 @@ object CPSTextParser extends JavaTokenParsers {
   def codeLine: Parser[String] = """[^\{^\}^;]*""".r ^^ {
     case line => line.trim
   }
-
 
   def codeBlock: Parser[String] = "{" ~> expr <~ "}" | "{}"
 
@@ -172,8 +169,8 @@ object CPSTextParser extends JavaTokenParsers {
     | role
     | context)
 
-  def behavior: Parser[Behavior] = "behavior " ~ codeBlock ^^ {
-    case "behavior " ~ c => Behavior(c)
+  def behavior: Parser[Behavior] = "behavior " ~> codeBlock ^^ {
+    case c => Behavior(c)
   }
 
   def method: Parser[Operation] = ident ~ ident ~ "() " ~ codeBlock ^^ {
@@ -209,7 +206,7 @@ object CPSTextParser extends JavaTokenParsers {
    * @return an instance of CPSProgram representing the concrete syntax tree for a given CPSText program.
    */
   def parse(p: String): CPSProgram = {
-    parseAll(cpsprogram, p) match {
+    parseAll(cpsProgram, p) match {
       case Success(r, _) => r.asInstanceOf[CPSProgram]
       case e => throw new Exception(e.toString)
     }
