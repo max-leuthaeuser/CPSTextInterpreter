@@ -31,10 +31,9 @@ object Main {
       exit(1)
     }
     val option = args(0)
-    val code = fromFile(args.toList(1)).mkString
     option match {
-      case "-p" => println(CPSTextParser.parse(code))
-      case "-i" => println(CPSTextInterpreter.interpretCode(code))
+      case "-p" => println(CPSTextParser.parse(fromFile(args.toList(1)).mkString))
+      case "-i" => println(CPSTextInterpreter.interpretCode(fromFile(args.toList(1)).mkString))
       case _ => println(help)
     }
   }

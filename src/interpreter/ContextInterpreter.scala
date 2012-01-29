@@ -30,6 +30,10 @@ class ContextInterpreter extends ASTElementInterpreter {
     "def do_activate_" + a.name + "() {" + r.map(x => x.name + " ! " + "token_" + x.name).mkString("\n") + "}\n" // TODO handle role bindings
   }
 
+  private def buildStartMethod(a: List[ActivationRule]) = {
+    "def start {" + a.map("context_activator_" + _.name + ".start").mkString("\n") + "}\n"
+  }
+
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
       case c: Context => {
@@ -39,6 +43,7 @@ class ContextInterpreter extends ASTElementInterpreter {
           new ActivationRuleInterpreter()(s, (a, c.name))
           s + buildDoActivationMethod(a, c.roles)
         })
+        s + buildStartMethod(c.activations)
 
         // constraints
         c.constraints.foreach(new RoleInterpreter()(s, _))

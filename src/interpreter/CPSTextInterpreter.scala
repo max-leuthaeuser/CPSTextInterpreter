@@ -58,7 +58,6 @@ object CPSTextInterpreter {
     println(new CPSProgramInterpreter()(s, cst))
     // TODO start actual interpretation
     // interpreter ! new CPSProgramInterpreter().apply(s, cst)
-    // s.getActivations.foreach(x => interpreter != (x + ".start"))
 
     false
   }

@@ -52,7 +52,6 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
         c.getRolePaths().foreach(x => {
           s += x + ".start"
         })
-
         s
       }
       case _ => throw new IllegalArgumentException("Unknown CPSProgram type!")

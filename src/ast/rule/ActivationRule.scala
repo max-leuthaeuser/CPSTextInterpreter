@@ -28,9 +28,9 @@ case class ActivationRule(activateFor: List[ActivationRuleVariable], when: Strin
 
     "activate for {\n" +
       activateFor.map(_.toString).mkString("\t\t" + ident, "\n\t\t" + ident, "\n\t" + ident) +
-      "when { " + when + " } with bindings {\n" +
-      bindings.map(_.toString).mkString("\t\t" + ident, "\n\t\t" + ident, "\n\t" + ident) + "}\n" + "\t\t" + ident +
-      "with settings {" + "\n\t" + ident + settings.interval + "\n\t" + ident + settings.timeout + "\n\t" + ident + "}"
+      "} when { " + when + " } with bindings {\n" +
+      bindings.map(_.toString).mkString("\t\t" + ident, "\n\t\t" + ident, "\n\t" + ident)
+    "} with settings {" + "\n\t\t" + ident + "interval " + settings.interval + "\n\t\t" + ident + "timeout " + settings.timeout + "\n\t" + ident + "}"
   }
 
   override def toString = {
