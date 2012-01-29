@@ -33,7 +33,7 @@ class ContextInterpreter extends ASTElementInterpreter {
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
       case c: Context => {
-        s + ("trait " + c.name + " extends TransientCollaboration {\n")
+        s + ("trait Context_" + c.name + " extends TransientCollaboration {\n")
         // activation records
         c.activations.foreach(a => {
           new ActivationRuleInterpreter()(s, (a, c.name))
@@ -48,7 +48,6 @@ class ContextInterpreter extends ASTElementInterpreter {
 
         // roles
         c.roles.foreach(new RoleInterpreter()(s, _))
-        // TODO roles need to get started (start())
 
         // inner contexts
         c.inner.foreach(new ContextInterpreter()(s, _))

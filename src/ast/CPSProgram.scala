@@ -20,6 +20,27 @@ package ast
 import cps.CPS
 
 case class CPSProgram(imports: List[String], robots: List[CPS], contexts: List[Context]) {
+  //some helper methods:
+  def getRolePaths(c: List[Context] = contexts): List[String] = {
+    var l = List[String]()
+    c.foreach(e => {
+      e.roles.foreach(r => {
+        l = ("context_" + e.name.toLowerCase + "." + r.name) :: l
+      })
+      l = l ++ getRolePaths(e.inner)
+    })
+    l
+  }
+
+  def getContextPaths(path: String = "", c: List[Context] = contexts): List[String] = {
+    var l = List[String]()
+    c.foreach(e => {
+      l = (path + "Context_" + e.name) :: l
+      l = l ++ getContextPaths("context_" + e.name.toLowerCase + ".", e.inner)
+    })
+    l
+  }
+
   override def toString = {
     robots.map(_.toString).mkString("\n") + "\n\n" + contexts.map(_.toString).mkString("\n")
   }

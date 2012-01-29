@@ -33,9 +33,9 @@ class RoleInterpreter extends ASTElementInterpreter {
       case r: Role => {
         s + ("case object token_" + r.name + "\n")
 
-        s + ("var " + r.name + " = new role_" + r.name + " {}\n")
+        s + ("var " + r.name + " = new Role_" + r.name + " {}\n")
 
-        s + "trait role_" + r.name + " extends Role[" + r.playedBy + "] with Actor {\n"
+        s + "trait Role_" + r.name + " extends Role[" + r.playedBy + "] with Actor {\n"
         // act method to start the behaviour method when the context the role belongs to gets activated
         s + buildActMethod("token_" + r.name)
 

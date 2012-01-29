@@ -27,13 +27,7 @@ package interpreter
  */
 class EvaluableString {
   lazy private val wrapped = new StringBuilder()
-  private val activationBlocks = new scala.collection.mutable.LinkedList[String]()
-
-  def addActivation(s: String) {
-    activationBlocks :+ s
-  }
-
-  def getActivations = activationBlocks
+  private val inPlace = new StringBuilder()
 
   /**
    * Adds a String.
@@ -47,6 +41,18 @@ class EvaluableString {
   }
 
   /**
+   * Adds a String for in place interpretation.
+   *
+   * @param s: the String to add
+   * @return this
+   */
+  def +=(s: String): EvaluableString = {
+    inPlace.append(s + ";")
+    this
+  }
+
+
+  /**
    * Adds a List of Strings.
    *
    * @param l: the List of Strings to add
@@ -57,5 +63,18 @@ class EvaluableString {
     this
   }
 
+  /**
+   * Adds a List of Strings for in place interpretation.
+   *
+   * @param l: the List of Strings to add
+   * @return this
+   */
+  def ++=(l: List[String]): EvaluableString = {
+    l.foreach(x => inPlace.append(x + ";"))
+    this
+  }
+
   override def toString = wrapped.toString()
+
+  def getInPlace = inPlace
 }

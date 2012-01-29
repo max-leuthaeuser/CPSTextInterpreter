@@ -39,10 +39,22 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
         // contexts
         c.contexts.foreach(new ContextInterpreter()(s, _))
 
-        // TODO handle control flow
+        // control flow, start contexts and roles
+        c.getContextPaths().foreach(x => {
+          var name = ""
+          if (x.contains("."))
+            name = x.substring(x.lastIndexOf(".") + 1).toLowerCase
+          else
+            name = x.toLowerCase
+          s += "val " + name + "= new " + x + " {}"
+          s += name + ".start"
+        })
+        c.getRolePaths().foreach(x => {
+          s += x + ".start"
+        })
 
         s
-      } // TODO handle CPSProgram interpretation
+      }
       case _ => throw new IllegalArgumentException("Unknown CPSProgram type!")
     }
   }
