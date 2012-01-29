@@ -27,7 +27,7 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
       case ar: (ActivationRule, String) => {
-        val actorName = "context_activator_" + ar._1.name
+        val actorName = "Context_Activator_" + ar._1.name
         s + ("val " + actorName.toLowerCase + " = new " + actorName + "()\n")
         s + ("class " + actorName + " extends Actor {\ndef act() {\n")
         if (ar._1.settings.timeout > 0)

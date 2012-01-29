@@ -42,7 +42,7 @@ object CPSTextParser extends JavaTokenParsers {
   }
 
   def imports: Parser[List[String]] = opt("import {" ~> rep1(importItem) <~ "}") ^^ {
-    case l => l.getOrElse(List[String]())
+    _.getOrElse(List[String]())
   }
 
   def importItem: Parser[String] = """[a-zA-Z_\.\*]+""".r <~ ";"
@@ -61,11 +61,11 @@ object CPSTextParser extends JavaTokenParsers {
   def ip: Parser[String] = ipv4Address | ipv6Address
 
   def ipv4Address: Parser[String] = """[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}""".r ^^ {
-    case s => InetAddress.getByName(s).toString.replace("/", "")
+    InetAddress.getByName(_).toString.replace("/", "")
   }
 
   def ipv6Address: Parser[String] = """[:%a-z0-9]+""".r ^^ {
-    case s => InetAddress.getByName(s).toString.replace("/", "")
+    InetAddress.getByName(_).toString.replace("/", "")
   }
 
   def port: Parser[Int] = decimalNumber ^^ {
@@ -79,7 +79,7 @@ object CPSTextParser extends JavaTokenParsers {
   def contexts: Parser[List[Context]] = rep1(context)
 
   def codeLine: Parser[String] = """[^\{^\}^;]*""".r ^^ {
-    case line => line.trim
+    _.trim
   }
 
   def codeBlock: Parser[String] = "{" ~> expr <~ "}" | "{}"
@@ -124,11 +124,11 @@ object CPSTextParser extends JavaTokenParsers {
   }
 
   def interval: Parser[Int] = opt("interval " ~> decimalNumber <~ ";") ^^ {
-    case s => s.getOrElse("100").toInt
+    _.getOrElse("100").toInt
   }
 
   def timeout: Parser[Int] = opt("timeout " ~> decimalNumber <~ ";") ^^ {
-    case s => s.getOrElse("0").toInt
+    _.getOrElse("0").toInt
   }
 
   def context: Parser[Context] = "context" ~ ident ~ "{" ~ rep1(activationRule) ~ contextContent ~ "}" ^^ {
@@ -136,7 +136,7 @@ object CPSTextParser extends JavaTokenParsers {
   }
 
   def variableValue: Parser[String] = opt("=" ~> codeLine) ^^ {
-    case c => c.getOrElse("")
+    _.getOrElse("")
   }
 
   def variableDecl: Parser[VariableDecl] = ("var" | "val") ~ ident ~ ":" ~ ident ~ variableValue ^^ {
@@ -149,19 +149,19 @@ object CPSTextParser extends JavaTokenParsers {
   def variableDecls: Parser[List[VariableDecl]] = rep(variableDecl <~ ";")
 
   def optVariableDecls: Parser[List[VariableDecl]] = opt(variableDecls) ^^ {
-    case l => l.getOrElse(List[VariableDecl]())
+    _.getOrElse(List[VariableDecl]())
   }
 
   def optRoles: Parser[List[Role]] = opt(roles) ^^ {
-    case l => l.getOrElse(List[Role]())
+    _.getOrElse(List[Role]())
   }
 
   def optContexts: Parser[List[Context]] = opt(contexts) ^^ {
-    case l => l.getOrElse(List[Context]())
+    _.getOrElse(List[Context]())
   }
 
   def optConstraints: Parser[List[RoleConstraint]] = opt(constraints) ^^ {
-    case l => l.getOrElse(List[RoleConstraint]())
+    _.getOrElse(List[RoleConstraint]())
   }
 
   def contextContent: Parser[List[ScalaObject]] = rep((variableDecl <~ ";")
@@ -170,7 +170,7 @@ object CPSTextParser extends JavaTokenParsers {
     | context)
 
   def behavior: Parser[Behavior] = "behavior " ~> codeBlock ^^ {
-    case c => Behavior(c)
+    Behavior(_)
   }
 
   def method: Parser[Operation] = ident ~ ident ~ "() " ~ codeBlock ^^ {
@@ -180,7 +180,7 @@ object CPSTextParser extends JavaTokenParsers {
   def methods: Parser[List[Operation]] = rep(method)
 
   def optMethods: Parser[List[Operation]] = opt(methods) ^^ {
-    case l => l.getOrElse(List[Operation]())
+    _.getOrElse(List[Operation]())
   }
 
   def role: Parser[Role] = "role" ~ ident ~ "playedBy" ~ ident ~ "{" ~ behavior ~ roleContent ~ "}" ^^ {
@@ -208,7 +208,7 @@ object CPSTextParser extends JavaTokenParsers {
   def parse(p: String): CPSProgram = {
     parseAll(cpsProgram, p) match {
       case Success(r, _) => r.asInstanceOf[CPSProgram]
-      case e => throw new Exception(e.toString)
+      case e => throw new Exception("Invalid CPSText source:\n" + e.toString)
     }
   }
 }
