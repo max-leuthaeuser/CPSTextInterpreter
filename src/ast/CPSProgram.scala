@@ -18,9 +18,21 @@
 package ast
 
 import cps.CPS
+import role.Role
 
 case class CPSProgram(imports: List[String], robots: List[CPS], contexts: List[Context]) {
   //some helper methods:
+  def getAllRoles(c: List[Context] = contexts): List[Role] = {
+    var l = List[Role]()
+    c.foreach(e => {
+      e.roles.foreach(r => {
+        l = r :: l
+      })
+      l = l ++ getAllRoles(e.inner)
+    })
+    l
+  }
+
   def getRolePaths(c: List[Context] = contexts): List[String] = {
     var l = List[String]()
     c.foreach(e => {

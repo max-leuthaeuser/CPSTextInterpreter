@@ -37,6 +37,10 @@ case class ActivationRule(activateFor: List[ActivationRuleVariable], when: Strin
     prettyPrint(0)
   }
 
+  def getBindingForVariable(variable: ActivationRuleVariable) = {
+    bindings.filter(_.variableName == variable.variableName)(0) // there cannot be more than one
+  }
+
   def name = {
     hashCode().abs
   }

@@ -19,15 +19,36 @@ package interpreter
 
 import ast.Context
 import ast.role.Role
-import ast.rule.ActivationRule
+import ast.rule.{ActivationRuleVariable, ActivationRule}
 
 /**
  * User: Max Leuthaeuser
  * Date: 18.01.12
  */
 class ContextInterpreter extends ASTElementInterpreter {
-  private def buildDoActivationMethod(a: ActivationRule, r: List[Role]) = {
-    "def do_activate_" + a.name + "() {" + r.map(x => x.name + " ! " + "token_" + x.name).mkString("\n") + "}\n" // TODO handle role bindings
+  private var initializedVariables = List[ActivationRuleVariable]()
+
+  // TODO Nao should be NaoRobot everywhere
+  // TODO handle roles that play roles
+  // TODO check constraints
+  private def buildDoActivationMethod(a: ActivationRule, innerRoles: List[Role], allRoles: List[Role]) = {
+    val globals = new StringBuilder()
+    val vars = new StringBuilder()
+    a.activateFor.foreach(x => {
+      if (!x.roleName.equals("Nao") && !initializedVariables.contains(x)) {
+        globals.append("var " + x.variableName + ": " + x.roleName + " = null\n")
+        vars.append(x.variableName + "= new " + x.roleName + "() :- "
+          + a.getBindingForVariable(x).roleName + "\n")
+        initializedVariables = x :: initializedVariables
+      } else {
+        vars.append(x.variableName + "=" + x.variableName + " :- "
+          + a.getBindingForVariable(x).roleName + "\n")
+      }
+    })
+
+    globals.toString() + "def do_activate_" + a.name + "() {\n" +
+      vars.toString() + "\n" +
+      innerRoles.map(x => x.name + " ! " + "token_" + x.name).mkString("\n") + "}\n"
   }
 
   private def buildStartMethod(a: List[ActivationRule]) = {
@@ -36,26 +57,26 @@ class ContextInterpreter extends ASTElementInterpreter {
 
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
-      case c: Context => {
-        s + ("trait Context_" + c.name + " extends TransientCollaboration {\n")
+      case c: (Context, List[Role]) => {
+        s + ("trait Context_" + c._1.name + " extends TransientCollaboration {\n")
         // activation records
-        c.activations.foreach(a => {
-          new ActivationRuleInterpreter()(s, (a, c.name))
-          s + buildDoActivationMethod(a, c.roles)
+        c._1.activations.foreach(a => {
+          new ActivationRuleInterpreter()(s, (a, c._1.name))
+          s + buildDoActivationMethod(a, c._1.roles, c._2)
         })
-        s + buildStartMethod(c.activations)
+        s + buildStartMethod(c._1.activations)
 
         // constraints
-        c.constraints.foreach(new RoleInterpreter()(s, _))
+        c._1.constraints.foreach(new RoleInterpreter()(s, _))
 
         // variables
-        c.variables.foreach(new VariableInterpreter()(s, _))
+        c._1.variables.foreach(new VariableInterpreter()(s, _))
 
         // roles
-        c.roles.foreach(new RoleInterpreter()(s, _))
+        c._1.roles.foreach(new RoleInterpreter()(s, _))
 
         // inner contexts
-        c.inner.foreach(new ContextInterpreter()(s, _))
+        c._1.inner.foreach(new ContextInterpreter()(s, _))
 
         s + "\n}\n"
       }

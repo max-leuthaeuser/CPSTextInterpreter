@@ -37,7 +37,8 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
         s + "\n"
 
         // contexts
-        c.contexts.foreach(new ContextInterpreter()(s, _))
+        val allRoles = c.getAllRoles()
+        c.contexts.foreach(x => new ContextInterpreter()(s, (x, allRoles)))
 
         // control flow, start contexts and roles
         c.getContextPaths().foreach(x => {
