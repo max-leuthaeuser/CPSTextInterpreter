@@ -28,21 +28,54 @@ import ast.rule.{ActivationRuleVariable, ActivationRule}
 class ContextInterpreter extends ASTElementInterpreter {
   private var initializedVariables = List[ActivationRuleVariable]()
 
-  // TODO Nao should be NaoRobot everywhere
-  // TODO handle roles that play roles
+  // TODO needs some refactoring here!
+  // TODO test with deeper nested role play role constructs
+  private def x(r: Role, roles: List[Role]): List[Role] = {
+    if (!roles.contains(r)) {
+      List[Role](r)
+    } else {
+      if (!r.playedBy.equals("NaoRobot")) {
+        val p = roles.filter(ro => r.playedBy.equals(ro.name))(0)
+        r :: x(p, roles)
+      } else {
+        List[Role](r)
+      }
+    }
+  }
+
+  // TODO needs some refactoring here!
+  private def getRolePlaysRoleDependencies(role: String, roles: List[Role]): String = {
+    val allRoles = roles.map(_.name)
+    if (allRoles.contains(roles.filter(ro => role.equals(ro.name))(0).playedBy)) {
+      var list = x(roles.filter(ro => role.equals(ro.name))(0), roles)
+      val head = list.head.name
+      list = list.reverse
+      val tail = list.slice(0, list.size - 1)
+      if (list.size == 1) {
+        " -: " + head
+      } else {
+        var result = "<<name>> as " + tail.head.name
+        list.tail.foreach(x => {
+          result = "(" + result + ") -: " + x.name
+        })
+        return result
+      }
+    }
+    return "<<name>> -: " + role
+  }
+
   // TODO check constraints
   private def buildDoActivationMethod(a: ActivationRule, innerRoles: List[Role], allRoles: List[Role]) = {
     val globals = new StringBuilder()
     val vars = new StringBuilder()
     a.activateFor.foreach(x => {
-      if (!x.roleName.equals("Nao") && !initializedVariables.contains(x)) {
+      if (!x.roleName.equals("NaoRobot") && !initializedVariables.contains(x)) {
+        // TODO need a solution for all types of CPS systems
         globals.append("var " + x.variableName + ": " + x.roleName + " = null\n")
-        vars.append(x.variableName + "= new " + x.roleName + "() :- "
-          + a.getBindingForVariable(x).roleName + "\n")
+        vars.append(x.variableName + "= " + getRolePlaysRoleDependencies(a.getBindingForVariable(x).roleName, allRoles).replace("<<name>>", "new " + x.roleName + "()") + "\n")
         initializedVariables = x :: initializedVariables
       } else {
-        vars.append(x.variableName + "=" + x.variableName + " :- "
-          + a.getBindingForVariable(x).roleName + "\n")
+        vars.append(x.variableName + "=" + getRolePlaysRoleDependencies(a.getBindingForVariable(x).roleName, allRoles).replace("<<name>>", x.variableName) + "\n")
       }
     })
 

@@ -26,9 +26,9 @@ object Role {
     var ops: List[Operation] = Nil
 
     content.foreach(_ match {
-      case e:EmptyVariableDecl => variables = e.asInstanceOf[EmptyVariableDecl] :: variables
-      case e:InitVariableDecl => variables = e.asInstanceOf[InitVariableDecl] :: variables
-      case e:Operation => ops = e.asInstanceOf[Operation] :: ops
+      case e: EmptyVariableDecl => variables = e.asInstanceOf[EmptyVariableDecl] :: variables
+      case e: InitVariableDecl => variables = e.asInstanceOf[InitVariableDecl] :: variables
+      case e: Operation => ops = e.asInstanceOf[Operation] :: ops
     })
 
     Role(name, behavior, variables, ops, playedBy)
@@ -55,4 +55,11 @@ case class Role(name: String, behavior: Behavior, variables: List[VariableDecl],
   }
 
   override def toString = prettyPrint(0)
+
+  override def equals(obj: Any) = {
+    obj match {
+      case r: Role => r.name.equals(name)
+      case _ => false
+    }
+  }
 }

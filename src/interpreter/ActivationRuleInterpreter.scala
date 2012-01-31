@@ -32,7 +32,7 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
         s + ("class " + actorName + " extends Actor {\ndef act() {\n")
         if (ar._1.settings.timeout > 0)
           s + ("Thread.sleep(" + ar._1.settings.timeout + ")\n")
-        s + ("while(!(" + ar._1.when + ")) {" + "Thread.sleep(" + ar._1.settings.interval + ")\n" + "} do_activate_" + ar._1.name + "()\n")
+        s + ("while(!(" + ar._1.when + ")) {" + "Thread.sleep(" + ar._1.settings.interval + ")\n" + "} do_activate_" + ar._1.name + "()}\n")
         s + ("\n}\n")
         s
       }

@@ -181,6 +181,13 @@ object CPSChecks {
     def check(c: List[Context]) {
       c.foreach(co => {
         co.activations.foreach(ac => {
+          // check if variables are no CPSystems
+          val cpsList = cst.robots.map(_.name)
+          ac.activateFor.foreach(va => {
+            if (cpsList.contains((va.variableName)))
+              throw new InvalidActivationRuleException("[Context '" + co.name + "'] Activation rule variable '" + va.variableName + "' must not be a CPSystem.")
+          })
+
           var v = List[String]()
           var b = List[String]()
 
@@ -245,6 +252,7 @@ object CPSChecks {
    * @param cst: CPSProgram to check
    */
   def checkRoles(cst: CPSProgram) {
+    // TODO need further tests
     // collect all roles
     val rl = getRoles(cst.contexts)
     var pl = List[String]()
@@ -265,7 +273,7 @@ object CPSChecks {
         throw new InvalidPlayedByException("Role '" + e._1 + "' cannot played by itself!")
 
       playedBy(e._2)
-      if (pl.contains(e._2.playedBy))
+      if (pl.size > 1 && pl.contains(e._2.playedBy))
         throw new InvalidPlayedByException("Cyclid playedBy definition found! [" + pl.reverse.mkString("", "->", "->") + e._2.playedBy + "]")
       pl = List[String]()
     })
