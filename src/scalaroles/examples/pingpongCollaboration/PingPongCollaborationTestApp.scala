@@ -1,4 +1,4 @@
-package scalaroles.examples.pingpongCollaboration.robotCollaboration
+package scalaroles.examples.pingpongCollaboration
 
 import scalaroles.players.NaoRobot._
 import scalaroles.roles.Basics._
@@ -12,7 +12,7 @@ object PingPongCollaborationTestApp {
     val x = ((chuck as pingpong.sound) -: pingpong.ping)
     x.play
 
-    val y = (chuck -: pingpong.stop)
+    val y = (x -: pingpong.stop)
     y.play
 
   }

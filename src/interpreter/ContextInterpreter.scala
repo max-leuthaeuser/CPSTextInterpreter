@@ -66,20 +66,21 @@ class ContextInterpreter extends ASTElementInterpreter {
 
   // TODO check constraints
   private def buildDoActivationMethod(a: ActivationRule, innerRoles: List[Role], allRoles: List[Role]) = {
-    val globals = new StringBuilder()
     val vars = new StringBuilder()
     a.activateFor.foreach(x => {
       if (!x.roleName.equals("NaoRobot") && !initializedVariables.contains(x)) {
         // TODO need a solution for all types of CPS systems
-        globals.append("var " + x.variableName + ": " + x.roleName + " = null\n")
-        vars.append(x.variableName + "= " + getRolePlaysRoleDependencies(a.getBindingForVariable(x).roleName, allRoles).replace("<<name>>", "new " + x.roleName + "()") + "\n")
+
+        // TODO how to make this public available?
+        vars.append("val " +
+          x.variableName + "=" + getRolePlaysRoleDependencies(a.getBindingForVariable(x).roleName, allRoles).replace("<<name>>", x.roleName) + "\n")
         initializedVariables = x :: initializedVariables
       } else {
-        vars.append(x.variableName + "=" + getRolePlaysRoleDependencies(a.getBindingForVariable(x).roleName, allRoles).replace("<<name>>", x.variableName) + "\n")
+        vars.append(x.variableName + "=" + getRolePlaysRoleDependencies(a.getBindingForVariable(x).roleName, allRoles).replace("<<name>>", x.roleName) + "\n")
       }
     })
 
-    globals.toString() + "def do_activate_" + a.name + "() {\n" +
+    "def do_activate_" + a.name + "() {\n" +
       vars.toString() + "\n" +
       innerRoles.map(x => x.name + " ! " + "token_" + x.name).mkString("\n") + "}\n"
   }
@@ -106,7 +107,7 @@ class ContextInterpreter extends ASTElementInterpreter {
         c._1.variables.foreach(new VariableInterpreter()(s, _))
 
         // roles
-        c._1.roles.foreach(new RoleInterpreter()(s, _))
+        c._1.roles.foreach(x => new RoleInterpreter()(s, (x, c._2)))
 
         // inner contexts
         c._1.inner.foreach(new ContextInterpreter()(s, _))

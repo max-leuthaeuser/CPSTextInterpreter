@@ -288,7 +288,7 @@ class Eval(target: Option[File]) {
       )
     )
 
-  private lazy val compiler = new StringCompiler(2, target)
+  lazy val compiler = new StringCompiler(2, target)
 
   /**
    * run preprocessors on our string, returning a String that is the processed source
@@ -605,7 +605,7 @@ class Eval(target: Option[File]) {
    * Dynamic scala compiler. Lots of (slow) state is created, so it may be advantageous to keep
    * around one of these and reuse it.
    */
-  private class StringCompiler(lineOffset: Int, targetDir: Option[File]) {
+  class StringCompiler(lineOffset: Int, targetDir: Option[File]) {
     val target = targetDir match {
       case Some(dir) => AbstractFile.getDirectory(dir)
       case None => new VirtualDirectory("(memory)", None)

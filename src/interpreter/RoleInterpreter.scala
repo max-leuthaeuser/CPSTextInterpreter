@@ -30,21 +30,24 @@ class RoleInterpreter extends ASTElementInterpreter {
 
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
     elem match {
-      case r: Role => {
-        s + ("case object token_" + r.name + "\n")
+      case r: (Role, List[Role]) => {
+        s + ("case object token_" + r._1.name + "\n")
 
-        s + ("var " + r.name + " = new Role_" + r.name + " {}\n")
-
-        s + "trait Role_" + r.name + " extends Role[" + r.playedBy + "] with Actor {\n"
+        s + ("var " + r._1.name + " = new Role_" + r._1.name + " {}\n")
+        
+        if (r._2.map(_.name).contains(r._1.playedBy))
+          s + "trait Role_" + r._1.name + " extends Role[Role_" + r._1.playedBy + "] with Actor {\n"
+        else
+          s + "trait Role_" + r._1.name + " extends Role[" + r._1.playedBy + "] with Actor {\n"
         // act method to start the behaviour method when the context the role belongs to gets activated
-        s + buildActMethod("token_" + r.name)
+        s + buildActMethod("token_" + r._1.name)
 
         // variables:
-        r.variables.foreach(new VariableInterpreter()(s, _))
+        r._1.variables.foreach(new VariableInterpreter()(s, _))
         // behavior:
-        new CallableInterpreter()(s, r.behavior)
+        new CallableInterpreter()(s, r._1.behavior)
         // methods:
-        r.operations.foreach(new CallableInterpreter()(s, _))
+        r._1.operations.foreach(new CallableInterpreter()(s, _))
         s + "\n}\n"
       }
       case ec: EquivalenceConstraint => s // TODO handle EquivalenceConstraint interpretation

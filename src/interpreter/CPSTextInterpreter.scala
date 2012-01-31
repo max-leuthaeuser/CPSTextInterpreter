@@ -55,10 +55,12 @@ object CPSTextInterpreter {
     // build all the initial components
     val s = new EvaluableString()
     val interpreter = new ScalaInterpreter()
-    println(new CPSProgramInterpreter()(s, cst))
+    println(new CPSProgramInterpreter()(new EvaluableString(), cst))
     // TODO start actual interpretation
-    // interpreter ! new CPSProgramInterpreter().apply(s, cst)
-
+    interpreter ! new CPSProgramInterpreter().apply(s, cst)
+    interpreter != s.getInPlace
+    println(s.getInPlace)
+    interpreter.reset()
     false
   }
 

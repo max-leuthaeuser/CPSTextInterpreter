@@ -3,7 +3,7 @@ Nao Hans IP 192.168.130.2 PORT 8090;
 
 context PingPong {
 	activate for {
-		NaoRobot chuck; NaoRobot hans;
+		Chuck chuck; Hans hans;
 	} when { true /* start immediately */} with bindings {
 		chuck -> Ping; hans -> Pong;
 	} with settings {
@@ -12,7 +12,7 @@ context PingPong {
     }
 
 	activate for {
-        NaoRobot chuck; NaoRobot hans;
+        Chuck chuck; Hans hans;
     } when { true } with bindings {
         chuck -> Stop; hans -> Stop;
     } with settings {
@@ -61,7 +61,7 @@ context PingPong {
 
     role Stop playedBy NaoRobot {
         behavior {
-            exit(0)
+            exit()
         }
     }
 }

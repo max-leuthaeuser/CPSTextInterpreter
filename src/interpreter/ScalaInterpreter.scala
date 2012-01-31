@@ -63,4 +63,8 @@ class ScalaInterpreter {
   def !=(s: EvaluableString) {
     eval.inPlace(s.toString)
   }
+
+  def reset() {
+    eval.compiler.reset()
+  }
 }

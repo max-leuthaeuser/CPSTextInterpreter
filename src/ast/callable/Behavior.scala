@@ -29,7 +29,7 @@ case class Behavior(body: String) extends Callable {
       b = " }"
     else
       b = body + "\n\t\t" + ident + "}"
-    "\tbehavior {\n\t\t\t" + ident + b
+    "\tbehavior() {\n\t\t\t" + ident + b
   }
 
   override def toString = prettyPrint(0)

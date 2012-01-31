@@ -1,4 +1,4 @@
-package scalaroles.examples.pingpongCollaboration.robotCollaboration
+package scalaroles.examples.pingpongCollaboration
 
 import scalaroles.players.NaoRobot
 import scalaroles.roles.TransientCollaboration
@@ -9,7 +9,7 @@ trait PingPong extends TransientCollaboration {
   val pong = new Pong {}
   val stop = new Stop {}
 
-  trait Sound extends Role[NaoRobot]
+
 
   trait Ping extends Role[Sound] {
     val sound = "ping"
@@ -26,6 +26,8 @@ trait PingPong extends TransientCollaboration {
       println(sound)
     }
   }
+
+  trait Sound extends Role[NaoRobot]
 
   trait Stop extends Role[NaoRobot] {
     def play {

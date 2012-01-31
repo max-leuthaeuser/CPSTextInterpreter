@@ -29,12 +29,13 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
       case c: CPSProgram => {
         // imports
         // some standard imports first, they are always needed
-        s + "import scala.actors.Actor\nimport scalaroles.roles.TransientCollaboration\nimport scalaroles.roles.Basics._\nimport scalaroles.players.NaoRobot\nimport scalaroles.players.NaoRobot._\n"
+        s + "import interpreter.ScalaInterpreter\nimport scala.actors.Actor\nimport scalaroles.roles.TransientCollaboration\nimport scalaroles.roles.Basics._\nimport scalaroles.players.NaoRobot\nimport scalaroles.players.NaoRobot._\n"
         s ++ c.imports.map("import " + _ + "\n") + "\n"
 
         // cps
+        s + "object CPS {"
         c.robots.foreach(new CPSTypeInterpreter()(s, _))
-        s + "\n"
+        s + "}\n import CPS._\n"
 
         // contexts
         val allRoles = c.getAllRoles()

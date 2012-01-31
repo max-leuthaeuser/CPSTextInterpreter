@@ -32,7 +32,7 @@ class VariableInterpreter extends ASTElementInterpreter {
       // we using the volatile annotation by default here because
       // concurrent access from several contexts might be possible
       case VariableDeclAccessType.modifiable => "@volatile var "
-      case VariableDeclAccessType.unmodifiable => "@volatile val "
+      case VariableDeclAccessType.unmodifiable => "val "
       case _ => throw new IllegalArgumentException("Unknown VariableDeclAccessType!")
     }
   }

@@ -28,7 +28,7 @@ class CPSTypeInterpreter extends ASTElementInterpreter {
     elem match {
       case c: CPS => {
         c.cpsType match {
-          case CPSType.Nao => s + ("@volatile val " + c.name + "=\"" + c.name + "\" IP \"" + c.ip + "\" PORT " + c.port + "\n")
+          case CPSType.Nao => s + ("@volatile var " + c.name + "=\"" + c.name + "\" IP \"" + c.ip + "\" PORT " + c.port + "\n")
           case CPSType.Mindstorm => throw new IllegalArgumentException("Interpretation for CPSType Mindstorm is not implemented yet.")
         }
       }
