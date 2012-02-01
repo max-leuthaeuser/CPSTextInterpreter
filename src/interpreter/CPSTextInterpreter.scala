@@ -19,6 +19,7 @@ package interpreter
 
 import ast.CPSProgram
 import parser.CPSTextParser
+import java.io.{InputStreamReader, BufferedReader, File, FileWriter}
 
 /**
  * Interpreter for CPSText containing static methods for interpreting CPSText code and programs.
@@ -39,6 +40,23 @@ object CPSTextInterpreter {
       }
     }
   }
+
+  /**
+  * Used for reading/writing to database, files, etc.
+  * Code From the book "Beginning Scala"
+  * http://www.amazon.com/Beginning-Scala-David-Pollak/dp/1430219890
+  */
+  private def using[A <: {def close() : Unit}, B](param: A)(f: A => B): B =
+    try {
+      f(param)
+    } finally {
+      param.close()
+    }
+
+  private def writeToFile(fileName: String, data: String) =
+    using(new FileWriter(fileName)) {
+      fileWriter => fileWriter.write(data)
+    }
 
   /**
    * Interprets a CPSProgram representing a piece of CPSText code.
@@ -64,18 +82,24 @@ object CPSTextInterpreter {
     if (db) println("\t5) Checking role constrains")
     CPSChecks.checkConstrains(cst)
 
-    // build all the initial components
-    val s = new CPSProgramInterpreter().apply(new EvaluableString(), cst)
-    val eval = new Eval()
-    // println(s)
-    // println(s.getInPlace)
+    println("# Starting")
     Time("Interpretation") {
-      eval.compile(s.toString)
-    }
+      val s = new EvaluableString()
+      s + ("object cpsprogram_Main {\n")
+      new CPSProgramInterpreter().apply(s, cst)
+      s + ("def main(args: Array[String]) { " + s.getInPlace + "} \n}")
 
+      writeToFile("cpsprogram_Main.scala", s.toString)
+      Runtime.getRuntime().exec("cmd.exe /C scalac -d temp -Xexperimental -classpath out/production/CPSTextInterpreter;lib/json.jar cpsprogram_Main.scala", null, new File(".")) // !
+    }
+    // TODO check classpath things here
     Time("Execution") {
-      eval.inPlace(s.getInPlace.toString())
-      true
+      val proc = Runtime.getRuntime().exec("cmd.exe /C scala -classpath temp;out/production/CPSTextInterpreter;lib/json.jar;. cpsprogram_Main", null, new File("."))
+      println("# Output: \n")
+      val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+      Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(println(_))
+      val exitCode = proc.waitFor()
+      println("# Terminated. Exit code: " + exitCode)
     }
   }
 

@@ -33,25 +33,33 @@ context PingPong {
 
 	role Sound playedBy NaoRobot {
     		behavior {}
+
+    		void greet() {
+    		    println("cu")
+    		}
     }
 
 	role Ping playedBy Sound {
 		behavior {
 		    println("ping")
-
 		}
 	}
 
 	role Pong playedBy Sound {
         behavior {
             println("pong")
+        }
 
+        void greet() {
+            println("bb")
         }
     }
 
     role Stop playedBy NaoRobot {
         behavior {
             println("aaand stop")
+            c1.greet
+            h1.greet
             System.exit(0)
         }
     }
