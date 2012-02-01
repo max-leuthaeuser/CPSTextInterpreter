@@ -33,7 +33,7 @@ object Main {
     val option = args(0)
     option match {
       case "-p" => println(CPSTextParser.parse(fromFile(args.toList(1)).mkString))
-      case "-i" => println(CPSTextInterpreter.interpretCode(fromFile(args.toList(1)).mkString))
+      case "-i" => CPSTextInterpreter.interpretCode(fromFile(args.toList(1)).mkString)
       case _ => println(help)
     }
   }

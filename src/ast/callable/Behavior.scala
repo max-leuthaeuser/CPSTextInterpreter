@@ -28,7 +28,7 @@ case class Behavior(body: String) extends Callable {
     if (body.matches("\\s*"))
       b = " }"
     else
-      b = body + "\n\t\t" + ident + "}"
+      b = body + "\n\t\t" + ident + "exit()}"
     "\tbehavior() {\n\t\t\t" + ident + b
   }
 

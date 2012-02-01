@@ -27,14 +27,26 @@ import parser.CPSTextParser
  * @date 22.11.2011
  */
 object CPSTextInterpreter {
+
+  private object Time {
+    def apply[T](name: String)(block: => T) {
+      val start = System.currentTimeMillis
+      try {
+        block
+      } finally {
+        val diff = System.currentTimeMillis - start
+        println("# " + name + " completed, time taken: " + diff + " ms (" + diff / 1000.0 + " s)")
+      }
+    }
+  }
+
   /**
    * Interprets a CPSProgram representing a piece of CPSText code.
    *
    * @param cst: the CPSProgram representing the concrete syntax tree
    * @param db: optional boolean flag, set to true if you want additional debug information printed to stdout. (predefined: false)
-   * @return true if interpretation was successful, will throw Exceptions if not.
    */
-  def interpretCST(cst: CPSProgram, db: Boolean = false): Boolean = {
+  def interpretCST(cst: CPSProgram, db: Boolean = false) {
     // Some static checks before starting the actual interpretation.
     if (db) {
       println("Running static checks...")
@@ -53,15 +65,18 @@ object CPSTextInterpreter {
     CPSChecks.checkConstrains(cst)
 
     // build all the initial components
-    // TODO why are println are not forwarded to std out
     val s = new CPSProgramInterpreter().apply(new EvaluableString(), cst)
-    val interpreter = new ScalaInterpreter()
-    println(s)
-    println(s.getInPlace)
-    interpreter ! s
-    interpreter != s.getInPlace
-    //interpreter.reset()
-    true
+    val eval = new Eval()
+    // println(s)
+    // println(s.getInPlace)
+    Time("Interpretation") {
+      eval.compile(s.toString)
+    }
+
+    Time("Execution") {
+      eval.inPlace(s.getInPlace.toString())
+      true
+    }
   }
 
   /**
@@ -69,9 +84,8 @@ object CPSTextInterpreter {
    *
    * @param code: the piece of CPSText code you want to interpret.
    * @param db: optional boolean flag, set to true if you want additional debug information printed to stdout. (predefined: false)
-   * @return true if parsing and interpretation was successful, false otherwise.
    */
-  def interpretCode(code: String, db: Boolean = false): Boolean = {
+  def interpretCode(code: String, db: Boolean = false) {
     interpretCST(CPSTextParser.parse(code), db)
   }
 }

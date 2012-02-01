@@ -75,7 +75,6 @@ class ContextInterpreter extends ASTElementInterpreter {
 
     vars.toString() + "\n" + "def do_activate_" + a.name + "() {\n" +
       "change = " + index + "\n" +
-      "println(\"activating " + a.name + "\")\n" +
       a.bindings.map(x => x.roleName + " ! " + "token_" + x.roleName).mkString("\n") + "}\n"
   }
 
