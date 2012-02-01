@@ -180,6 +180,20 @@ object CPSChecks {
   def checkBindings(cst: CPSProgram) {
     def check(c: List[Context]) {
       c.foreach(co => {
+        var vlist = List[String]()
+        co.activations.foreach(ac => {
+          // check if no variable is used in more than one activation block,
+          // this would not be possible, because Scala does not allow dynamic typing which
+          // would be needed to handle dynamic role bindings.
+          ac.activateFor.foreach(af => {
+            if (vlist.contains(af.variableName)) {
+              throw new InvalidActivationRuleException("[Context '" + co.name + "'] Activation rule variable '" + af.variableName + "' must not be used for different activation blocks!")
+            } else {
+              vlist = af.variableName :: vlist
+            }
+          })
+        })
+
         co.activations.foreach(ac => {
           // check if variables are no CPSystems
           val cpsList = cst.robots.map(_.name)

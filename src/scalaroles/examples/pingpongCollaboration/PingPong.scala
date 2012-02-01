@@ -10,7 +10,6 @@ trait PingPong extends TransientCollaboration {
   val stop = new Stop {}
 
 
-
   trait Ping extends Role[Sound] {
     val sound = "ping"
 
@@ -20,7 +19,7 @@ trait PingPong extends TransientCollaboration {
   }
 
   trait Pong extends Role[Sound] {
-    val sound = "ping"
+    val sound = "pong"
 
     def play {
       println(sound)

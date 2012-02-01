@@ -65,24 +65,18 @@ class ContextInterpreter extends ASTElementInterpreter {
   }
 
   // TODO check constraints
-  private def buildDoActivationMethod(a: ActivationRule, innerRoles: List[Role], allRoles: List[Role]) = {
+  private def buildDoActivationMethod(index: Int, a: ActivationRule, allRoles: List[Role]) = {
     val vars = new StringBuilder()
     a.activateFor.foreach(x => {
-      if (!x.roleName.equals("NaoRobot") && !initializedVariables.contains(x)) {
-        // TODO need a solution for all types of CPS systems
-
-        // TODO how to make this public available?
-        vars.append("val " +
-          x.variableName + "=" + getRolePlaysRoleDependencies(a.getBindingForVariable(x).roleName, allRoles).replace("<<name>>", x.roleName) + "\n")
-        initializedVariables = x :: initializedVariables
-      } else {
-        vars.append(x.variableName + "=" + getRolePlaysRoleDependencies(a.getBindingForVariable(x).roleName, allRoles).replace("<<name>>", x.roleName) + "\n")
-      }
+      vars.append("def " + x.variableName + " = {\n")
+      vars.append("if (change < " + index + ") throw new Exception(\"Using " + x.variableName + " is not allowed yet! Activation was not done yet!\")\n")
+      vars.append(getRolePlaysRoleDependencies(a.getBindingForVariable(x).roleName, allRoles).replace("<<name>>", x.roleName) + "}\n")
     })
 
-    "def do_activate_" + a.name + "() {\n" +
-      vars.toString() + "\n" +
-      innerRoles.map(x => x.name + " ! " + "token_" + x.name).mkString("\n") + "}\n"
+    vars.toString() + "\n" + "def do_activate_" + a.name + "() {\n" +
+      "change = " + index + "\n" +
+      "println(\"activating " + a.name + "\")\n" +
+      a.bindings.map(x => x.roleName + " ! " + "token_" + x.roleName).mkString("\n") + "}\n"
   }
 
   private def buildStartMethod(a: List[ActivationRule]) = {
@@ -94,9 +88,12 @@ class ContextInterpreter extends ASTElementInterpreter {
       case c: (Context, List[Role]) => {
         s + ("trait Context_" + c._1.name + " extends TransientCollaboration {\n")
         // activation records
+        s + ("var change = 0\n")
+        var index = 0
         c._1.activations.foreach(a => {
+          index += 1
           new ActivationRuleInterpreter()(s, (a, c._1.name))
-          s + buildDoActivationMethod(a, c._1.roles, c._2)
+          s + buildDoActivationMethod(index, a, c._2)
         })
         s + buildStartMethod(c._1.activations)
 

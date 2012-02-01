@@ -32,7 +32,7 @@ object CPSTextInterpreter {
    *
    * @param cst: the CPSProgram representing the concrete syntax tree
    * @param db: optional boolean flag, set to true if you want additional debug information printed to stdout. (predefined: false)
-   * @return true if interpretation was successful, false otherwise.
+   * @return true if interpretation was successful, will throw Exceptions if not.
    */
   def interpretCST(cst: CPSProgram, db: Boolean = false): Boolean = {
     // Some static checks before starting the actual interpretation.
@@ -53,15 +53,15 @@ object CPSTextInterpreter {
     CPSChecks.checkConstrains(cst)
 
     // build all the initial components
-    val s = new EvaluableString()
+    // TODO why are println are not forwarded to std out
+    val s = new CPSProgramInterpreter().apply(new EvaluableString(), cst)
     val interpreter = new ScalaInterpreter()
-    println(new CPSProgramInterpreter()(new EvaluableString(), cst))
-    // TODO start actual interpretation
-    interpreter ! new CPSProgramInterpreter().apply(s, cst)
-    interpreter != s.getInPlace
+    println(s)
     println(s.getInPlace)
-    interpreter.reset()
-    false
+    interpreter ! s
+    interpreter != s.getInPlace
+    //interpreter.reset()
+    true
   }
 
   /**

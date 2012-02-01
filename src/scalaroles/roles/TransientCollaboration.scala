@@ -5,8 +5,6 @@
 
 package scalaroles.roles
 
-import scala.collection.mutable.{ArrayBuffer}
-import java.util.HashMap
 import scalaroles.roles.internal._
 
 trait TransientCollaboration extends Collaboration {
