@@ -25,7 +25,7 @@ import ast.role.{Role, EquivalenceConstraint, ImplicationConstraint, Prohibition
  */
 class RoleInterpreter extends ASTElementInterpreter {
   private def buildActMethod(name: String) = {
-    "def act() { loop { react { case " + name + " => behavior() } } }\n"
+    "def act() { while (true) { receive { case " + name + " => behavior(); exit()} } }\n"
   }
 
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
@@ -34,7 +34,7 @@ class RoleInterpreter extends ASTElementInterpreter {
         s + ("case object token_" + r._1.name + "\n")
 
         s + ("var " + r._1.name + " = new Role_" + r._1.name + " {}\n")
-        
+
         if (r._2.map(_.name).contains(r._1.playedBy))
           s + "trait Role_" + r._1.name + " extends Role[Role_" + r._1.playedBy + "] with Actor {\n"
         else

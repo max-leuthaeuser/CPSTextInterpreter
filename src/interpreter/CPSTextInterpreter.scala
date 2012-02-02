@@ -20,6 +20,8 @@ package interpreter
 import ast.CPSProgram
 import parser.CPSTextParser
 import java.io.{InputStreamReader, BufferedReader, File, FileWriter}
+import java.util.Calendar
+import java.text.SimpleDateFormat
 
 /**
  * Interpreter for CPSText containing static methods for interpreting CPSText code and programs.
@@ -59,6 +61,13 @@ object CPSTextInterpreter {
     }
 
   private def isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0
+
+  private def now = {
+    val DATE_FORMAT_NOW = "HH:mm:ss:SSS";
+    val cal = Calendar.getInstance();
+    val sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+    sdf.format(cal.getTime());
+  }
 
   /**
    * Interprets a CPSProgram representing a piece of CPSText code.
@@ -119,7 +128,7 @@ object CPSTextInterpreter {
       val proc = Runtime.getRuntime().exec(scala + " -classpath temp;CPSTextInterpreter.jar;. cpsprogram_Main", null, new File("."))
       println("# Output of CPSText program: \n")
       val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-      Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(println(_))
+      Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => println(" > " + now + ": " + x))
       val exitCode = proc.waitFor()
       println("# Finished. Exit code: " + exitCode)
     }
