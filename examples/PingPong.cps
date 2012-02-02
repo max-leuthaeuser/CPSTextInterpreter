@@ -57,7 +57,7 @@ context PingPong {
 
     role Stop playedBy NaoRobot {
         behavior {
-            println("aaand stop")
+            println("and stop")
             c1.greet
             h1.greet
             System.exit(0)

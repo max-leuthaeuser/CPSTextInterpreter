@@ -58,12 +58,15 @@ object CPSTextInterpreter {
       fileWriter => fileWriter.write(data)
     }
 
+  private def isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0
+
   /**
    * Interprets a CPSProgram representing a piece of CPSText code.
    *
    * @param cst: the CPSProgram representing the concrete syntax tree
    * @param db: optional boolean flag, set to true if you want additional debug information printed to stdout. (predefined: false)
    */
+
   def interpretCST(cst: CPSProgram, db: Boolean = false) {
     // Some static checks before starting the actual interpretation.
     if (db) {
@@ -82,7 +85,15 @@ object CPSTextInterpreter {
     if (db) println("\t5) Checking role constrains")
     CPSChecks.checkConstrains(cst)
 
+    var compiler = "scalac"
+    var scala = "scala"
+    if (isWindows) {
+      compiler = "cmd.exe /C " + compiler
+      scala = "cmd.exe /C " + scala
+    }
+
     println("# Starting")
+
     Time("Interpretation") {
       val s = new EvaluableString()
       s + ("object cpsprogram_Main {\n")
@@ -90,16 +101,22 @@ object CPSTextInterpreter {
       s + ("def main(args: Array[String]) { " + s.getInPlace + "} \n}")
 
       writeToFile("cpsprogram_Main.scala", s.toString)
-      Runtime.getRuntime().exec("cmd.exe /C scalac -d temp -Xexperimental -classpath out/production/CPSTextInterpreter;lib/json.jar cpsprogram_Main.scala", null, new File(".")) // !
-    }
-    // TODO check classpath things here
-    Time("Execution") {
-      val proc = Runtime.getRuntime().exec("cmd.exe /C scala -classpath temp;out/production/CPSTextInterpreter;lib/json.jar;. cpsprogram_Main", null, new File("."))
-      println("# Output: \n")
+
+      val proc = Runtime.getRuntime().exec(compiler + " -d temp -Xexperimental -classpath out/production/CPSTextInterpreter;lib/json.jar cpsprogram_Main.scala", null, new File("."))
+      println("# Output of compilation process: \n")
       val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
       Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(println(_))
       val exitCode = proc.waitFor()
-      println("# Terminated. Exit code: " + exitCode)
+      println("# Finished. Exit code: " + exitCode)
+    }
+    // TODO check classpath things here
+    Time("Execution") {
+      val proc = Runtime.getRuntime().exec(scala + " -classpath temp;out/production/CPSTextInterpreter;lib/json.jar;. cpsprogram_Main", null, new File("."))
+      println("# Output of CPSText program: \n")
+      val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+      Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(println(_))
+      val exitCode = proc.waitFor()
+      println("# Finished. Exit code: " + exitCode)
     }
   }
 
