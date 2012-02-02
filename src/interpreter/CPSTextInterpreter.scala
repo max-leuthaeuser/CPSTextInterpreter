@@ -85,11 +85,16 @@ object CPSTextInterpreter {
     if (db) println("\t5) Checking role constrains")
     CPSChecks.checkConstrains(cst)
 
-    var compiler = "scalac"
+    var compiler = "fsc"
     var scala = "scala"
+    var removeFile = ""
+    var removeClasses = ""
+
     if (isWindows) {
       compiler = "cmd.exe /C " + compiler
       scala = "cmd.exe /C " + scala
+      removeFile = "cmd.exe /C del /S cpsprogram_Main.scala"
+      removeClasses = "cmd.exe /C cd temp && del *.class"
     }
 
     println("# Starting")
@@ -102,22 +107,28 @@ object CPSTextInterpreter {
 
       writeToFile("cpsprogram_Main.scala", s.toString)
 
-      val proc = Runtime.getRuntime().exec(compiler + " -d temp -Xexperimental -classpath out/production/CPSTextInterpreter;lib/json.jar cpsprogram_Main.scala", null, new File("."))
+      val proc = Runtime.getRuntime().exec(compiler + " -d temp -Xexperimental -classpath CPSTextInterpreter.jar cpsprogram_Main.scala", null, new File("."))
       println("# Output of compilation process: \n")
       val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
       Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(println(_))
       val exitCode = proc.waitFor()
       println("# Finished. Exit code: " + exitCode)
     }
-    // TODO check classpath things here
+
     Time("Execution") {
-      val proc = Runtime.getRuntime().exec(scala + " -classpath temp;out/production/CPSTextInterpreter;lib/json.jar;. cpsprogram_Main", null, new File("."))
+      val proc = Runtime.getRuntime().exec(scala + " -classpath temp;CPSTextInterpreter.jar;. cpsprogram_Main", null, new File("."))
       println("# Output of CPSText program: \n")
       val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
       Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(println(_))
       val exitCode = proc.waitFor()
       println("# Finished. Exit code: " + exitCode)
     }
+
+    Time("Cleaning up") {
+      Runtime.getRuntime().exec(removeFile).waitFor()
+      Runtime.getRuntime().exec(removeClasses).waitFor()
+    }
+    println("# Shutting down")
   }
 
   /**
