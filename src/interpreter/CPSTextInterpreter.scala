@@ -63,10 +63,10 @@ object CPSTextInterpreter {
   private def isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0
 
   private def now = {
-    val DATE_FORMAT_NOW = "HH:mm:ss:SSS";
-    val cal = Calendar.getInstance();
-    val sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
-    sdf.format(cal.getTime());
+    val DATE_FORMAT_NOW = "HH:mm:ss:SSS"
+    val cal = Calendar.getInstance()
+    val sdf = new SimpleDateFormat(DATE_FORMAT_NOW)
+    sdf.format(cal.getTime())
   }
 
   /**
@@ -95,13 +95,13 @@ object CPSTextInterpreter {
     CPSChecks.checkConstrains(cst)
 
     var compiler = "fsc"
-    var scala = "scala"
+    var java = "java"
     var removeFile = "rm cpsprogram_Main.scala"
     var removeClasses = "rm temp/*.class"
 
     if (isWindows) {
       compiler = "cmd.exe /C " + compiler
-      scala = "cmd.exe /C " + scala
+      java = "cmd.exe /C " + java
       removeFile = "cmd.exe /C del /S cpsprogram_Main.scala"
       removeClasses = "cmd.exe /C cd temp && del *.class"
     }
@@ -118,16 +118,16 @@ object CPSTextInterpreter {
 
       val proc = Runtime.getRuntime().exec(compiler + " -d temp -Xexperimental -classpath CPSTextInterpreter.jar cpsprogram_Main.scala", null, new File("."))
       println("# Output of compilation process: \n")
-      val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+      val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
       Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(println(_))
       val exitCode = proc.waitFor()
       println("# Finished. Exit code: " + exitCode)
     }
 
     Time("Execution") {
-      val proc = Runtime.getRuntime().exec(scala + " -classpath temp;CPSTextInterpreter.jar;. cpsprogram_Main", null, new File("."))
+      val proc = Runtime.getRuntime().exec(java + " -classpath temp:CPSTextInterpreter.jar:. cpsprogram_Main", null, new File("."))
       println("# Output of CPSText program: \n")
-      val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+      val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
       Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => println(" > " + now + ": " + x))
       val exitCode = proc.waitFor()
       println("# Finished. Exit code: " + exitCode)
