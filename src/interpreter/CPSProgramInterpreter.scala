@@ -18,11 +18,6 @@
 package interpreter
 
 import ast.CPSProgram
-import scala.actors.DaemonActor
-
-class A extends DaemonActor {
-  def act() {}
-}
 
 /**
  * User: Max Leuthaeuser
