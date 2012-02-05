@@ -95,13 +95,14 @@ object CPSTextInterpreter {
     CPSChecks.checkConstrains(cst)
 
     var compiler = "fsc"
-    var java = "java"
+    var jre = "java"
     var removeFile = "rm cpsprogram_Main.scala"
     var removeClasses = "rm temp/*.class"
+    val sep = System.getProperties().getProperty("path.separator");
 
     if (isWindows) {
       compiler = "cmd.exe /C " + compiler
-      java = "cmd.exe /C " + java
+      jre = "cmd.exe /C " + jre
       removeFile = "cmd.exe /C del /S cpsprogram_Main.scala"
       removeClasses = "cmd.exe /C cd temp && del *.class"
     }
@@ -125,7 +126,7 @@ object CPSTextInterpreter {
     }
 
     Time("Execution") {
-      val proc = Runtime.getRuntime().exec(java + " -classpath temp:CPSTextInterpreter.jar:. cpsprogram_Main", null, new File("."))
+      val proc = Runtime.getRuntime().exec(jre + " -classpath temp" + sep + "CPSTextInterpreter.jar" + sep + ". cpsprogram_Main", null, new File("."))
       println("# Output of CPSText program: \n")
       val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
       Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => println(" > " + now + ": " + x))
