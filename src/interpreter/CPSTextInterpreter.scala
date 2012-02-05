@@ -97,7 +97,7 @@ object CPSTextInterpreter {
     var compiler = "fsc"
     var scala = "scala"
     var removeFile = "rm cpsprogram_Main.scala"
-    var removeClasses = "rm temp/*.scala"
+    var removeClasses = "rm temp/*.class"
 
     if (isWindows) {
       compiler = "cmd.exe /C " + compiler
