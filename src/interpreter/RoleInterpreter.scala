@@ -25,7 +25,7 @@ import ast.role.{Role, EquivalenceConstraint, ImplicationConstraint, Prohibition
  */
 class RoleInterpreter extends ASTElementInterpreter {
   private def buildActMethod(name: String) = {
-    "def act() { while (true) { receive { case " + name + " => behavior(); exit()} } }\n"
+    "def act() { while (true) { receive { case " + name + " => behavior() } } }\n"
   }
 
   override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {

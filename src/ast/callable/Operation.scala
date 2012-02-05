@@ -32,7 +32,7 @@ case class Operation(name: String, typ: String, body: String) extends Callable {
 
     var t = ""
     if (!typ.toLowerCase.equals("void")) {
-      t = ": " + typ
+      t = ": " + typ + " = "
     }
 
     name + "()" + t + " {\n\t\t\t" + ident + b

@@ -19,35 +19,39 @@ package interpreter
 
 import ast.Context
 import ast.role.Role
-import ast.rule.{ActivationRuleVariable, ActivationRule}
+import ast.rule.ActivationRule
 
 /**
  * User: Max Leuthaeuser
  * Date: 18.01.12
  */
 class ContextInterpreter extends ASTElementInterpreter {
-  private var initializedVariables = List[ActivationRuleVariable]()
-
-  // TODO needs some refactoring here!
   // TODO test with deeper nested role play role constructs
-  private def x(r: Role, roles: List[Role]): List[Role] = {
+  /**
+   * Recursively calculates a List of all roles role 'r' plays.
+   */
+  private def getRolePlaysRoleList(r: Role, roles: List[Role]): List[Role] = {
     if (!roles.contains(r)) {
       List[Role](r)
     } else {
       if (!r.playedBy.equals("NaoRobot")) {
         val p = roles.filter(ro => r.playedBy.equals(ro.name))(0)
-        r :: x(p, roles)
+        r :: getRolePlaysRoleList(p, roles)
       } else {
         List[Role](r)
       }
     }
   }
 
-  // TODO needs some refactoring here!
+  /**
+   * Processes the list of all roles which role 'role' plays.
+   * Type conversion done with keyword 'as' first, playedBy is then translated to '-:'.
+   * Makes sure that all parentheses are set correctly.
+   */
   private def getRolePlaysRoleDependencies(role: String, roles: List[Role]): String = {
     val allRoles = roles.map(_.name)
     if (allRoles.contains(roles.filter(ro => role.equals(ro.name))(0).playedBy)) {
-      var list = x(roles.filter(ro => role.equals(ro.name))(0), roles)
+      var list = getRolePlaysRoleList(roles.filter(ro => role.equals(ro.name))(0), roles)
       val head = list.head.name
       list = list.reverse
       val tail = list.slice(0, list.size - 1)
@@ -106,7 +110,7 @@ class ContextInterpreter extends ASTElementInterpreter {
         c._1.roles.foreach(x => new RoleInterpreter()(s, (x, c._2)))
 
         // inner contexts
-        c._1.inner.foreach(new ContextInterpreter()(s, _))
+        c._1.inner.foreach(x => new ContextInterpreter()(s, (x, c._2)))
 
         s + "\n}\n"
       }
