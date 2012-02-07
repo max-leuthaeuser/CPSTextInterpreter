@@ -9,13 +9,14 @@ the wiki (coming soon).
 Part I. The repository layout
 --------------------------------------------------------------------------------                            
 
-Follows the file layout of the repository. :: 
+Follows the file layout of the repository. This is not a complete listing. :: 
+
   scala/
    +--builds/                   The destination folder for distributions build with maven.
    +--pom.xml                 	The maven build configuration.
    +--examples/                 Some examples of CPSText programs.
    +--lib/                      Pre-compiled libraries for the build.
-   |   ---json.jar              The json library, needed by the Java abstraction layer to NaoService.
+   |   +--json.jar              The json library, needed by the Java abstraction layer to NaoService.
    +--model/			        Contains models for CPSText.
    +--README	                The file you are currently reading.
    +--src/                      All the source files of CPSTextInterpreter.
@@ -43,6 +44,7 @@ The following is assumed to be installed on the build machine:
 
 The following is assumed to be installed on the machine you want to run
 CPSTextInterpreter:
+
 - A Java runtime environment (JRE) or SDK 1.6 or above. (``java`` needs to be in the PATH)
 - Scala 2.8.0 (``fsc`` needs to be in the PATH)
 
