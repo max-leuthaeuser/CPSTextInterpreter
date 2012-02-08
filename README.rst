@@ -25,13 +25,12 @@ Follows the file layout of the repository. This is not a complete listing. ::
 
 
 
-Part II. Building CPSTextInterpreter with maven
+Part II. Building CPSTextInterpreter with Maven
 --------------------------------------------------------------------------------
 
-Maven is used to compile Scala. It is automated and takes care of
-managing the dependencies and will build a runnable jar executable with Java.
+Maven is used to manage the dependencies and it will build a runnable jar executable with Java.
 
-- install maven (http://maven.apache.org/)
+- install Maven (http://maven.apache.org/)
 - run ``mvn package``, the resulting jar is placed in ``builds/``
 
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -40,7 +39,7 @@ REQUIREMENTS FOR CPSTextInterpreter:
 The following is assumed to be installed on the build machine:
 
 - A Java runtime environment (JRE) or SDK 1.6 or above.
-- maven
+- Maven
 
 The following is assumed to be installed on the machine you want to run
 CPSTextInterpreter:
