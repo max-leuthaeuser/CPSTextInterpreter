@@ -19,8 +19,9 @@ package de.qualitune.ast.cps
 
 import CPSType._
 
-case class CPS(cpsType: CPSType, name: String, ip: String, port: Int) {
+case class CPS(cpsType: CPSType, name: String, ip: String, port: Int, priorities: Map[String, Int]) {
   override def toString = {
-    cpsType.toString + " " + name + " IP " + ip + " PORT " + port + ";"
+    val prios = if (priorities.isEmpty) "" else " with priorities {" + priorities.mkString("\n", ";\n", ";\n") + "}"
+    cpsType.toString + " " + name + " IP " + ip + " PORT " + port + prios
   }
 }

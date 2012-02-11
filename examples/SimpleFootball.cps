@@ -1,5 +1,11 @@
-Nao Chuck IP 192.168.130.1 PORT 8080;
-Nao Hans IP 192.168.130.2 PORT 8090;
+Nao Chuck IP 192.168.130.1 PORT 8080 with priorities {
+    Sender -> 1;
+    GoodPlayer -> 2;
+}
+Nao Hans IP 192.168.130.2 PORT 8090 with priorities {
+    Sender -> 1;
+    GoodPlayer -> 1;
+}
 
 context Football {
 	activate for {
