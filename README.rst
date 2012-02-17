@@ -40,6 +40,7 @@ The following is assumed to be installed on the build machine:
 
 - A Java runtime environment (JRE) or SDK 1.6 or above.
 - Maven
+- Scalatest plugin from here: http://github.com/teigen/maven-scalatest-plugin if you want to run the tests.
 
 The following is assumed to be installed on the machine you want to run
 CPSTextInterpreter:
