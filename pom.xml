@@ -20,6 +20,22 @@
     <encoding>UTF-8</encoding>
     <scala.version>2.8.0</scala.version>
   </properties>
+  
+  <repositories>
+    <repository>
+      <id>scala-tools.org</id>
+      <name>Scala-Tools Maven2 Repository</name>
+      <url>http://scala-tools.org/repo-releases</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>scala-tools.org</id>
+      <name>Scala-Tools Maven2 Repository</name>
+      <url>http://scala-tools.org/repo-releases</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <dependencies>
 	<dependency>
@@ -49,6 +65,18 @@
   </dependencies>
 
   <build>
+	<testSourceDirectory>src/test/scala</testSourceDirectory>
+	
+	<pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.jteigen</groupId>
+          <artifactId>maven-scalatest-plugin</artifactId>
+          <version>1.1-SNAPSHOT</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <plugins>
 	  <plugin>
         <groupId>org.scala-tools</groupId>
@@ -100,18 +128,38 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.6</version>
         <configuration>
-          <useFile>false</useFile>
-          <disableXmlReport>true</disableXmlReport>
-          <!-- If you have classpath issue like NoDefClassError,... -->
-          <!-- useManifestOnlyJar>false</useManifestOnlyJar -->
+		  <useFile>true</useFile>
+		  <disableXmlReport>true</disableXmlReport>
           <includes>
             <include>**/*Test.*</include>
             <include>**/*Suite.*</include>
+			<include>**/*Spec.*</include>
           </includes>
         </configuration>
       </plugin>
+	  
+	  <plugin>
+	    <groupId>com.jteigen</groupId>
+	    <artifactId>maven-scalatest-plugin</artifactId>
+	    <version>1.1-SNAPSHOT</version>
+		<executions>
+          <execution>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+		<!-- this is the standard way to configure maven-plugins: by adding "configuration"-tag -->
+        <configuration>		  
+		  <!-- tell the plugin where your classes are -->
+		  <runpath>target/test-classes,target/classes</runpath>		  
+		  <!-- this just finds all Suites in mytestpackage-package of your test-classes 
+		  <wildcards>mytestpackage</wildcards>		  -->
+		  <!-- "W" means "Without color", it removes the ANSI-color-chars from the output -->
+		  <stdout>WD</stdout>
+        </configuration>		
+	  </plugin>
     </plugins>
   </build>
 </project>
