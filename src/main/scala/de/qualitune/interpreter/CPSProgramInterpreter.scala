@@ -17,14 +17,15 @@
 
 package de.qualitune.interpreter
 
-import de.qualitune.ast.CPSProgram
+import de.qualitune.ast.{ASTElement, CPSProgram}
+
 
 /**
  * User: Max Leuthaeuser
  * Date: 19.01.12
  */
 class CPSProgramInterpreter extends ASTElementInterpreter {
-  override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
+  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
     elem match {
       case c: CPSProgram => {
         // imports
@@ -40,12 +41,12 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
 
         // cps
         s + "object CPS {"
-        c.robots.foreach(new CPSTypeInterpreter()(s, _))
+        c.robots.foreach(new CPSTypeInterpreter()(s, _, null))
         s + "}\n import CPS._\n"
 
         // contexts
         val allRoles = c.getAllRoles()
-        c.contexts.foreach(x => new ContextInterpreter()(s, (x, allRoles)))
+        c.contexts.foreach(x => new ContextInterpreter()(s, x, allRoles))
 
         // control flow, start contexts and roles
         c.getContextPaths().foreach(x => {

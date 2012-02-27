@@ -17,9 +17,9 @@
 
 package de.qualitune.interpreter
 
-import de.qualitune.ast.Context
 import de.qualitune.ast.role.Role
 import de.qualitune.ast.rule.ActivationRule
+import de.qualitune.ast.{ASTElement, Context}
 
 /**
  * User: Max Leuthaeuser
@@ -86,33 +86,36 @@ class ContextInterpreter extends ASTElementInterpreter {
     "def start {" + a.map("context_activator_" + _.name + ".start").mkString("\n") + "}\n"
   }
 
-  override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
+
+  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
     elem match {
-      case c: (Context, List[Role]) => {
-        s + ("trait Context_" + c._1.name + " extends TransientCollaboration {\n")
-        // activation records
-        s + ("var change = 0\n")
-        var index = 0
-        c._1.activations.foreach(a => {
-          index += 1
-          new ActivationRuleInterpreter()(s, (a, c._1.name))
-          s + buildDoActivationMethod(index, a, c._2)
-        })
-        s + buildStartMethod(c._1.activations)
+      case c: Context => data match {
+        case d: List[Role] => {
+          s + ("trait Context_" + c.name + " extends TransientCollaboration {\n")
+          // activation records
+          s + ("var change = 0\n")
+          var index = 0
+          c.activations.foreach(a => {
+            index += 1
+            new ActivationRuleInterpreter()(s, a, null)
+            s + buildDoActivationMethod(index, a, d)
+          })
+          s + buildStartMethod(c.activations)
 
-        // constraints
-        c._1.constraints.foreach(new RoleInterpreter()(s, _))
+          // constraints
+          c.constraints.foreach(new RoleInterpreter()(s, _, null))
 
-        // variables
-        c._1.variables.foreach(new VariableInterpreter()(s, _))
+          // variables
+          c.variables.foreach(new VariableInterpreter()(s, _, null))
 
-        // roles
-        c._1.roles.foreach(x => new RoleInterpreter()(s, (x, c._2)))
+          // roles
+          c.roles.foreach(x => new RoleInterpreter()(s, x, d))
 
-        // inner contexts
-        c._1.inner.foreach(x => new ContextInterpreter()(s, (x, c._2)))
+          // inner contexts
+          c.inner.foreach(x => new ContextInterpreter()(s, x, d))
 
-        s + "\n}\n"
+          s + "\n}\n"
+        }
       }
       case _ => throw new IllegalArgumentException("Unknown Context type!")
     }

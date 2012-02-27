@@ -17,7 +17,9 @@
 
 package de.qualitune.ast.role
 
-abstract class RoleConstraint {
+import de.qualitune.ast.ASTElement
+
+abstract class RoleConstraint extends ASTElement {
   def source: String
 
   def source_=(s: String): Unit

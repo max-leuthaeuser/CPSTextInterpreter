@@ -18,7 +18,8 @@
 package de.qualitune.ast.variable
 
 import VariableDeclAccessType._
+import de.qualitune.ast.ASTElement
 
-abstract class VariableDecl(accessType: VariableDeclAccessType, name: String, typ: String) {
+abstract class VariableDecl(accessType: VariableDeclAccessType, name: String, typ: String) extends ASTElement {
 
 }

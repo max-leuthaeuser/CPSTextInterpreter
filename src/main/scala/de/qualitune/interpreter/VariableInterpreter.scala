@@ -20,6 +20,7 @@ package de.qualitune.interpreter
 import de.qualitune.ast.variable.{EmptyVariableDecl, InitVariableDecl}
 import de.qualitune.ast.variable.VariableDeclAccessType
 import de.qualitune.ast.variable.VariableDeclAccessType._
+import de.qualitune.ast.ASTElement
 
 
 /**
@@ -37,7 +38,7 @@ class VariableInterpreter extends ASTElementInterpreter {
     }
   }
 
-  override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
+  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
     elem match {
       case ev: EmptyVariableDecl => s + (getAccessTypeModifier(ev.accessType) + ev.name + ":" + ev.typ + "=_\n")
       case iv: InitVariableDecl => s + (getAccessTypeModifier(iv.accessType) + iv.name + ":" + iv.typ + "=" + iv.value + "\n")

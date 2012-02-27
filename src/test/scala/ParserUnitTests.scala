@@ -16,6 +16,7 @@
  */
 
 import de.qualitune.parser.CPSTextParser._
+import org.scalatest.Assertions._
 import org.scalatest.FunSuite
 
 object ParserUtils {
@@ -61,14 +62,42 @@ class ParserUnitTests extends FunSuite {
   }
 
   test("Testing ip parser") {
-    // ip
+    // ip should match IPv4 and IPv6 addresses
+    val expResult1 = "192.169.0.1"
+    val expResult2 = "127.0.0.1"
+    val expResult3 = "2001:0db8:0000:08d3:0000:8a2e:0070:7344"
+    val expResult4 = "2001:db8:0:8d3:0:8a2e:70:7344"
+
+    assert(expResult1 === ParserUtils.parse[String](ip, expResult1))
+    assert(expResult2 === ParserUtils.parse[String](ip, expResult2))
+    assert(expResult4 === ParserUtils.parse[String](ip, expResult3))
+    assert(expResult4 === ParserUtils.parse[String](ip, expResult4))
+
+    // and some invalid addresses
+    val invalid1 = "192.169.a.b"
+    val invalid2 = "0;;0.169.2.1"
+    val invalid3 = "2001:db8:0:8d3:0:8a2e:70:7344:z"
+    val invalid4 = "a1:db8:0,8d3:0:8a2e:70:7344:0"
+
+    intercept[Exception] {
+      ParserUtils.parse[String](ip, invalid1)
+    }
+    intercept[Exception] {
+      ParserUtils.parse[String](ip, invalid2)
+    }
+    intercept[Exception] {
+      ParserUtils.parse[String](ip, invalid3)
+    }
+    intercept[Exception] {
+      ParserUtils.parse[String](ip, invalid4)
+    }
   }
 
   test("Testing ipv4Address parser") {
-    val expResult: String = "192.169.0.1"
+    val expResult = "192.169.0.1"
     assert(expResult === ParserUtils.parse[String](ipv4Address, "192.169.0.1"))
 
-    val invalid: String = "192.169.a.b" // not a valid ipv4 address
+    val invalid = "192.169.a.b" // not a valid ipv4 address
     intercept[Exception] {
       ParserUtils.parse[String](ipv4Address, invalid)
     }
@@ -76,15 +105,16 @@ class ParserUnitTests extends FunSuite {
 
   test("Testing ipv6Address parser") {
     // these are actually the same addresses, leading zeros can be ignored.
-    val expResult1: String = "2001:0db8:0000:08d3:0000:8a2e:0070:7344"
-    val expResult2: String = "2001:db8:0:8d3:0:8a2e:70:7344"
+    val expResult1 = "2001:0db8:0000:08d3:0000:8a2e:0070:7344"
+    val expResult2 = "2001:db8:0:8d3:0:8a2e:70:7344"
 
     assert(expResult2 === ParserUtils.parse[String](ipv6Address, expResult1))
     assert(expResult2 === ParserUtils.parse[String](ipv6Address, expResult2))
 
-    val invalid1: String = "192.169.a.b" // not a valid ipv6 address
-    val invalid2: String = "192.169.2.1" // not a valid ipv6 address
-    val invalid3: String = "2001:db8:0:8d3:0:8a2e:70:7344:z" // not a valid ipv6 address
+    val invalid1 = "192.169.a.b" // not a valid ipv6 address
+    val invalid2 = "192.169.2.1" // not a valid ipv6 address
+    val invalid3 = "2001:db8:0:8d3:0:8a2e:70:7344:z" // not a valid ipv6 address
+
     intercept[Exception] {
       ParserUtils.parse[String](ipv6Address, invalid1)
     }
@@ -97,13 +127,14 @@ class ParserUnitTests extends FunSuite {
   }
 
   test("Testing port parser") {
-    val expResult: Int = 8080
-    val invalid1: String = "80aa"
-    val invalid2: String = "-1"
-    val invalid3: String = "0"
-    val invalid4: String = "2.2"
+    val expResult = 8080
+    val invalid1 = "80aa"
+    val invalid2 = "-1"
+    val invalid3 = "0"
+    val invalid4 = "2.2"
 
     assert(expResult === ParserUtils.parse[Int](port, "8080"))
+
     intercept[Exception] {
       ParserUtils.parse[Int](port, invalid1)
     }
@@ -123,7 +154,40 @@ class ParserUnitTests extends FunSuite {
   }
 
   test("Testing codeLine parser") {
-    // codeLine
+    val expResult1 = "hello()"
+    val expResult2 = "println(\"out\")"
+    val expResult3 = "println('out')"
+    val expResult4 = "100"
+    val expResult5 = "\"text\""
+
+    assert(expResult1 === ParserUtils.parse[String](codeLine, expResult1))
+    assert(expResult1 === ParserUtils.parse[String](codeLine, expResult1 + "   ")) // should be trimmed
+    assert(expResult2 === ParserUtils.parse[String](codeLine, expResult2))
+    assert(expResult3 === ParserUtils.parse[String](codeLine, expResult3))
+    assert(expResult4 === ParserUtils.parse[String](codeLine, expResult4))
+    assert(expResult5 === ParserUtils.parse[String](codeLine, expResult5))
+
+    val invalid1 = "} test()"
+    val invalid2 = "{} test()"
+    val invalid3 = "{      }"
+    val invalid4 = "test();"
+    val invalid5 = "test()\\;"
+
+    intercept[Exception] {
+      ParserUtils.parse[String](codeLine, invalid1)
+    }
+    intercept[Exception] {
+      ParserUtils.parse[String](codeLine, invalid2)
+    }
+    intercept[Exception] {
+      ParserUtils.parse[String](codeLine, invalid3)
+    }
+    intercept[Exception] {
+      ParserUtils.parse[String](codeLine, invalid4)
+    }
+    intercept[Exception] {
+      ParserUtils.parse[String](codeLine, invalid5)
+    }
   }
 
   test("Testing codeBlock parser") {

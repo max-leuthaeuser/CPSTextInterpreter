@@ -19,6 +19,7 @@ package de.qualitune.ast.role
 
 import de.qualitune.ast.callable.{Operation, Behavior}
 import de.qualitune.ast.variable.{InitVariableDecl, EmptyVariableDecl, VariableDecl}
+import de.qualitune.ast.ASTElement
 
 object Role {
   def build(name: String, behavior: Behavior, content: List[ScalaObject], playedBy: String): Role = {
@@ -35,7 +36,7 @@ object Role {
   }
 }
 
-case class Role(name: String, behavior: Behavior, variables: List[VariableDecl], operations: List[Operation], playedBy: String) {
+case class Role(name: String, behavior: Behavior, variables: List[VariableDecl], operations: List[Operation], playedBy: String) extends ASTElement {
   def prettyPrint(identLevel: Int): String = {
     var ident = ""
     (1 to identLevel).foreach(e => {

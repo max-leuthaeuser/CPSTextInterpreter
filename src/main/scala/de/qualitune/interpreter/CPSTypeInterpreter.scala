@@ -18,13 +18,14 @@
 package de.qualitune.interpreter
 
 import de.qualitune.ast.cps.{CPS, CPSType}
+import de.qualitune.ast.ASTElement
 
 /**
  * User: Max Leuthaeuser
  * Date: 18.01.12
  */
 class CPSTypeInterpreter extends ASTElementInterpreter {
-  override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
+  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
     elem match {
       case c: CPS => {
         c.cpsType match {

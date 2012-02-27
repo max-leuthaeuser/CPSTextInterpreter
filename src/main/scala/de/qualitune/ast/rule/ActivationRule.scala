@@ -17,9 +17,11 @@
 
 package de.qualitune.ast.rule
 
+import de.qualitune.ast.ASTElement
+
 case class Settings(interval: Int, timeout: Int)
 
-case class ActivationRule(activateFor: List[ActivationRuleVariable], when: String, bindings: List[ActivationRuleBinding], settings: Settings) {
+case class ActivationRule(activateFor: List[ActivationRuleVariable], when: String, bindings: List[ActivationRuleBinding], settings: Settings) extends ASTElement {
   def prettyPrint(identLevel: Int): String = {
     var ident = ""
     (1 to identLevel).foreach(e => {

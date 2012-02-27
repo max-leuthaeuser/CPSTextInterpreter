@@ -17,6 +17,6 @@
 
 package de.qualitune.ast.callable
 
-case class Callable() {
+import de.qualitune.ast.ASTElement
 
-}
+case class Callable() extends ASTElement

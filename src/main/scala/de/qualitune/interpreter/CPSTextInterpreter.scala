@@ -30,7 +30,6 @@ import java.text.SimpleDateFormat
  * @date 22.11.2011
  */
 object CPSTextInterpreter {
-
   private object Time {
     def apply[T](name: String)(block: => T) {
       val start = System.currentTimeMillis
@@ -112,7 +111,7 @@ object CPSTextInterpreter {
     Time("Interpretation") {
       val s = new EvaluableString()
       s + ("object cpsprogram_Main {\n")
-      new CPSProgramInterpreter().apply(s, cst)
+      new CPSProgramInterpreter().apply(s, cst, null)
       s + ("def main(args: Array[String]) { " + s.getInPlace + "} \n}")
 
       writeToFile("cpsprogram_Main.scala", s.toString)

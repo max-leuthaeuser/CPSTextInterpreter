@@ -18,6 +18,7 @@
 package de.qualitune.interpreter
 
 import de.qualitune.ast.callable.{Callable, Behavior, Operation}
+import de.qualitune.ast.ASTElement
 
 
 /**
@@ -27,7 +28,7 @@ import de.qualitune.ast.callable.{Callable, Behavior, Operation}
 class CallableInterpreter extends ASTElementInterpreter {
   private def callableToString(c: Callable) = "def " + c.toString.replaceAll("\t", "") + "\n"
 
-  override def apply[E <: AnyRef](s: EvaluableString, elem: E) = {
+  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
     elem match {
       case b: Behavior => s + callableToString(b)
       case o: Operation => s + callableToString(o)

@@ -48,7 +48,7 @@ case class Context(name: String,
                    variables: List[VariableDecl],
                    activations: List[ActivationRule],
                    roles: List[Role],
-                   constraints: List[RoleConstraint]) {
+                   constraints: List[RoleConstraint]) extends ASTElement {
 
   def prettyPrint(identLevel: Int): String = {
     var ident = ""

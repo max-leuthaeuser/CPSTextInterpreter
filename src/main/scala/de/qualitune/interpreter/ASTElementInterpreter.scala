@@ -17,10 +17,12 @@
 
 package de.qualitune.interpreter
 
+import de.qualitune.ast.ASTElement
+
 /**
  * User: Max Leuthaeuser
  * Date: 18.01.12
  */
 abstract class ASTElementInterpreter {
-  def apply[E <: AnyRef](s: EvaluableString, elem: E): EvaluableString
+  def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T): EvaluableString
 }

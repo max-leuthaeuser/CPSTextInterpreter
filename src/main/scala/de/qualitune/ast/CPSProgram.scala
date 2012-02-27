@@ -20,7 +20,7 @@ package de.qualitune.ast
 import cps.CPS
 import role.Role
 
-case class CPSProgram(imports: List[String], robots: List[CPS], contexts: List[Context]) {
+case class CPSProgram(imports: List[String], robots: List[CPS], contexts: List[Context]) extends ASTElement {
   //some helper methods:
   def getAllRoles(c: List[Context] = contexts): List[Role] = {
     var l = List[Role]()

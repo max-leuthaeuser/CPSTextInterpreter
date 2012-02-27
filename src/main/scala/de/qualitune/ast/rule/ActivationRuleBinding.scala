@@ -17,6 +17,8 @@
 
 package de.qualitune.ast.rule
 
-case class ActivationRuleBinding(variableName: String, roleName: String) {
+import de.qualitune.ast.ASTElement
+
+case class ActivationRuleBinding(variableName: String, roleName: String) extends ASTElement {
   override def toString = variableName + " -> " + roleName + ";"
 }
