@@ -29,13 +29,13 @@ object Context {
     var constraints = List[RoleConstraint]()
 
     contents.foreach(_ match {
-      case e: Context => inner = e.asInstanceOf[Context] :: inner
-      case e: Role => roles = e.asInstanceOf[Role] :: roles
-      case e: EmptyVariableDecl => variables = e.asInstanceOf[EmptyVariableDecl] :: variables
-      case e: InitVariableDecl => variables = e.asInstanceOf[InitVariableDecl] :: variables
-      case e: EquivalenceConstraint => constraints = e.asInstanceOf[EquivalenceConstraint] :: constraints
-      case e: ImplicationConstraint => constraints = e.asInstanceOf[ImplicationConstraint] :: constraints
-      case e: ProhibitionConstraint => constraints = e.asInstanceOf[ProhibitionConstraint] :: constraints
+      case e: Context => inner = e :: inner
+      case e: Role => roles = e :: roles
+      case e: EmptyVariableDecl => variables = e :: variables
+      case e: InitVariableDecl => variables = e :: variables
+      case e: EquivalenceConstraint => constraints = e :: constraints
+      case e: ImplicationConstraint => constraints = e :: constraints
+      case e: ProhibitionConstraint => constraints = e :: constraints
       case e => throw new Exception("Unexpected type: " + e.getClass)
     })
 

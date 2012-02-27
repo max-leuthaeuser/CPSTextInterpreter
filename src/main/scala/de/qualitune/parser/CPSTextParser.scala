@@ -54,7 +54,7 @@ object CPSTextParser extends JavaTokenParsers {
   }
 
   def cpspriorities: Parser[Map[String, Int]] = "with priorities {" ~> rep1(cpspriority <~ ";") <~ "}" ^^ {
-    case l => Map[String, Int]() ++ l
+    Map[String, Int]() ++ _
   }
 
   def cpspriority: Parser[(String, Int)] = ident ~ "->" ~ decimalNumber ^^ {
