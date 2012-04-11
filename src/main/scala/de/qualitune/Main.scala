@@ -14,9 +14,10 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 package de.qualitune
- 
+
+import config.ConfigReader
 import scala.io.Source._
 import de.qualitune.interpreter.CPSTextInterpreter
 import de.qualitune.parser.CPSTextParser
@@ -35,7 +36,11 @@ object Main {
     val option = args(0)
     option match {
       case "-p" => println(CPSTextParser.parse(fromFile(args.toList(1)).mkString))
-      case "-i" => CPSTextInterpreter.interpretCode(fromFile(args.toList(1)).mkString)
+      case "-i" => {
+        // read config first
+        val config = ConfigReader.parse(fromFile("config/run.conf").mkString)
+        CPSTextInterpreter.interpretCode(fromFile(args.toList(1)).mkString, config)
+      }
       case _ => println(help)
     }
   }

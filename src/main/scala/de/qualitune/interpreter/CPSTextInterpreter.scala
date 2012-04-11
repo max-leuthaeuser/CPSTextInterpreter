@@ -22,6 +22,7 @@ import de.qualitune.parser.CPSTextParser
 import java.io.{InputStreamReader, BufferedReader, File, FileWriter}
 import java.util.Calendar
 import java.text.SimpleDateFormat
+import de.qualitune.config.Configuration
 
 /**
  * Interpreter for CPSText containing static methods for interpreting CPSText code and programs.
@@ -30,6 +31,7 @@ import java.text.SimpleDateFormat
  * @date 22.11.2011
  */
 object CPSTextInterpreter {
+
   private object Time {
     def apply[T](name: String)(block: => T) {
       val start = System.currentTimeMillis
@@ -72,25 +74,25 @@ object CPSTextInterpreter {
    * Interprets a CPSProgram representing a piece of CPSText code.
    *
    * @param cst: the CPSProgram representing the concrete syntax tree
-   * @param db: optional boolean flag, set to true if you want additional debug information printed to stdout. (predefined: false)
+   * @param config: the current configuration
    */
 
-  def interpretCST(cst: CPSProgram, db: Boolean = false) {
+  def interpretCST(cst: CPSProgram, config: Configuration) {
     // Some static checks before starting the actual interpretation.
-    if (db) {
-      println("Running static checks...")
-      println("\t1) Checking names")
+    if (config.debugging.enabled) {
+      config.debugging.write("Running static checks...")
+      config.debugging.write("\t1) Checking names")
     }
     CPSChecks.checkNames(cst)
-    if (db) println("\t2) Checking imports")
+    if (config.debugging.enabled) config.debugging.write("\t2) Checking imports")
     CPSChecks.checkImports(cst)
-    if (db) println("\t2) Checking role bindings")
+    if (config.debugging.enabled) config.debugging.write("\t2) Checking role bindings")
     CPSChecks.checkBindings(cst)
-    if (db) println("\t3) Checking roles")
+    if (config.debugging.enabled) config.debugging.write("\t3) Checking roles")
     CPSChecks.checkRoles(cst)
-    if (db) println("\t4) Checking CPS objects")
+    if (config.debugging.enabled) config.debugging.write("\t4) Checking CPS objects")
     CPSChecks.checkCPSObjects(cst)
-    if (db) println("\t5) Checking role constrains")
+    if (config.debugging.enabled) config.debugging.write("\t5) Checking role constrains")
     CPSChecks.checkConstrains(cst)
 
     var compiler = "fsc"
@@ -108,34 +110,40 @@ object CPSTextInterpreter {
 
     println("# Starting")
 
-    Time("Interpretation") {
-      val s = new EvaluableString()
-      s + ("object cpsprogram_Main {\n")
-      new CPSProgramInterpreter().apply(s, cst, null)
-      s + ("def main(args: Array[String]) { " + s.getInPlace + "} \n}")
+    if (config.interpretation.enabled) {
+      Time("Interpretation") {
+        val s = new EvaluableString()
+        s + ("object cpsprogram_Main {\n")
+        new CPSProgramInterpreter().apply(s, cst, null)
+        s + ("def main(args: Array[String]) { " + s.getInPlace + "} \n}")
 
-      writeToFile("cpsprogram_Main.scala", s.toString)
+        writeToFile("cpsprogram_Main.scala", s.toString)
 
-      val proc = Runtime.getRuntime().exec(compiler + " -d temp -Xexperimental -cp CPSTextInterpreter.jar cpsprogram_Main.scala", null, new File("."))
-      println("# Output of compilation process: \n")
-      val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
-      Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(println(_))
-      val exitCode = proc.waitFor()
-      println("# Finished. Exit code: " + exitCode)
+        val proc = Runtime.getRuntime().exec(compiler + " -d temp -Xexperimental -cp CPSTextInterpreter.jar cpsprogram_Main.scala", null, new File("."))
+        println("# Output of compilation process: \n")
+        val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
+        Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(println(_))
+        val exitCode = proc.waitFor()
+        println("# Finished. Exit code: " + exitCode)
+      }
     }
 
-    Time("Execution") {
-      val proc = Runtime.getRuntime().exec(jre + " -cp temp" + sep + "CPSTextInterpreter.jar" + sep + ". cpsprogram_Main", null, new File("."))
-      println("# Output of CPSText program: \n")
-      val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
-      Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => println(" > " + now + ": " + x))
-      val exitCode = proc.waitFor()
-      println("# Finished. Exit code: " + exitCode)
+    if (config.execution.enabled) {
+      Time("Execution") {
+        val proc = Runtime.getRuntime().exec(jre + " -cp temp" + sep + "CPSTextInterpreter.jar" + sep + ". cpsprogram_Main", null, new File("."))
+        println("# Output of CPSText program: \n")
+        val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
+        Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => println(" > " + now + ": " + x))
+        val exitCode = proc.waitFor()
+        println("# Finished. Exit code: " + exitCode)
+      }
     }
 
-    Time("Cleaning up") {
-      Runtime.getRuntime().exec(removeFile).waitFor()
-      Runtime.getRuntime().exec(removeClasses).waitFor()
+    if (config.clean) {
+      Time("Cleaning up") {
+        Runtime.getRuntime().exec(removeFile).waitFor()
+        Runtime.getRuntime().exec(removeClasses).waitFor()
+      }
     }
     println("# Shutting down")
   }
@@ -144,9 +152,9 @@ object CPSTextInterpreter {
    * Parses and interprets a String containing CPSText code.
    *
    * @param code: the piece of CPSText code you want to interpret.
-   * @param db: optional boolean flag, set to true if you want additional debug information printed to stdout. (predefined: false)
+   * @param config: the current configuration
    */
-  def interpretCode(code: String, db: Boolean = false) {
-    interpretCST(CPSTextParser.parse(code), db)
+  def interpretCode(code: String, config: Configuration) {
+    interpretCST(CPSTextParser.parse(code), config)
   }
 }
