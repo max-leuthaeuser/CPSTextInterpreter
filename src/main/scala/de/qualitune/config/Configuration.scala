@@ -1,6 +1,7 @@
 package de.qualitune.config
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException
+import java.io.File
+import de.qualitune.util.IO
 
 /**
  * Configuration classes representing a config for CPSText interpreter.
@@ -22,24 +23,25 @@ object Configuration {
   }
 }
 
-case class Target(var enabled: Boolean, var depends: String)
+case class Target(val enabled: Boolean, val depends: String)
 
-case class Debugging(override var enabled: Boolean, override var depends: String, var path: String) extends Target(enabled, depends) {
+case class Debugging(override val enabled: Boolean, override val depends: String, val path: String) extends Target(enabled, depends) {
   def write(text: String) {
     if (path == "stdout") {
       println(text)
     } else {
       // write to file
-      // TODO implement this
-      throw new NotImplementedException()
+      val file = new File(path)
+      if (file.exists())
+        IO.appendToFile(path, text)
+      else
+        IO.writeToFile(path, text)
     }
   }
 }
 
-case class Interpretation(override var enabled: Boolean, override var depends: String) extends Target(enabled, depends)
+case class Interpretation(override val enabled: Boolean, override val depends: String) extends Target(enabled, depends)
 
-case class Execution(override var enabled: Boolean, override var depends: String) extends Target(enabled, depends)
+case class Execution(override val enabled: Boolean, override val depends: String) extends Target(enabled, depends)
 
-case class Configuration(var debugging: Debugging, var interpretation: Target, var execution: Target, var clean: Boolean) {
-
-}
+class Configuration private (val debugging: Debugging, val interpretation: Target, val execution: Target, val clean: Boolean)

@@ -19,10 +19,9 @@ package de.qualitune.interpreter
 
 import de.qualitune.ast.CPSProgram
 import de.qualitune.parser.CPSTextParser
-import java.io.{InputStreamReader, BufferedReader, File, FileWriter}
-import java.util.Calendar
-import java.text.SimpleDateFormat
+import java.io.{InputStreamReader, BufferedReader, File}
 import de.qualitune.config.Configuration
+import de.qualitune.util.IO
 
 /**
  * Interpreter for CPSText containing static methods for interpreting CPSText code and programs.
@@ -31,45 +30,6 @@ import de.qualitune.config.Configuration
  * @date 22.11.2011
  */
 object CPSTextInterpreter {
-
-  private object Time {
-    def apply[T](name: String)(block: => T) {
-      val start = System.currentTimeMillis
-      try {
-        block
-      } finally {
-        val diff = System.currentTimeMillis - start
-        println("# " + name + " completed, time taken: " + diff + " ms (" + diff / 1000.0 + " s)")
-      }
-    }
-  }
-
-  /**
-  * Used for reading/writing to database, files, etc.
-  * Code From the book "Beginning Scala"
-  * http://www.amazon.com/Beginning-Scala-David-Pollak/dp/1430219890
-  */
-  private def using[A <: {def close() : Unit}, B](param: A)(f: A => B): B =
-    try {
-      f(param)
-    } finally {
-      param.close()
-    }
-
-  private def writeToFile(fileName: String, data: String) =
-    using(new FileWriter(fileName)) {
-      fileWriter => fileWriter.write(data)
-    }
-
-  private def isWindows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0
-
-  private def now = {
-    val DATE_FORMAT_NOW = "HH:mm:ss:SSS"
-    val cal = Calendar.getInstance()
-    val sdf = new SimpleDateFormat(DATE_FORMAT_NOW)
-    sdf.format(cal.getTime())
-  }
-
   /**
    * Interprets a CPSProgram representing a piece of CPSText code.
    *
@@ -101,51 +61,52 @@ object CPSTextInterpreter {
     var removeClasses = "rm temp/*.class"
     val sep = System.getProperties().getProperty("path.separator");
 
-    if (isWindows) {
+    if (IO.isWindows) {
       compiler = "cmd.exe /C " + compiler
       jre = "cmd.exe /C " + jre
       removeFile = "cmd.exe /C del /S cpsprogram_Main.scala"
       removeClasses = "cmd.exe /C cd temp && del *.class"
     }
 
-    println("# Starting")
+    config.debugging.write("# Starting")
 
     if (config.interpretation.enabled) {
-      Time("Interpretation") {
+      IO.Time("Interpretation") {
         val s = new EvaluableString()
         s + ("object cpsprogram_Main {\n")
         new CPSProgramInterpreter().apply(s, cst, null)
         s + ("def main(args: Array[String]) { " + s.getInPlace + "} \n}")
 
-        writeToFile("cpsprogram_Main.scala", s.toString)
+        IO.writeToFile("cpsprogram_Main.scala", s.toString)
 
+        // TODO make sure temp exists
         val proc = Runtime.getRuntime().exec(compiler + " -d temp -Xexperimental -cp CPSTextInterpreter.jar cpsprogram_Main.scala", null, new File("."))
-        println("# Output of compilation process: \n")
+        config.debugging.write("# Output of compilation process: \n")
         val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
-        Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(println(_))
+        Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(config.debugging.write(_))
         val exitCode = proc.waitFor()
-        println("# Finished. Exit code: " + exitCode)
+        config.debugging.write("# Finished. Exit code: " + exitCode)
       }
     }
 
     if (config.execution.enabled) {
-      Time("Execution") {
+      IO.Time("Execution") {
         val proc = Runtime.getRuntime().exec(jre + " -cp temp" + sep + "CPSTextInterpreter.jar" + sep + ". cpsprogram_Main", null, new File("."))
-        println("# Output of CPSText program: \n")
+        config.debugging.write("# Output of CPSText program: \n")
         val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
-        Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => println(" > " + now + ": " + x))
+        Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => config.debugging.write(" > " + IO.now + ": " + x))
         val exitCode = proc.waitFor()
-        println("# Finished. Exit code: " + exitCode)
+        config.debugging.write("# Finished. Exit code: " + exitCode)
       }
     }
 
     if (config.clean) {
-      Time("Cleaning up") {
+      IO.Time("Cleaning up") {
         Runtime.getRuntime().exec(removeFile).waitFor()
         Runtime.getRuntime().exec(removeClasses).waitFor()
       }
     }
-    println("# Shutting down")
+    config.debugging.write("# Shutting down")
   }
 
   /**

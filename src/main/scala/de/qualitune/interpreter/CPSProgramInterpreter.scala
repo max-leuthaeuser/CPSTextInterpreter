@@ -36,7 +36,7 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
 			import de.qualitune.scalaroles.players.NaoRobot
 			import de.qualitune.scalaroles.players.NaoRobot._
 			"""
-			
+
         s ++ c.imports.map("import " + _ + "\n") + "\n"
 
         // cps

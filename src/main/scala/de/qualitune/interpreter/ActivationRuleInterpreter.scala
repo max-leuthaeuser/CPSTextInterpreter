@@ -28,15 +28,15 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
   override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
     elem match {
       case ar: ActivationRule => {
-          val actorName = "Context_Activator_" + ar.name
-          s + ("val " + actorName.toLowerCase + " = new " + actorName + "()\n")
-          s + ("class " + actorName + " extends Actor {\ndef act() {\n")
-          if (ar.settings.timeout > 0)
-            s + ("Thread.sleep(" + ar.settings.timeout + ")\n")
-          s + ("while(!(" + ar.when + ")) {" + "Thread.sleep(" + ar.settings.interval + ")\n" + "}\n do_activate_" + ar.name + "(); exit()}\n")
-          s + ("\n}\n")
-          s
-        }
+        val actorName = "Context_Activator_" + ar.name
+        s + ("val " + actorName.toLowerCase + " = new " + actorName + "()\n")
+        s + ("class " + actorName + " extends Actor {\ndef act() {\n")
+        if (ar.settings.timeout > 0)
+          s + ("Thread.sleep(" + ar.settings.timeout + ")\n")
+        s + ("while(!(" + ar.when + ")) {" + "Thread.sleep(" + ar.settings.interval + ")\n" + "}\n do_activate_" + ar.name + "(); exit()}\n")
+        s + ("\n}\n")
+        s
+      }
       case _ => throw new IllegalArgumentException("Unknown ActivationRule type!")
     }
   }

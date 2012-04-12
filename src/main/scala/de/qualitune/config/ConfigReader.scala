@@ -21,7 +21,7 @@ object ConfigReader extends JavaTokenParsers {
     case "target" ~ "Execution" ~ "{" ~ "requires" ~ ":" ~ req ~ "enabled" ~ ":" ~ e ~ "}" => Execution(e, req)
   }
 
-  def clean: Parser[Boolean] = "target" ~ "Debugging" ~ "{" ~ "enabled" ~ ":" ~> bool <~ "}"
+  def clean: Parser[Boolean] = "target" ~ "Clean" ~ "{" ~ "enabled" ~ ":" ~> bool <~ "}"
 
   def debugging: Parser[Debugging] = "target" ~ "Debugging" ~ "{" ~ "enabled" ~ ":" ~ bool ~ "target" ~ ":" ~ path ~ "}" ^^ {
     case "target" ~ "Debugging" ~ "{" ~ "enabled" ~ ":" ~ db ~ "target" ~ ":" ~ t ~ "}" => Debugging(db, "", t)
