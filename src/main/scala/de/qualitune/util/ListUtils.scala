@@ -1,7 +1,7 @@
 package de.qualitune.util
 
 /**
- * Provides some list utils like calculating permutation.
+ * Provides some list utils like calculating permutations or combinations.
  * If this projects gets updated to Scala 2.9.x one could use the
  * build-in list operations from the library instead.
  *
@@ -31,4 +31,20 @@ object ListUtils {
       for ((y, ys) <- selections(xs); ps <- permute(ys))
       yield y :: ps
   }
+
+  /** Calculates the Cartesian product for two lists. */
+  def pair[A](a: List[A], b: List[A]) = a.flatMap(_a => b.map(_b => _a -> _b))
+
+  /**
+   * For a list of a unknown number of lists, of different length, and for maybe
+   * different types, you can use this to get the Cartesian product.
+   */
+  def xproduct(xx: List[List[_]]): List[List[_]] =
+    xx match {
+      case aa :: bb :: Nil =>
+        aa.map(a => bb.map(b => List(a, b))).flatten
+      case aa :: bb :: cc =>
+        xproduct(bb :: cc).map(li => aa.map(a => a :: li)).flatten
+      case _ => xx
+    }
 }
