@@ -1,7 +1,7 @@
 package de.qualitune.config
 
 import java.io.File
-import de.qualitune.util.IO
+import de.qualitune.util.IOUtils
 
 /**
  * Configuration classes representing a config for CPSText interpreter.
@@ -33,9 +33,9 @@ case class Debugging(override val enabled: Boolean, override val depends: String
       // write to file
       val file = new File(path)
       if (file.exists())
-        IO.appendToFile(path, text)
+        IOUtils.appendToFile(path, text)
       else
-        IO.writeToFile(path, text)
+        IOUtils.writeToFile(path, text)
     }
   }
 }
@@ -44,4 +44,4 @@ case class Interpretation(override val enabled: Boolean, override val depends: S
 
 case class Execution(override val enabled: Boolean, override val depends: String) extends Target(enabled, depends)
 
-class Configuration private (val debugging: Debugging, val interpretation: Target, val execution: Target, val clean: Boolean)
+class Configuration private(val debugging: Debugging, val interpretation: Target, val execution: Target, val clean: Boolean)

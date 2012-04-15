@@ -21,7 +21,7 @@ import de.qualitune.ast.CPSProgram
 import de.qualitune.parser.CPSTextParser
 import java.io.{InputStreamReader, BufferedReader, File}
 import de.qualitune.config.Configuration
-import de.qualitune.util.IO
+import de.qualitune.util.IOUtils
 
 /**
  * Interpreter for CPSText containing static methods for interpreting CPSText code and programs.
@@ -61,7 +61,7 @@ object CPSTextInterpreter {
     var removeClasses = "rm temp/*.class"
     val sep = System.getProperties().getProperty("path.separator");
 
-    if (IO.isWindows) {
+    if (IOUtils.isWindows) {
       compiler = "cmd.exe /C " + compiler
       jre = "cmd.exe /C " + jre
       removeFile = "cmd.exe /C del /S cpsprogram_Main.scala"
@@ -71,13 +71,13 @@ object CPSTextInterpreter {
     config.debugging.write("# Starting")
 
     if (config.interpretation.enabled) {
-      IO.Time("Interpretation") {
+      IOUtils.Time("Interpretation") {
         val s = new EvaluableString()
         s + ("object cpsprogram_Main {\n")
         new CPSProgramInterpreter().apply(s, cst, null)
         s + ("def main(args: Array[String]) { " + s.getInPlace + "} \n}")
 
-        IO.writeToFile("cpsprogram_Main.scala", s.toString)
+        IOUtils.writeToFile("cpsprogram_Main.scala", s.toString)
 
         // TODO make sure temp exists
         val proc = Runtime.getRuntime().exec(compiler + " -d temp -Xexperimental -cp CPSTextInterpreter.jar cpsprogram_Main.scala", null, new File("."))
@@ -90,18 +90,18 @@ object CPSTextInterpreter {
     }
 
     if (config.execution.enabled) {
-      IO.Time("Execution") {
+      IOUtils.Time("Execution") {
         val proc = Runtime.getRuntime().exec(jre + " -cp temp" + sep + "CPSTextInterpreter.jar" + sep + ". cpsprogram_Main", null, new File("."))
         config.debugging.write("# Output of CPSText program: \n")
         val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
-        Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => config.debugging.write(" > " + IO.now + ": " + x))
+        Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => config.debugging.write(" > " + IOUtils.now + ": " + x))
         val exitCode = proc.waitFor()
         config.debugging.write("# Finished. Exit code: " + exitCode)
       }
     }
 
     if (config.clean) {
-      IO.Time("Cleaning up") {
+      IOUtils.Time("Cleaning up") {
         Runtime.getRuntime().exec(removeFile).waitFor()
         Runtime.getRuntime().exec(removeClasses).waitFor()
       }
