@@ -80,12 +80,15 @@ object CPSTextInterpreter {
         IOUtils.writeToFile("cpsprogram_Main.scala", s.toString)
 
         // TODO make sure temp exists
+        // TODO fix compile bug, which leads to infinite runtime sometimes
+        /**
         val proc = Runtime.getRuntime().exec(compiler + " -d temp -Xexperimental -cp CPSTextInterpreter.jar cpsprogram_Main.scala", null, new File("."))
         config.debugging.write("# Output of compilation process: \n")
         val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
         Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(config.debugging.write(_))
         val exitCode = proc.waitFor()
         config.debugging.write("# Finished. Exit code: " + exitCode)
+        */
       }
     }
 

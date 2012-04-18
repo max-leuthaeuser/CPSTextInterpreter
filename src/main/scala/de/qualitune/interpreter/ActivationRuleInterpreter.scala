@@ -33,6 +33,10 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
         s + ("class " + actorName + " extends Actor {\ndef act() {\n")
         if (ar.settings.timeout > 0)
           s + ("Thread.sleep(" + ar.settings.timeout + ")\n")
+        // TODO get all core objects with all played roles
+        // TODO calculate needed permutations (xfactor)
+        // TODO generate new condition
+        // TODO put winner to context global map (with all rolenames + roleobjects)
         s + ("while(!(" + ar.when + ")) {" + "Thread.sleep(" + ar.settings.interval + ")\n" + "}\n do_activate_" + ar.name + "(); exit()}\n")
         s + ("\n}\n")
         s

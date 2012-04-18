@@ -74,11 +74,15 @@ class ContextInterpreter extends ASTElementInterpreter {
     a.activateFor.foreach(x => {
       vars.append("def " + x.variableName + " = {\n")
       vars.append("if (change < " + index + ") throw new Exception(\"Using " + x.variableName + " is not allowed yet! Activation was not done yet!\")\n")
+      // TODO look up all roles for the core object and generate playedBy deps live
       vars.append(getRolePlaysRoleDependencies(a.getBindingForVariable(x).roleName, allRoles).replace("<<name>>", x.roleName) + "}\n")
     })
 
     vars.toString() + "\n" + "def do_activate_" + a.name + "() {\n" +
       "change = " + index + "\n" +
+      // TODO create new instance of role, update role mapping (name of role + instance), activate role
+      // TODO add role mapping registry
+      // TODO remove single role instance everywhere (in main etc.)
       a.bindings.map(x => x.roleName + " ! " + "token_" + x.roleName).mkString("\n") + "}\n"
   }
 

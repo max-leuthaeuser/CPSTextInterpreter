@@ -23,6 +23,7 @@ import de.qualitune.interpreter.CPSTextInterpreter
 import de.qualitune.parser.CPSTextParser
 
 object Main {
+  // TODO: use templates for code generation globally
   private val help = """Usage:
     -p filename : parses the given CPSText file
     -i filename : parses and interpretes the given CPSText file
