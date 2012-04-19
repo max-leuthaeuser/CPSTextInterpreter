@@ -11,7 +11,7 @@ package de.qualitune.util
  * Date: 15.04.12
  */
 object ListUtils {
-  /** For each element x in List xss, returns (x, xss - x) */
+  /**For each element x in List xss, returns (x, xss - x) */
   def selections[A](xss: List[A]): List[(A, List[A])] = xss match {
     case Nil => Nil
     case x :: xs =>
@@ -19,7 +19,7 @@ object ListUtils {
       yield (y, x :: ys))
   }
 
-  /** Returns a list containing all permutations of the input list */
+  /**Returns a list containing all permutations of the input list */
   def permute[A](xs: List[A]): List[List[A]] = xs match {
     case Nil => List(Nil)
 
@@ -32,8 +32,21 @@ object ListUtils {
       yield y :: ps
   }
 
-  /** Calculates the Cartesian product for two lists. */
+  /**Calculates the Cartesian product for two lists. */
   def pair[A](a: List[A], b: List[A]) = a.flatMap(_a => b.map(_b => _a -> _b))
+
+  /**Calculates combinations out of liat l with length n. */
+  def combinations[T](n: Int, l: List[T]): List[List[T]] = {
+    def comb1[T](n: Int, l: List[T]): List[List[T]] =
+      n match {
+        case 0 => List(List())
+        case _ => for (i <- (0 to (l.size - n)).toList;
+                       l1 = l.drop(i);
+                       sl <- combinations(n - 1, l1.tail))
+        yield l1.head :: sl
+      }
+    comb1(n, l).distinct
+  }
 
   /**
    * For a list of a unknown number of lists, of different length, and for maybe
