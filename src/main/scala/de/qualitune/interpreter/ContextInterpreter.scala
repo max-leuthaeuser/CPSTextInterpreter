@@ -48,6 +48,7 @@ class ContextInterpreter extends ASTElementInterpreter {
    * Type conversion done with keyword 'as' first, playedBy is then translated to '-:'.
    * Makes sure that all parentheses are set correctly.
    */
+  // TODO refactor this for ROP
   private def getRolePlaysRoleDependencies(role: String, roles: List[Role]): String = {
     val allRoles = roles.map(_.name)
     if (allRoles.contains(roles.filter(ro => role.equals(ro.name))(0).playedBy)) {
