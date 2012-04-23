@@ -37,7 +37,7 @@ object ListUtils {
 
   /**Calculates combinations out of liat l with length n. */
   def combinations[T](n: Int, l: List[T]): List[List[T]] = {
-    def comb1[T](n: Int, l: List[T]): List[List[T]] =
+    def comb1[E](n: Int, l: List[E]): List[List[E]] =
       n match {
         case 0 => List(List())
         case _ => for (i <- (0 to (l.size - n)).toList;

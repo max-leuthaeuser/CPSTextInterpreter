@@ -33,8 +33,8 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
         s + """import scala.actors.Actor
 			import de.qualitune.scalaroles.roles.TransientCollaboration
 			import de.qualitune.scalaroles.roles.Basics._
-			import de.qualitune.scalaroles.players.NaoRobot
-			import de.qualitune.scalaroles.players.NaoRobot._
+			import de.qualitune.roles.players.NaoRobot
+			import de.qualitune.roles.players.NaoRobot._
 			"""
 
         s ++ c.imports.map("import " + _ + "\n") + "\n"

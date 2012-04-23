@@ -1,4 +1,4 @@
-package de.qualitune.scalaroles.players
+package de.qualitune.roles.players
 
 import de.qualitune.Nao._
 
