@@ -35,7 +35,7 @@ object ListUtils {
   /**Calculates the Cartesian product for two lists. */
   def pair[A](a: List[A], b: List[A]) = a.flatMap(_a => b.map(_b => _a -> _b))
 
-  /**Calculates combinations out of liat l with length n. */
+  /**Calculates combinations out of list l with length n. */
   def combinations[T](n: Int, l: List[T]): List[List[T]] = {
     def comb1[E](n: Int, l: List[E]): List[List[E]] =
       n match {

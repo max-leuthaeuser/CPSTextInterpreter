@@ -1,20 +1,21 @@
 package de.qualitune.roles
 
 /**
- * User: Max
+ * User: Max Leuthaeuser
+ * Date: 25.04.12
  */
-class ComponentRole(private val core: ComponentCore) extends Component {
+class ComponentRole(private val core: Component) extends Component {
   def getName = this.getClass.getSimpleName
 
-  def addRole(spec: ComponentRole) {
+  override def addRole(spec: ComponentRole) {
     core.addRole(spec)
   }
 
-  def getRole(spec: String) {
+  override def getRole(spec: String): ComponentRole = {
     core.getRole(spec)
   }
 
-  def hasRole(spec: String) {
+  override def hasRole(spec: String): Boolean = {
     core.hasRole(spec)
   }
 }

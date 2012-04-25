@@ -1,165 +1,165 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>de.qualitune</groupId>
-  <artifactId>cpstextinterpreter</artifactId>
-  <version>0.1-EXPERIMENTAL</version>
-  <name>${project.artifactId}</name>
-  <description>CPSTextInterpreter for executing CPSText programs</description>
-  <inceptionYear>2012</inceptionYear>
-  <licenses>
-    <license>
-      <name>GPL</name>
-      <url>http://....</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.qualitune</groupId>
+    <artifactId>cpstextinterpreter</artifactId>
+    <version>0.1-EXPERIMENTAL</version>
+    <name>${project.artifactId}</name>
+    <description>CPSTextInterpreter for executing CPSText programs</description>
+    <inceptionYear>2012</inceptionYear>
+    <licenses>
+        <license>
+            <name>GPL</name>
+            <url>http://....</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-  <properties>
-    <maven.compiler.source>1.6</maven.compiler.source>
-    <maven.compiler.target>1.6</maven.compiler.target>
-    <encoding>UTF-8</encoding>
-    <scala.version>2.8.0</scala.version>
-  </properties>
-  
-  <repositories>
-    <repository>
-      <id>scala-tools.org</id>
-      <name>Scala-Tools Maven2 Repository</name>
-      <url>http://scala-tools.org/repo-releases</url>
-    </repository>
-  </repositories>
+    <properties>
+        <maven.compiler.source>1.6</maven.compiler.source>
+        <maven.compiler.target>1.6</maven.compiler.target>
+        <encoding>UTF-8</encoding>
+        <scala.version>2.8.0</scala.version>
+    </properties>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>scala-tools.org</id>
-      <name>Scala-Tools Maven2 Repository</name>
-      <url>http://scala-tools.org/repo-releases</url>
-    </pluginRepository>
-  </pluginRepositories>
+    <repositories>
+        <repository>
+            <id>scala-tools.org</id>
+            <name>Scala-Tools Maven2 Repository</name>
+            <url>http://scala-tools.org/repo-releases</url>
+        </repository>
+    </repositories>
 
-  <dependencies>
-	<dependency>
-		<groupId>org.json</groupId>
-		<artifactId>json</artifactId>
-		<version>20090211</version>
-	</dependency>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-      <version>${scala.version}</version>
-    </dependency>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>scala-tools.org</id>
+            <name>Scala-Tools Maven2 Repository</name>
+            <url>http://scala-tools.org/repo-releases</url>
+        </pluginRepository>
+    </pluginRepositories>
 
-    <!-- Test -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.scalatest</groupId>
-      <artifactId>scalatest</artifactId>
-      <version>1.3</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20090211</version>
+        </dependency>
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
 
-  <build>
-	<testSourceDirectory>src/test/scala</testSourceDirectory>
-	
-	<pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>com.jteigen</groupId>
-          <artifactId>maven-scalatest-plugin</artifactId>
-          <version>1.1-SNAPSHOT</version>
-        </plugin>
-      </plugins>
-    </pluginManagement>
+        <!-- Test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest</artifactId>
+            <version>1.3</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-    <plugins>
-	  <plugin>
-        <groupId>org.scala-tools</groupId>
-        <artifactId>maven-scala-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-              <goal>testCompile</goal>
-            </goals>
-            <configuration>
-              <args>
-				<arg>-Xexperimental</arg>
-                <arg>-make:transitive</arg>
-                <arg>-dependencyfile</arg>
-                <arg>${project.build.directory}/.scala_dependencies</arg>
-              </args>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-	  
-	  <plugin>
-		<groupId>org.apache.maven.plugins</groupId>
-		<artifactId>maven-assembly-plugin</artifactId>
-		<configuration>
-		  <descriptorRefs>
-			<descriptorRef>jar-with-dependencies</descriptorRef>
-		  </descriptorRefs>
-		  <finalName>CPSTextInterpreter</finalName>
-		  <outputDirectory>builds</outputDirectory>
-		  <appendAssemblyId>false</appendAssemblyId>
-		  <archive>
-			<manifest>
-			  <mainClass>de.qualitune.Main</mainClass>
-			</manifest>
-		  </archive>
-		</configuration>
-		<executions>
-		  <execution>
-			<id>make-assembly</id>
-			<phase>package</phase>
-			<goals>
-			  <goal>attached</goal>
-			</goals>
-		  </execution>
-		</executions>
-	  </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-		  <useFile>true</useFile>
-		  <disableXmlReport>true</disableXmlReport>
-          <includes>
-            <include>**/*Test.*</include>
-            <include>**/*Suite.*</include>
-			<include>**/*Spec.*</include>
-          </includes>
-        </configuration>
-      </plugin>
-	  
-	  <plugin>
-	    <groupId>com.jteigen</groupId>
-	    <artifactId>maven-scalatest-plugin</artifactId>
-	    <version>1.1-SNAPSHOT</version>
-		<executions>
-          <execution>
-            <goals>
-              <goal>test</goal>
-            </goals>
-          </execution>
-        </executions>
-		<!-- this is the standard way to configure maven-plugins: by adding "configuration"-tag -->
-        <configuration>		  
-		  <!-- tell the plugin where your classes are -->
-		  <runpath>target/test-classes,target/classes</runpath>		  
-		  <!-- this just finds all Suites in mytestpackage-package of your test-classes 
-		  <wildcards>mytestpackage</wildcards>		  -->
-		  <!-- "W" means "Without color", it removes the ANSI-color-chars from the output -->
-		  <stdout>WD</stdout>
-        </configuration>		
-	  </plugin>
-    </plugins>
-  </build>
+    <build>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.jteigen</groupId>
+                    <artifactId>maven-scalatest-plugin</artifactId>
+                    <version>1.1-SNAPSHOT</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <args>
+                                <arg>-make:transitive</arg>
+                                <arg>-dependencyfile</arg>
+                                <arg>${project.build.directory}/.scala_dependencies</arg>
+                            </args>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <finalName>CPSTextInterpreter</finalName>
+                    <outputDirectory>builds</outputDirectory>
+                    <appendAssemblyId>false</appendAssemblyId>
+                    <archive>
+                        <manifest>
+                            <mainClass>de.qualitune.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>attached</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <useFile>true</useFile>
+                    <disableXmlReport>true</disableXmlReport>
+                    <includes>
+                        <include>**/*Test.*</include>
+                        <include>**/*Suite.*</include>
+                        <include>**/*Spec.*</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.jteigen</groupId>
+                <artifactId>maven-scalatest-plugin</artifactId>
+                <version>1.1-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <!-- this is the standard way to configure maven-plugins: by adding "configuration"-tag -->
+                <configuration>
+                    <!-- tell the plugin where your classes are -->
+                    <runpath>target/test-classes,target/classes</runpath>
+                    <!-- this just finds all Suites in mytestpackage-package of your test-classes
+               <wildcards>mytestpackage</wildcards>		  -->
+                    <!-- "W" means "Without color", it removes the ANSI-color-chars from the output -->
+                    <stdout>WD</stdout>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

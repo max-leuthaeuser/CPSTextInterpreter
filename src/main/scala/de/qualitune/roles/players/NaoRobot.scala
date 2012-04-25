@@ -1,5 +1,10 @@
 package de.qualitune.roles.players
 
+/**
+ * User: Max Leuthaeuser
+ * Date: 25.04.12
+ */
+
 import de.qualitune.Nao._
 
 object NaoRobot {
