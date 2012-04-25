@@ -45,8 +45,8 @@ The following is assumed to be installed on the build machine:
 The following is assumed to be installed on the machine you want to run
 CPSTextInterpreter:
 
-- A Java runtime environment (JRE) or SDK 1.6 or above. (``java`` needs to be in the PATH)
-- Scala 2.8.0 (``fsc`` needs to be in the PATH)
+- A Java runtime environment (JRE) or SDK 1.6 or above. (needs to be in the PATH)
+- Scala 2.9.2 (needs to be in the PATH)
 
 
 Part IV. Contributing to CPSTextInterpreter
