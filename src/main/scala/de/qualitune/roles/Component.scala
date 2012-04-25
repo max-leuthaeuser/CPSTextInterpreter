@@ -9,7 +9,7 @@ import players.NaoRobot
 abstract class Component extends NaoRobot {
   def addRole(spec: ComponentRole)
 
-  def getRole(spec: String): ComponentRole
+  def getRole(spec: String): Iterable[ComponentRole]
 
   def hasRole(spec: String): Boolean
 }

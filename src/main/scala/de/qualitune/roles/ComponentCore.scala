@@ -1,17 +1,24 @@
 package de.qualitune.roles
 
+import collection.mutable.{Map, LinkedList}
+
+
 /**
  * User: Max Leuthaeuser
  * Date: 25.04.12
  */
 class ComponentCore extends Component {
-  private var roles = scala.collection.mutable.Map[String, ComponentRole]()
+  private var roles = Map[String, LinkedList[ComponentRole]]()
 
   override def addRole(spec: ComponentRole) {
-    roles(spec.getName) = spec
+    if (roles.contains(spec.getName)) {
+      roles(spec.getName) = roles.get(spec.getName).get :+ spec
+    } else {
+      roles(spec.getName) = LinkedList(spec)
+    }
   }
 
-  override def getRole(spec: String): ComponentRole = {
+  override def getRole(spec: String): Iterable[ComponentRole] = {
     roles.get(spec).get
   }
 
@@ -20,7 +27,7 @@ class ComponentCore extends Component {
   }
 
   def getRoles() = {
-    roles.values
+    roles.values.flatten
   }
 }
 

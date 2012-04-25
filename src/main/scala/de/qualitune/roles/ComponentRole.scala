@@ -11,7 +11,7 @@ class ComponentRole(private val core: Component) extends Component {
     core.addRole(spec)
   }
 
-  override def getRole(spec: String): ComponentRole = {
+  override def getRole(spec: String): Iterable[ComponentRole] = {
     core.getRole(spec)
   }
 
