@@ -21,8 +21,8 @@ import de.qualitune.ast.{ASTElement, CPSProgram}
 
 
 /**
- * User: Max Leuthaeuser
- * Date: 19.01.12
+ * @author Max Leuthaeuser
+ * @since 19.01.12
  */
 class CPSProgramInterpreter extends ASTElementInterpreter {
   override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
@@ -31,8 +31,7 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
         // imports
         // some standard imports first, they are always needed
         s + """import scala.actors.Actor
-			import de.qualitune.scalaroles.roles.TransientCollaboration
-			import de.qualitune.scalaroles.roles.Basics._
+			import de.qualitune.scalaroles.roles.ComponentRole
 			import de.qualitune.roles.players.NaoRobot
 			import de.qualitune.roles.players.NaoRobot._
 			"""
@@ -57,9 +56,6 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
             name = x.toLowerCase
           s += "val " + name + "= new " + x + " {}"
           s += name + ".start"
-        })
-        c.getRolePaths().foreach(x => {
-          s += x + ".start"
         })
         s
       }

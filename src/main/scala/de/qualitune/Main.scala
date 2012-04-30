@@ -22,6 +22,10 @@ import scala.io.Source._
 import de.qualitune.interpreter.CPSTextInterpreter
 import de.qualitune.parser.CPSTextParser
 
+/**
+ * @author Max Leuthaeuser
+ * @since 22.11.2011
+ */
 object Main {
   // TODO: use templates for code generation globally
   private val help = """Usage:
@@ -32,13 +36,14 @@ object Main {
   def main(args: Array[String]) {
     if (args.isEmpty) {
       println(help)
-      exit(1)
+      System.exit(1)
     }
     val option = args(0)
     option match {
       case "-p" => println(CPSTextParser.parse(fromFile(args.toList(1)).mkString))
       case "-i" => {
         // read config first
+        // TODO what happens if config is unavailable
         val config = ConfigReader.parse(fromFile("config/run.conf").mkString)
         CPSTextInterpreter.interpretCode(fromFile(args.toList(1)).mkString, config)
       }

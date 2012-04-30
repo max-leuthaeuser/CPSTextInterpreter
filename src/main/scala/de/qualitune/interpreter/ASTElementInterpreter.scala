@@ -20,8 +20,8 @@ package de.qualitune.interpreter
 import de.qualitune.ast.ASTElement
 
 /**
- * User: Max Leuthaeuser
- * Date: 18.01.12
+ * @author Max Leuthaeuser
+ * @since 22.11.2011
  */
 abstract class ASTElementInterpreter {
   def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T): EvaluableString

@@ -27,7 +27,7 @@ import de.qualitune.util.IOUtils
  * Interpreter for CPSText containing static methods for interpreting CPSText code and programs.
  *
  * @author Max Leuthaeuser
- * @date 22.11.2011
+ * @since 22.11.2011
  */
 object CPSTextInterpreter {
   /**
@@ -48,18 +48,16 @@ object CPSTextInterpreter {
     CPSChecks.checkImports(cst)
     if (config.debugging.enabled) config.debugging.write("\t2) Checking role bindings")
     CPSChecks.checkBindings(cst)
-    if (config.debugging.enabled) config.debugging.write("\t3) Checking roles")
-    CPSChecks.checkRoles(cst)
     if (config.debugging.enabled) config.debugging.write("\t4) Checking CPS objects")
     CPSChecks.checkCPSObjects(cst)
     if (config.debugging.enabled) config.debugging.write("\t5) Checking role constrains")
     CPSChecks.checkConstrains(cst)
 
-    var compiler = "fsc"
+    var compiler = "scalac"
     var jre = "java"
     var removeFile = "rm cpsprogram_Main.scala"
     var removeClasses = "rm temp/*.class"
-    val sep = System.getProperties().getProperty("path.separator");
+    val sep = System.getProperties.getProperty("path.separator");
 
     if (IOUtils.isWindows) {
       compiler = "cmd.exe /C " + compiler
@@ -79,24 +77,25 @@ object CPSTextInterpreter {
 
         IOUtils.writeToFile("cpsprogram_Main.scala", s.toString)
 
-        // TODO make sure temp exists
+        IOUtils.createDirectory(new File("temp"))
+
         // TODO fix compile bug, which leads to infinite runtime sometimes
         /**
-        val proc = Runtime.getRuntime().exec(compiler + " -d temp -Xexperimental -cp CPSTextInterpreter.jar cpsprogram_Main.scala", null, new File("."))
+        val proc = Runtime.getRuntime().exec(compiler + " -d temp -cp CPSTextInterpreter.jar cpsprogram_Main.scala", null, new File("."))
         config.debugging.write("# Output of compilation process: \n")
         val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
         Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(config.debugging.write(_))
         val exitCode = proc.waitFor()
         config.debugging.write("# Finished. Exit code: " + exitCode)
-        */
+         */
       }
     }
 
     if (config.execution.enabled) {
       IOUtils.Time("Execution") {
-        val proc = Runtime.getRuntime().exec(jre + " -cp temp" + sep + "CPSTextInterpreter.jar" + sep + ". cpsprogram_Main", null, new File("."))
+        val proc = Runtime.getRuntime.exec(jre + " -cp temp" + sep + "CPSTextInterpreter.jar" + sep + ". cpsprogram_Main", null, new File("."))
         config.debugging.write("# Output of CPSText program: \n")
-        val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
+        val reader = new BufferedReader(new InputStreamReader(proc.getInputStream))
         Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => config.debugging.write(" > " + IOUtils.now + ": " + x))
         val exitCode = proc.waitFor()
         config.debugging.write("# Finished. Exit code: " + exitCode)
@@ -105,8 +104,8 @@ object CPSTextInterpreter {
 
     if (config.clean) {
       IOUtils.Time("Cleaning up") {
-        Runtime.getRuntime().exec(removeFile).waitFor()
-        Runtime.getRuntime().exec(removeClasses).waitFor()
+        Runtime.getRuntime.exec(removeFile).waitFor()
+        Runtime.getRuntime.exec(removeClasses).waitFor()
       }
     }
     config.debugging.write("# Shutting down")

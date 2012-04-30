@@ -22,10 +22,9 @@ import de.qualitune.ast.variable.VariableDeclAccessType
 import de.qualitune.ast.variable.VariableDeclAccessType._
 import de.qualitune.ast.ASTElement
 
-
 /**
- * User: Max Leuthaeuser
- * Date: 18.01.12
+ * @author Max Leuthaeuser
+ * @since 18.01.12
  */
 class VariableInterpreter extends ASTElementInterpreter {
   private def getAccessTypeModifier(t: VariableDeclAccessType): String = {

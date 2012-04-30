@@ -22,7 +22,7 @@ import de.qualitune.ast.variable.{InitVariableDecl, EmptyVariableDecl, VariableD
 import de.qualitune.ast.ASTElement
 
 object Role {
-  def build(name: String, behavior: Behavior, content: List[ScalaObject], playedBy: String): Role = {
+  def build(name: String, behavior: Behavior, content: List[ScalaObject]): Role = {
     var variables: List[VariableDecl] = Nil
     var ops: List[Operation] = Nil
 
@@ -32,11 +32,11 @@ object Role {
       case e: Operation => ops = e.asInstanceOf[Operation] :: ops
     })
 
-    Role(name, behavior, variables, ops, playedBy)
+    Role(name, behavior, variables, ops)
   }
 }
 
-case class Role(name: String, behavior: Behavior, variables: List[VariableDecl], operations: List[Operation], playedBy: String) extends ASTElement {
+case class Role(name: String, behavior: Behavior, variables: List[VariableDecl], operations: List[Operation]) extends ASTElement {
   def prettyPrint(identLevel: Int): String = {
     var ident = ""
     (1 to identLevel).foreach(e => {
@@ -51,7 +51,7 @@ case class Role(name: String, behavior: Behavior, variables: List[VariableDecl],
     if (!operations.isEmpty) o = operations.map(_.prettyPrint(identLevel)).mkString("\t\t" + ident, "\n\n\t\t" + ident, "")
 
 
-    "role " + name + " playerBy " + playedBy + " {\n" +
+    "role " + name + " {\n" +
       "\t" + ident + behavior.prettyPrint(identLevel) + "\n\n" + v + o + "\n\t" + ident + "}"
   }
 

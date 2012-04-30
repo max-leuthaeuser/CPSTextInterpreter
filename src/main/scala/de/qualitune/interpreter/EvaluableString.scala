@@ -23,7 +23,7 @@ package de.qualitune.interpreter
  * Additionally a field for storing all information for activation blocks is provided.
  *
  * @author Max Leuthaeuser
- * @date 18.01.2012
+ * @since 18.01.2012
  */
 class EvaluableString {
   lazy private val wrapped = new StringBuilder()

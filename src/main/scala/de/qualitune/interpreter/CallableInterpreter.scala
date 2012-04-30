@@ -22,8 +22,8 @@ import de.qualitune.ast.ASTElement
 
 
 /**
- * User: Max Leuthaeuser
- * Date: 18.01.12
+ * @author Max Leuthaeuser
+ * @since 22.11.2011
  */
 class CallableInterpreter extends ASTElementInterpreter {
   private def callableToString(c: Callable) = "def " + c.toString.replaceAll("\t", "") + "\n"

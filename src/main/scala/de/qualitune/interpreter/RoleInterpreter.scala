@@ -21,27 +21,21 @@ import de.qualitune.ast.role.{Role, EquivalenceConstraint, ImplicationConstraint
 import de.qualitune.ast.ASTElement
 
 /**
- * User: Max Leuthaeuser
- * Date: 18.01.12
+ * @author Max Leuthaeuser
+ * @since 18.01.12
  */
 class RoleInterpreter extends ASTElementInterpreter {
   private def buildActMethod(name: String) = {
     "def act() { while (true) { receive { case " + name + " => behavior() } } }\n"
   }
 
-  // TODO refactor this for ROP
+  // TODO test this for ROP
   override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
     elem match {
       case r: Role => data match {
         case d: List[Role] => {
           s + ("case object token_" + r.name + "\n")
-
-          s + ("var " + r.name + " = new Role_" + r.name + " {}\n")
-
-          if (d.map(_.name).contains(r.playedBy))
-            s + "trait Role_" + r.name + " extends Role[Role_" + r.playedBy + "] with Actor {\n"
-          else
-            s + "trait Role_" + r.name + " extends Role[" + r.playedBy + "] with Actor {\n"
+          s + "class " + r.name + " extends ComponentRole with Actor {\n"
           // act method to start the behaviour method when the context the role belongs to gets activated
           s + buildActMethod("token_" + r.name)
 

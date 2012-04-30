@@ -7,7 +7,7 @@ import de.qualitune.util.IOUtils
  * Configuration classes representing a config for CPSText interpreter.
  *
  * @author Max Leuthaeuser
- * @date 11.03.2012
+ * @since 11.03.2012
  */
 
 object Configuration {
@@ -23,9 +23,9 @@ object Configuration {
   }
 }
 
-case class Target(val enabled: Boolean, val depends: String)
+case class Target(enabled: Boolean, depends: String)
 
-case class Debugging(override val enabled: Boolean, override val depends: String, val path: String) extends Target(enabled, depends) {
+case class Debugging(override val enabled: Boolean, override val depends: String, path: String) extends Target(enabled, depends) {
   def write(text: String) {
     if (path == "stdout") {
       println(text)

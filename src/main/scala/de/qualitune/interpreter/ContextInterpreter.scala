@@ -22,27 +22,10 @@ import de.qualitune.ast.rule.ActivationRule
 import de.qualitune.ast.{ASTElement, Context}
 
 /**
- * User: Max Leuthaeuser
- * Date: 18.01.12
+ * @author Max Leuthaeuser
+ * @since 22.11.2011
  */
 class ContextInterpreter extends ASTElementInterpreter {
-  // TODO test with deeper nested role play role constructs
-  /**
-   * Recursively calculates a List of all roles role 'r' plays.
-   */
-  private def getRolePlaysRoleList(r: Role, roles: List[Role]): List[Role] = {
-    if (!roles.contains(r)) {
-      List[Role](r)
-    } else {
-      if (!r.playedBy.equals("NaoRobot")) {
-        val p = roles.filter(ro => r.playedBy.equals(ro.name))(0)
-        r :: getRolePlaysRoleList(p, roles)
-      } else {
-        List[Role](r)
-      }
-    }
-  }
-
   /**
    * Processes the list of all roles which role 'role' plays.
    * Type conversion done with keyword 'as' first, playedBy is then translated to '-:'.

@@ -45,7 +45,9 @@ object ListUtils {
                        sl <- combinations(n - 1, l1.tail))
         yield l1.head :: sl
       }
-    comb1(n, l).distinct
+    var li = List[T]()
+    (1 to n).foreach(_ => li ++= l)
+    comb1(n, li).distinct
   }
 
   /**

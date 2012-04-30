@@ -31,7 +31,7 @@ import de.qualitune.ast.callable.{Behavior, Operation}
  * Parser for parsing CPSText and creating an instance of the corresponding AST.
  *
  * @author Max Leuthaeuser
- * @date 22.11.2011
+ * @since 22.11.2011
  */
 object CPSTextParser extends JavaTokenParsers {
   // ignore whitespaces and all c-style comments
@@ -195,8 +195,8 @@ object CPSTextParser extends JavaTokenParsers {
     _.getOrElse(List[Operation]())
   }
 
-  def role: Parser[Role] = "role" ~ ident ~ "playedBy" ~ ident ~ "{" ~ behavior ~ roleContent ~ "}" ^^ {
-    case "role" ~ n ~ "playedBy" ~ p ~ "{" ~ b ~ c ~ "}" => Role.build(n, b, c, p)
+  def role: Parser[Role] = "role" ~ ident ~ "{" ~ behavior ~ roleContent ~ "}" ^^ {
+    case "role" ~ n ~ "{" ~ b ~ c ~ "}" => Role.build(n, b, c)
   }
 
   def roleContent: Parser[List[ScalaObject]] = rep((variableDecl <~ ";") | method)

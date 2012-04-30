@@ -24,10 +24,10 @@ import de.qualitune.ast.role._
 import exceptions._
 
 /**
- *  Object containing some methods for checking a CPSProgram statically.
+ * Object containing some methods for checking a CPSProgram statically.
  *
  * @author Max Leuthaeuser
- * @date 22.11.2011
+ * @since 22.11.2011
  */
 object CPSChecks {
   /**
@@ -158,8 +158,8 @@ object CPSChecks {
 
     /**
      * Algorithm:
-     *  - run through all contexts and
-     *  - run through all roles
+     * - run through all contexts and
+     * - run through all roles
      * and check if their names and embedded variables are unique.
      *
      * Same name for role or contexts generates error, same name for variables on top level
@@ -258,39 +258,6 @@ object CPSChecks {
       l = l ++ getConstraints(e.inner)
     })
     l
-  }
-
-  /**
-   * Check if all role definitions are well formed, hence no cyclic playedBy definitions.
-   *
-   * @param cst: CPSProgram to check
-   */
-  def checkRoles(cst: CPSProgram) {
-    // TODO need further tests
-    // collect all roles
-    val rl = getRoles(cst.contexts)
-    var pl = List[String]()
-
-    // calculate played by reference list recursively
-    def playedBy(r: Role) {
-      if (!pl.contains(r.playedBy)) {
-        val elem = rl.getOrElse(r.playedBy, null)
-        if (elem != null) {
-          pl = r.playedBy :: pl
-          playedBy(elem)
-        }
-      }
-    }
-
-    rl.foreach(e => {
-      if (e._1.equals(e._2.playedBy))
-        throw new InvalidPlayedByException("Role '" + e._1 + "' cannot played by itself!")
-
-      playedBy(e._2)
-      if (pl.size > 1 && pl.contains(e._2.playedBy))
-        throw new InvalidPlayedByException("Cyclid playedBy definition found! [" + pl.reverse.mkString("", "->", "->") + e._2.playedBy + "]")
-      pl = List[String]()
-    })
   }
 
   /**

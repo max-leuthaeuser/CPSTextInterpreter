@@ -21,8 +21,8 @@ import de.qualitune.ast.rule.ActivationRule
 import de.qualitune.ast.ASTElement
 
 /**
- * User: Max Leuthaeuser
- * Date: 18.01.12
+ * @author Max Leuthaeuser
+ * @since 22.11.2011
  */
 class ActivationRuleInterpreter extends ASTElementInterpreter {
   override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {

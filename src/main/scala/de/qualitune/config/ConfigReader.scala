@@ -6,7 +6,7 @@ import util.parsing.combinator.JavaTokenParsers
  * Parser for parsing a config file  and creating an instance of Configuration.
  *
  * @author Max Leuthaeuser
- * @date 11.03.2012
+ * @since 11.03.2012
  */
 object ConfigReader extends JavaTokenParsers {
   // ignore whitespaces and all c-style comments
@@ -38,11 +38,11 @@ object ConfigReader extends JavaTokenParsers {
   }
 
   /**
-  * Will parse a String and return an instance of Configuration
-  *
-  * @param p: a String representing a textual configuration
-  * @return an instance of Configuration
-  */
+   * Will parse a String and return an instance of Configuration
+   *
+   * @param p: a String representing a textual configuration
+   * @return an instance of Configuration
+   */
   def parse(p: String): Configuration = {
     parseAll(config, p) match {
       case Success(r, _) => r.asInstanceOf[Configuration]
