@@ -17,10 +17,11 @@
 
 package de.qualitune
 
-import config.ConfigReader
+import config.{Configuration, ConfigReader}
 import scala.io.Source._
 import de.qualitune.interpreter.CPSTextInterpreter
 import de.qualitune.parser.CPSTextParser
+import java.io.FileNotFoundException
 
 /**
  * @author Max Leuthaeuser
@@ -43,8 +44,12 @@ object Main {
       case "-p" => println(CPSTextParser.parse(fromFile(args.toList(1)).mkString))
       case "-i" => {
         // read config first
-        // TODO what happens if config is unavailable
-        val config = ConfigReader.parse(fromFile("config/run.conf").mkString)
+        var config: Configuration = null
+        try {
+          config = ConfigReader.parse(fromFile("config/run.conf").mkString)
+        } catch {
+          case e: FileNotFoundException => println("Configuration not found!")
+        }
         CPSTextInterpreter.interpretCode(fromFile(args.toList(1)).mkString, config)
       }
       case _ => println(help)
