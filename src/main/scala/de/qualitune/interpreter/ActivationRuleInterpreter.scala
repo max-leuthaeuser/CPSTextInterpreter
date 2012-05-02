@@ -28,15 +28,18 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
   override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
     elem match {
       case ar: ActivationRule => {
+        // create variables for all bindings
+        ar.bindings.foreach(b => s + ("@volatile var " + b.variableName + ": " + b.roleName + " = null"))
+
         val actorName = "Context_Activator_" + ar.name
         s + ("val " + actorName.toLowerCase + " = new " + actorName + "()\n")
         s + ("class " + actorName + " extends Actor {\ndef act() {\n")
         if (ar.settings.timeout > 0)
           s + ("Thread.sleep(" + ar.settings.timeout + ")\n")
         // TODO get all core objects with all played roles
-        // TODO calculate needed permutations (xfactor)
+        // TODO calculate needed permutations
         // TODO generate new condition
-        // TODO put winner to context global map (with all rolenames + roleobjects)
+        // TODO create new instance of role, update role mapping (name of role + instance), activate role
         s + ("while(!(" + ar.when + ")) {" + "Thread.sleep(" + ar.settings.interval + ")\n" + "}\n do_activate_" + ar.name + "(); exit()}\n")
         s + ("\n}\n")
         s

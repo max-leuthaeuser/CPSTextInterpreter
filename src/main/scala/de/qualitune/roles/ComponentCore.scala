@@ -1,14 +1,22 @@
 package de.qualitune.roles
 
 import collection.mutable.{Map, LinkedList}
-
+import players.NaoRobot
 
 /**
  * User: Max Leuthaeuser
  * Date: 25.04.12
  */
 class ComponentCore extends Component {
-  private var roles = Map[String, LinkedList[ComponentRole]]()
+  private val roles = Map[String, LinkedList[ComponentRole]]()
+
+  /**Copyconstructor */
+  def this(r: NaoRobot) {
+    this()
+    this.name = r.name
+    this.ip = r.ip
+    this.port = r.port
+  }
 
   override def addRole(spec: ComponentRole) {
     if (roles.contains(spec.getName)) {
@@ -26,8 +34,7 @@ class ComponentCore extends Component {
     roles.contains(spec)
   }
 
-  def getRoles() = {
-    roles.values.flatten
-  }
+  @deprecated
+  def getRoles = roles.values.flatten
 }
 

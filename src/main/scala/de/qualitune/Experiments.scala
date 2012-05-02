@@ -9,8 +9,6 @@ import util.ListUtils
  */
 object Experiments {
 
-  class RobotCore extends ComponentCore
-
   class RoleA(n: String, core: Component) extends ComponentRole(core) {
     def a() = {
       println("A.a from " + n)
@@ -63,15 +61,13 @@ object Experiments {
   }
 
   def main(args: Array[String]) {
-    val c1 = new RobotCore()
-
+    val c1 = new ComponentCore()
     c1.addRole(new RoleA("a1 (core c1)", c1))
     c1.addRole(new RoleA("a2 (core c1)", c1))
-
     c1.addRole(new RoleB("b1 (core c1)", c1))
     c1.addRole(new RoleB("b2 (core c1)", c1))
 
-    val c2 = new RobotCore()
+    val c2 = new ComponentCore()
     c2.addRole(new RoleC("c1 (core c2)", c2))
     c2.addRole(new RoleC("c2 (core c2)", c2))
 

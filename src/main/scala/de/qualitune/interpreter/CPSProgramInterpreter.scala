@@ -32,8 +32,10 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
         // some standard imports first, they are always needed
         s + """import scala.actors.Actor
 			import de.qualitune.scalaroles.roles.ComponentRole
+			import de.qualitune.scalaroles.roles.ComponentCore
 			import de.qualitune.roles.players.NaoRobot
 			import de.qualitune.roles.players.NaoRobot._
+			import collection.mutable.Map
 			"""
 
         s ++ c.imports.map("import " + _ + "\n") + "\n"
@@ -43,18 +45,24 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
         c.robots.foreach(new CPSTypeInterpreter()(s, _, null))
         s + "}\n import CPS._\n"
 
+        // global registry for core object with their roles
+        s + "object Registry {"
+        s + " @volatile var cores = List[ComponentCore]()"
+        s + "}\n"
+
+
         // contexts
         val allRoles = c.getAllRoles()
         c.contexts.foreach(x => new ContextInterpreter()(s, x, allRoles))
 
-        // control flow, start contexts and roles
+        // control flow, start contexts
         c.getContextPaths().foreach(x => {
           var name = ""
           if (x.contains("."))
             name = x.substring(x.lastIndexOf(".") + 1).toLowerCase
           else
             name = x.toLowerCase
-          s += "val " + name + "= new " + x + " {}"
+          s += "val " + name + "= new " + x + "()"
           s += name + ".start"
         })
         s
