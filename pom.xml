@@ -40,23 +40,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20090211</version>
-        </dependency>
-        <dependency>
             <groupId>org.scala-lang</groupId>
             <artifactId>scala-library</artifactId>
             <version>${scala.version}</version>
         </dependency>
 
-        <!-- jnaoqi jar -->
         <dependency>
             <groupId>com.aldebaran</groupId>
             <artifactId>jnaoqi</artifactId>
             <version>1.12.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/jnaoqi.jar</systemPath>
         </dependency>
 
         <!-- Test -->
@@ -176,16 +168,16 @@
             </plugin>
         </plugins>
     </build>
-	
-	<reporting>
-		<plugins>
-		<plugin>
-			<groupId>org.scala-tools</groupId>
-			<artifactId>maven-scala-plugin</artifactId>
-			<configuration>
-				<outputDirectory>doc</outputDirectory>
-			</configuration>
-		</plugin>
-		</plugins>
-	</reporting>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.scala-tools</groupId>
+                <artifactId>maven-scala-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>doc</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 </project>
