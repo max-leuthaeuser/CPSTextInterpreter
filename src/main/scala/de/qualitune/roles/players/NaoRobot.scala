@@ -5,7 +5,8 @@ package de.qualitune.roles.players
  * Date: 25.04.12
  */
 
-import de.qualitune.Nao._
+import com.aldebaran.proxy._
+import de.qualitune.Nao
 
 object NaoRobot {
   val STANDARD_IP: String = "192.168.0.139"
@@ -33,75 +34,75 @@ trait NaoRobot extends Robot {
     this
   }
 
-  def AudioDevice(): ALAudioDevice = new ALAudioDevice(ip, port)
+  def AudioDevice(): ALAudioDeviceProxy = Nao.createALAudioDevice(ip, port)
 
-  def AudioPlayer(): ALAudioPlayer = new ALAudioPlayer(ip, port)
+  def AudioPlayer(): ALAudioPlayerProxy = Nao.createALAudioPlayer(ip, port)
 
-  def AudioSourceLocalization(): ALAudioSourceLocalization = new ALAudioSourceLocalization(ip, port)
+  def AudioSourceLocalization(): ALAudioSourceLocalizationProxy = Nao.createALAudioSourceLocalization(ip, port)
 
-  def BehaviorManager(): ALBehaviorManager = new ALBehaviorManager(ip, port)
+  def BehaviorManager(): ALBehaviorManagerProxy = Nao.createALBehaviorManager(ip, port)
 
-  def Bluetooth(): ALBluetooth = new ALBluetooth(ip, port)
+  def Bluetooth(): ALBluetoothProxy = Nao.createALBluetooth(ip, port)
 
-  def Bonjour(): ALBonjour = new ALBonjour(ip, port)
+  def Bonjour(): ALBonjourProxy = Nao.createALBonjour(ip, port)
 
-  def FaceDetection(): ALFaceDetection = new ALFaceDetection(ip, port)
+  def FaceDetection(): ALFaceDetectionProxy = Nao.createALFaceDetection(ip, port)
 
-  def FaceTracker(): ALFaceTracker = new ALFaceTracker(ip, port)
+  def FaceTracker(): ALFaceTrackerProxy = Nao.createALFaceTracker(ip, port)
 
-  def FileManager(): ALFileManager = new ALFileManager(ip, port)
+  def FileManager(): ALFileManagerProxy = Nao.createALFileManager(ip, port)
 
-  def FrameManager(): ALFrameManager = new ALFrameManager(ip, port)
+  def FrameManager(): ALFrameManagerProxy = Nao.createALFrameManager(ip, port)
 
-  def Fsr(): ALFsr = new ALFsr(ip, port)
+  def Fsr(): ALFsrProxy = Nao.createALFsr(ip, port)
 
-  def Infrared(): ALInfrared = new ALInfrared(ip, port)
+  def Infrared(): ALInfraredProxy = Nao.createALInfrared(ip, port)
 
-  def LandMarkDetection(): ALLandMarkDetection = new ALLandMarkDetection(ip, port)
+  def LandMarkDetection(): ALLandMarkDetectionProxy = Nao.createALLandMarkDetection(ip, port)
 
-  def Laser(): ALLaser = new ALLaser(ip, port)
+  def Laser(): ALLaserProxy = Nao.createALLaser(ip, port)
 
-  def Launcher(): ALLauncher = new ALLauncher(ip, port)
+  def Launcher(): ALLauncherProxy = Nao.createALLauncher(ip, port)
 
-  def Leds(): ALLeds = new ALLeds(ip, port)
+  def Leds(): ALLedsProxy = Nao.createALLeds(ip, port)
 
-  def Logger(): ALLogger = new ALLogger(ip, port)
+  def Logger(): ALLoggerProxy = Nao.createALLogger(ip, port)
 
-  def Memory(): ALMemory = new ALMemory(ip, port)
+  def Memory(): ALMemoryProxy = Nao.createALMemory(ip, port)
 
-  def Motion(): ALMotion = new ALMotion(ip, port)
+  def Motion(): ALMotionProxy = Nao.createALMotion(ip, port)
 
-  def MotionRecorder(): ALMotionRecorder = new ALMotionRecorder(ip, port)
+  def MotionRecorder(): ALMotionRecorderProxy = Nao.createALMotionRecorder(ip, port)
 
-  def Preferences(): ALPreferences = new ALPreferences(ip, port)
+  def Preferences(): ALPreferencesProxy = Nao.createALPreferences(ip, port)
 
-  def PythonBridge(): ALPythonBridge = new ALPythonBridge(ip, port)
+  def PythonBridge(): ALPythonBridgeProxy = Nao.createALPythonBridge(ip, port)
 
-  def RedBallDetection(): ALRedBallDetection = new ALRedBallDetection(ip, port)
+  def RedBallDetection(): ALRedBallDetectionProxy = Nao.createALRedBallDetection(ip, port)
 
-  def RedBallTracker(): ALRedBallTracker = new ALRedBallTracker(ip, port)
+  def RedBallTracker(): ALRedBallTrackerProxy = Nao.createALRedBallTracker(ip, port)
 
-  def ResourceManager(): ALResourceManager = new ALResourceManager(ip, port)
+  def ResourceManager(): ALResourceManagerProxy = Nao.createALResourceManager(ip, port)
 
-  def RobotPose(): ALRobotPose = new ALRobotPose(ip, port)
+  def RobotPose(): ALRobotPoseProxy = Nao.createALRobotPose(ip, port)
 
-  def Sensors(): ALSensors = new ALSensors(ip, port)
+  def Sensors(): ALSensorsProxy = Nao.createALSensors(ip, port)
 
-  def Sentinel(): ALSentinel = new ALSentinel(ip, port)
+  def Sentinel(): ALSentinelProxy = Nao.createALSentinel(ip, port)
 
-  def Sonar(): ALSonar = new ALSonar(ip, port)
+  def Sonar(): ALSonarProxy = Nao.createALSonar(ip, port)
 
-  def SoundDetection(): ALSoundDetection = new ALSoundDetection(ip, port)
+  def SoundDetection(): ALSoundDetectionProxy = Nao.createALSoundDetection(ip, port)
 
-  def SpeechRecognition(): ALSpeechRecognition = new ALSpeechRecognition(ip, port)
+  def SpeechRecognition(): ALSpeechRecognitionProxy = Nao.createALSpeechRecognition(ip, port)
 
-  def TextToSpeech(): ALTextToSpeech = new ALTextToSpeech(ip, port)
+  def TextToSpeech(): ALTextToSpeechProxy = Nao.createALTextToSpeech(ip, port)
 
-  def VideoDevice(): ALVideoDevice = new ALVideoDevice(ip, port)
+  def VideoDevice(): ALVideoDeviceProxy = Nao.createALVideoDevice(ip, port)
 
-  def VisionRecognition(): ALVisionRecognition = new ALVisionRecognition(ip, port)
+  def VisionRecognition(): ALVisionRecognitionProxy = Nao.createALVisionRecognition(ip, port)
 
-  def VisionToolbox(): ALVisionToolbox = new ALVisionToolbox(ip, port)
+  def VisionToolbox(): ALVisionToolboxProxy = Nao.createALVisionToolbox(ip, port)
 
-  def DCM(): DCM = new DCM(ip, port)
+  def DCM(): DCMProxy = Nao.createDCM(ip, port)
 }

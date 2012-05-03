@@ -50,6 +50,15 @@
             <version>${scala.version}</version>
         </dependency>
 
+        <!-- jnaoqi jar -->
+        <dependency>
+            <groupId>com.aldebaran</groupId>
+            <artifactId>jnaoqi</artifactId>
+            <version>1.12.3</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jnaoqi.jar</systemPath>
+        </dependency>
+
         <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
@@ -82,6 +91,11 @@
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>${basedir}/lib/java/com/aldebaran/proxy</include>
+                    </includes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -168,8 +182,10 @@
 		<plugin>
 			<groupId>org.scala-tools</groupId>
 			<artifactId>maven-scala-plugin</artifactId>
+			<configuration>
+				<outputDirectory>doc</outputDirectory>
+			</configuration>
 		</plugin>
 		</plugins>
 	</reporting>
-	</project>
 </project>
