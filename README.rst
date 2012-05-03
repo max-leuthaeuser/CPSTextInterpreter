@@ -16,7 +16,7 @@ Follows the file layout of the repository. This is not a complete listing. ::
    +--pom.xml                 	The maven build configuration.
    +--examples/                 Some examples of CPSText programs.
    +--lib/                      Pre-compiled libraries for the build.
-   |   +--json.jar              The json library, needed by the Java abstraction layer to NaoService.
+   |   +--jnaoqi.jar            The naoqi library, needed by the Java abstraction layer for RPC calls to the Nao robot.
    +--model/			        Contains models for CPSText.
    +--README	                The file you are currently reading.
    +--src/                      All the source files of CPSTextInterpreter.
