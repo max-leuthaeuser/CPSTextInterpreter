@@ -1,26 +1,20 @@
-Nao Chuck IP 192.168.130.1 PORT 8080 with priorities {
-    Sender -> 1;
-    GoodPlayer -> 2;
-}
-Nao Hans IP 192.168.130.2 PORT 8090 with priorities {
-    Sender -> 1;
-    GoodPlayer -> 1;
-}
+Nao Chuck IP 192.168.130.1 PORT 8080
+Nao Hans IP 192.168.130.2 PORT 8090
 
 context Football {
 	activate for {
-		Chuck c1; Hans h1;
+		Nao a; Nao b;
 	} when { true /* start immediately */} with bindings {
-		c1 -> GoodPlayer; h1 -> BadPlayer;
+		a -> GoodPlayer; b -> BadPlayer;
 	} with settings {
         interval 500;
         // timeout can be left out, standard is 0
     }
 
     activate for {
-        Chuck c3; Hans h3;
+        Nao x;
     } when { true } with bindings {
-        c3 -> Stop; h3 -> Stop;
+        x -> Stop;
     } with settings {
         interval 500;
         /* stop immediately after 10sec */
@@ -29,31 +23,22 @@ context Football {
 
     context GoalShot {
         activate for {
-            Chuck c2;
-        } when { c1.foundTheBall() } with bindings {
-            c2 -> Sender;
+            Nao c;
+        } when { c.foundTheBall() } with bindings {
+            c -> Sender;
         } with settings {
             interval 500;
             timeout 1000;
         }
 
-		activate for {
-            Chuck h2;
-        } when { h1.foundTheBall() } with bindings {
-            h2 -> Sender;
-        } with settings {
-            interval 500;
-            timeout 1000;
-        }
-
-        role Sender playedBy NaoRobot {
+        role Sender {
             behavior {
                 println("aaaand shot!")
             }
         }
     }
 
-    role BadPlayer playedBy NaoRobot {
+    role BadPlayer {
         behavior {
             println("Ok, lets play football.")
         }
@@ -66,7 +51,7 @@ context Football {
         }
     }
 
-    role GoodPlayer playedBy NaoRobot {
+    role GoodPlayer {
         behavior {
             println("Ok, lets play football.")
         }
@@ -79,7 +64,7 @@ context Football {
         }
     }
 
-    role Stop playedBy NaoRobot {
+    role Stop {
         behavior {
             println("and stop")
             System.exit(0)

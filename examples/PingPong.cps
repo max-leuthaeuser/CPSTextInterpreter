@@ -3,18 +3,18 @@ Nao Hans IP 192.168.130.2 PORT 8090;
 
 context PingPong {
 	activate for {
-		Chuck c1; Hans h1;
+		Nao a; Nao b;
 	} when { true /* start immediately */} with bindings {
-		c1 -> Ping; h1 -> Pong;
+		a -> Ping; b -> Pong;
 	} with settings {
         interval 500;
         // timeout can be left out, standard is 0
     }
 
 	activate for {
-        Chuck c2; Hans h2;
+        Nao c;
     } when { true } with bindings {
-        c2 -> Stop; h2 -> Stop;
+        c -> Stop;
     } with settings {
         interval 500;
         /* stop immediately after 10sec */
@@ -25,27 +25,17 @@ context PingPong {
 	Stop prohibits Ping;
 	Stop prohibits Pong;
 
-	val ping: Int = 0;
-	val pong: Int = 1;
-
-	// we start with ping
-	var sound: Int = ping;
-
-	role Sound playedBy NaoRobot {
-    		behavior {}
-
-    		void greet() {
-    		    println("cu")
-    		}
-    }
-
-	role Ping playedBy Sound {
+	role Ping {
 		behavior {
 		    println("ping")
 		}
+
+		void greet() {
+            println("cu")
+        }
 	}
 
-	role Pong playedBy Sound {
+	role Pong {
         behavior {
             println("pong")
         }
@@ -55,11 +45,11 @@ context PingPong {
         }
     }
 
-    role Stop playedBy NaoRobot {
+    role Stop {
         behavior {
             println("and stop")
-            c1.greet
-            h1.greet
+            a.greet
+            b.greet
             System.exit(0)
         }
     }

@@ -20,9 +20,8 @@ package de.qualitune.ast.cps
 import CPSType._
 import de.qualitune.ast.ASTElement
 
-case class CPS(cpsType: CPSType, name: String, ip: String, port: Int, priorities: Map[String, Int]) extends ASTElement {
+case class CPS(cpsType: CPSType, name: String, ip: String, port: Int) extends ASTElement {
   override def toString = {
-    val prios = if (priorities.isEmpty) "" else " with priorities {" + priorities.mkString("\n", ";\n", ";\n") + "}"
-    cpsType.toString + " " + name + " IP " + ip + " PORT " + port + prios
+    cpsType.toString + " " + name + " IP " + ip + " PORT " + port
   }
 }

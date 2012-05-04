@@ -36,6 +36,7 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
 			import de.qualitune.roles.players.NaoRobot
 			import de.qualitune.roles.players.NaoRobot._
 			import collection.mutable.Map
+			import de.qualitune.util.ListUtils
 			"""
 
         s ++ c.imports.map("import " + _ + "\n") + "\n"

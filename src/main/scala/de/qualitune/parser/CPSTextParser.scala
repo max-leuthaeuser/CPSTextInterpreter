@@ -49,20 +49,8 @@ object CPSTextParser extends JavaTokenParsers {
 
   def robots: Parser[List[CPS]] = rep(robot)
 
-  def robot: Parser[CPS] = cpsType ~ ident ~ "IP" ~ ip ~ "PORT" ~ port ~ opt(cpspriorities) ^^ {
-    case t ~ n ~ "IP" ~ i ~ "PORT" ~ p ~ cpsp => CPS(t, n, i, p, cpsp.getOrElse(Map[String, Int]()))
-  }
-
-  def cpspriorities: Parser[Map[String, Int]] = "with priorities {" ~> rep1(cpspriority <~ ";") <~ "}" ^^ {
-    Map[String, Int]() ++ _
-  }
-
-  def cpspriority: Parser[(String, Int)] = ident ~ "->" ~ decimalNumber ^^ {
-    case r ~ "->" ~ v => {
-      val value = v.toInt
-      if (value < 1) throw new Exception("Priority must be 1 or higher!")
-      (r, value)
-    }
+  def robot: Parser[CPS] = cpsType ~ ident ~ "IP" ~ ip ~ "PORT" ~ port ^^ {
+    case t ~ n ~ "IP" ~ i ~ "PORT" ~ p => CPS(t, n, i, p)
   }
 
   def cpsType: Parser[CPSType] = ("Nao" | "Mindstorm") ^^ {

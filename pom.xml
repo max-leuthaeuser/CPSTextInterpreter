@@ -86,6 +86,8 @@
                 <configuration>
                     <includes>
                         <include>${basedir}/lib/java/com/aldebaran/proxy</include>
+                        <include>**/*.scala</include>
+                        <include>**/*.java</include>
                     </includes>
                 </configuration>
                 <executions>

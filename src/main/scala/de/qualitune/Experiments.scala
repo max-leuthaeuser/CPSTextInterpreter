@@ -34,12 +34,22 @@ object Experiments {
     /**
      * activate for {
      * RoleA a; RoleB b; RoleC c;
-     * } when ( a.a() && b.b() && c.c() )
+     * } when ( a.a() && b.b() && c.c() ) with bindings {
+     * b -> RoleA; a -> RoleB;
+     * }
      */
-    for (c <- l) {
-      if (c(0).hasRole("RoleA") && c(1).hasRole("RoleB") && c(2).hasRole("RoleC")) {
-        for (a <- c(0).getRole("RoleA"); b <- c(1).getRole("RoleB"); c <- c(2).getRole("RoleC")) {
-          println(a.asInstanceOf[RoleA].a() && b.asInstanceOf[RoleB].b() && c.asInstanceOf[RoleC].c())
+    for (c_list <- l) {
+      if (c_list(0).hasRole("RoleA") && c_list(1).hasRole("RoleB") && c_list(2).hasRole("RoleC")) {
+        for (a <- c_list(0).getRole("RoleA"); b <- c_list(1).getRole("RoleB"); c <- c_list(2).getRole("RoleC")) {
+          if (a.asInstanceOf[RoleA].a() && b.asInstanceOf[RoleB].b() && c.asInstanceOf[RoleC].c()) {
+            val new_b = new RoleA("", c_list(1))
+            c_list(1).addRole(new_b)
+            val new_a = new RoleB("", c_list(0))
+            c_list(0).addRole(new_a)
+            // make them globally in the current scope available
+            // b = new_b
+            // a = new_a
+          }
         }
       }
     }
