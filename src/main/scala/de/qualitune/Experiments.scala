@@ -1,7 +1,7 @@
 package de.qualitune
 
 import roles.{ComponentRole, Component, ComponentCore}
-import util.ListUtils
+import util.{StringUtils, ListUtils}
 
 /**
  * @author Max Leuthaeuser

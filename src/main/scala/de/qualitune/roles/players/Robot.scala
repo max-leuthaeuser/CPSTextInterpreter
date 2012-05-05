@@ -8,5 +8,5 @@ package de.qualitune.roles.players
  * @since 25.04.2012
  */
 trait Robot {
-  var name: String = "Robot"
+  val name: String = "Robot"
 }

@@ -19,6 +19,7 @@ package de.qualitune.interpreter
 
 import de.qualitune.ast.rule.ActivationRule
 import de.qualitune.ast.ASTElement
+import de.qualitune.util.StringUtils
 
 /**
  * @author Max Leuthaeuser
@@ -59,8 +60,12 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
         }.mkString("; ") + ") {\n")
         // transform the context activation condition (apply casts)
         var cond = ar.when.replaceAll(" ", "")
-        // TODO test regex!
-        ar.activateFor.foreach(e => cond = cond.replaceAll(e.variableName + ".", e.variableName + ".asInstanceOf[" + e.roleName + "]."))
+        val prefix = "(\\{|!|\\||&)"
+        ar.activateFor.foreach(e => {
+          val pattern = e.variableName + "."
+          val replacment = e.variableName + ".asInstanceOf[" + e.roleName + "]."
+          cond = StringUtils.replaceAllWithPrefix(cond, prefix, pattern, replacment)
+        })
         // check the condition
         s + ("   if(" + cond + ") {\n")
         s + (ar.bindings.map(e => {
@@ -72,8 +77,10 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
             "c_list(" + i + ").addRole(new_" + e.variableName + ")\n" +
             // make them globally in the current scope available
             e.variableName + " = " + "new_" + e.variableName + "\n" +
+            // start role (its activator)
+            e.variableName + ".start\n" +
             // activate role
-            "new_" + e.variableName + " ! token_" + e.roleName
+            e.variableName + " ! token_" + e.roleName
         }).mkString("\n"))
 
         // end if
