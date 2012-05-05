@@ -29,7 +29,6 @@ class RoleInterpreter extends ASTElementInterpreter {
     "def act() { while (true) { receive { case " + name + " => behavior() } } }\n"
   }
 
-  // TODO test this for ROP
   override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
     elem match {
       case r: Role => data match {

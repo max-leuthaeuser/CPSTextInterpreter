@@ -97,6 +97,8 @@
                             <goal>testCompile</goal>
                         </goals>
                         <configuration>
+                            <useFsc>true</useFsc>
+                            <once>true</once>
                             <args>
                                 <arg>-make:transitive</arg>
                                 <arg>-dependencyfile</arg>
