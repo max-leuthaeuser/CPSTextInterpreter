@@ -1,12 +1,11 @@
 package de.qualitune.roles
 
-import players.NaoRobot
 
 /**
- * User: Max Leuthaeuser
- * Date: 25.04.12
+ * @author Max Leuthaeuser
+ * @since 25.04.12
  */
-abstract class Component extends NaoRobot {
+abstract class Component {
   def addRole(spec: ComponentRole)
 
   def getRole(spec: String): Iterable[ComponentRole]

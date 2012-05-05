@@ -1,39 +1,36 @@
 package de.qualitune.roles.players
 
-/**
- * User: Max Leuthaeuser
- * Date: 25.04.12
- */
-
 import com.aldebaran.proxy._
 import de.qualitune.Nao
+import de.qualitune.roles.{ComponentCore, ComponentRole, Component}
 
+/**
+ * Companion object for {@link de.qualitune.roles.players.NaoRobot}.
+ * Provides standard IP and PORT and a static factory method
+ * to create a new {@link de.qualitune.roles.ComponentCore} with NaoRobot as played {@link de.qualitune.roles.ComponentRole}.
+ *
+ * @author Max Leuthaeuser
+ * @since 25.04.12
+ */
 object NaoRobot {
   val STANDARD_IP: String = "192.168.0.139"
   val STANDARD_PORT: Int = 8070
 
-  implicit def toNao(n: String) = new NaoRobot {
-    name = n
+  def createWithCore(name: String, ip: String, port: Int) = {
+    val core = new ComponentCore()
+    val robot = new NaoRobot(name, ip, port, core)
+    core.addRole(robot)
+    core
   }
 }
 
 /**
- * Trait representing a NAO robot.
+ * Role class representing a NAO robot.
+ *
+ * @author Max Leuthaeuser
+ * @since 25.04.12
  */
-trait NaoRobot extends Robot {
-  var ip: String = NaoRobot.STANDARD_IP
-  var port: Int = NaoRobot.STANDARD_PORT
-
-  def IP(ip: String): NaoRobot = {
-    this.ip = ip
-    this
-  }
-
-  def PORT(port: Int): NaoRobot = {
-    this.port = port
-    this
-  }
-
+class NaoRobot(override val name: String = "Nao", val ip: String = NaoRobot.STANDARD_IP, val port: Int = NaoRobot.STANDARD_PORT, private val core: Component) extends ComponentRole(core) with Robot {
   def AudioDevice(): ALAudioDeviceProxy = Nao.createALAudioDevice(ip, port)
 
   def AudioPlayer(): ALAudioPlayerProxy = Nao.createALAudioPlayer(ip, port)

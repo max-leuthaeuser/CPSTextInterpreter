@@ -1,8 +1,8 @@
 package de.qualitune.roles
 
 /**
- * User: Max Leuthaeuser
- * Date: 25.04.12
+ * @author Max Leuthaeuser
+ * @since 25.04.12
  */
 class ComponentRole(private val core: Component) extends Component {
   def getName = this.getClass.getSimpleName

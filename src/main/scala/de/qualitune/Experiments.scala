@@ -72,7 +72,6 @@ object Experiments {
 
   def main(args: Array[String]) {
     val c1 = new ComponentCore()
-    c1.addRole(new RoleA("a1 (core c1)", c1))
     c1.addRole(new RoleA("a2 (core c1)", c1))
     c1.addRole(new RoleB("b1 (core c1)", c1))
     c1.addRole(new RoleB("b2 (core c1)", c1))
@@ -87,4 +86,3 @@ object Experiments {
     test2(ListUtils.combinations(1, l2))
   }
 }
-

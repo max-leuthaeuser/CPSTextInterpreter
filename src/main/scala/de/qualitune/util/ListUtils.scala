@@ -7,8 +7,8 @@ package de.qualitune.util
  *
  * From: http://stackoverflow.com/questions/4596724/faster-permutation-generator
  *
- * User: Max Leuthaeuser
- * Date: 15.04.12
+ * @author Max Leuthaeuser
+ * @since 15.04.12
  */
 object ListUtils {
   /**For each element x in List xss, returns (x, xss - x) */

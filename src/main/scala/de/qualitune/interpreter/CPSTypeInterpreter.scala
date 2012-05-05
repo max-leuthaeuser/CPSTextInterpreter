@@ -21,8 +21,8 @@ import de.qualitune.ast.cps.{CPS, CPSType}
 import de.qualitune.ast.ASTElement
 
 /**
- * User: Max Leuthaeuser
- * Date: 18.01.12
+ * @author Max Leuthaeuser
+ * @since 18.01.12
  */
 class CPSTypeInterpreter extends ASTElementInterpreter {
   override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
@@ -30,7 +30,7 @@ class CPSTypeInterpreter extends ASTElementInterpreter {
       case c: CPS => {
         c.cpsType match {
           case CPSType.Nao => {
-            s + ("@volatile val " + c.name + "= new ComponentCore(\"" + c.name + "\" IP \"" + c.ip + "\" PORT " + c.port + ")\n")
+            s + ("@volatile val " + c.name + " = NaoRobot.createWithCore(\"" + c.name + ", \"" + c.ip + "\", " + c.port + ")\n")
             s += ("Registry.cores = " + c.name + " :: Registry.cores")
           }
           case CPSType.Mindstorm => throw new IllegalArgumentException("Interpretation for CPSType Mindstorm is not implemented yet.")
