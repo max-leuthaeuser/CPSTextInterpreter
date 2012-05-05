@@ -33,8 +33,8 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
         s + """import scala.actors.Actor
 			import de.qualitune.scalaroles.roles.ComponentRole
 			import de.qualitune.scalaroles.roles.ComponentCore
-			import de.qualitune.roles.players.NaoRobot
-			import de.qualitune.roles.players.NaoRobot._
+			import de.qualitune.roles.players.Nao
+			import de.qualitune.roles.players.Nao._
 			import collection.mutable.Map
 			import de.qualitune.util.ListUtils
 			"""

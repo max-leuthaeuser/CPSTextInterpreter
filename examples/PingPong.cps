@@ -4,7 +4,7 @@ Nao Hans IP 192.168.130.2 PORT 8090;
 context PingPong {
 	activate for {
 		Nao a; Nao b;
-	} when { true /* start immediately */} with bindings {
+	} when { true } with bindings {
 		a -> Ping; b -> Pong;
 	} with settings {
         interval 500;

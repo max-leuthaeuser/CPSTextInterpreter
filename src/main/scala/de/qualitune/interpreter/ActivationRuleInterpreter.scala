@@ -25,7 +25,6 @@ import de.qualitune.ast.ASTElement
  * @since 22.11.2011
  */
 class ActivationRuleInterpreter extends ASTElementInterpreter {
-  // TODO what to do with core type NaoRobot?
   // TODO make it possible to bind a variable to more than one role
   override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
     elem match {

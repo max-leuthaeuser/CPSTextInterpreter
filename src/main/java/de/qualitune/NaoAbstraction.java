@@ -1,6 +1,6 @@
 /**
  * Java abstraction layer for Nao humanoid robot.
- * This is automatically generated code. Do not modify it!
+ * Updated to jNaoQi (03.05.2012)
  *
  * Copyright (C) 2011 Max Leuthäuser
  * Contact: s7060241@mail.zih.tu-dresden.de
@@ -22,10 +22,14 @@
 package de.qualitune;
 
 import com.aldebaran.proxy.*;
-import java.util.ArrayList;
-import java.io.*;
 
-public class Nao {
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+
+public class NaoAbstraction {
     static {
         try {
             // load library
@@ -45,6 +49,7 @@ public class Nao {
         for (String bin : bins) {
             InputStream in = ALMemoryProxy.class.getResourceAsStream(bin);
             byte[] buffer = new byte[1024];
+            @SuppressWarnings("UnusedAssignment")
             int read = -1;
             try {
                 String[] temp = bin.split("/");
@@ -61,15 +66,18 @@ public class Nao {
             }
         }
         // now load the file
-        System.load(f.getAbsolutePath());
+        if (f != null)
+            System.load(f.getAbsolutePath());
+        else
+            throw new RuntimeException("Error during loading jNaoQi libs!");
     }
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALAudioDeviceProxy}.
+     * NaoAbstraction module {@link ALAudioDeviceProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALAudioDeviceProxy}
      */
     public static ALAudioDeviceProxy createALAudioDevice(final String ip, final int port) {
@@ -78,10 +86,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALAudioPlayerProxy}.
+     * NaoAbstraction module {@link ALAudioPlayerProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALAudioPlayerProxy}
      */
     public static ALAudioPlayerProxy createALAudioPlayer(final String ip, final int port) {
@@ -90,10 +98,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALAudioSourceLocalizationProxy}.
+     * NaoAbstraction module {@link ALAudioSourceLocalizationProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALAudioSourceLocalizationProxy}
      */
     public static ALAudioSourceLocalizationProxy createALAudioSourceLocalization(final String ip, final int port) {
@@ -102,10 +110,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALBehaviorManagerProxy}.
+     * NaoAbstraction module {@link ALBehaviorManagerProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALBehaviorManagerProxy}
      */
     public static ALBehaviorManagerProxy createALBehaviorManager(final String ip, final int port) {
@@ -114,10 +122,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALBluetoothProxy}.
+     * NaoAbstraction module {@link ALBluetoothProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALBluetoothProxy}
      */
     public static ALBluetoothProxy createALBluetooth(final String ip, final int port) {
@@ -126,10 +134,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALBonjourProxy}.
+     * NaoAbstraction module {@link ALBonjourProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALBonjourProxy}
      */
     public static ALBonjourProxy createALBonjour(final String ip, final int port) {
@@ -138,10 +146,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALFaceDetectionProxy}.
+     * NaoAbstraction module {@link ALFaceDetectionProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALFaceDetectionProxy}
      */
     public static ALFaceDetectionProxy createALFaceDetection(final String ip, final int port) {
@@ -150,10 +158,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALFaceTrackerProxy}.
+     * NaoAbstraction module {@link ALFaceTrackerProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALFaceTrackerProxy}
      */
     public static ALFaceTrackerProxy createALFaceTracker(final String ip, final int port) {
@@ -162,10 +170,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALFileManagerProxy}.
+     * NaoAbstraction module {@link ALFileManagerProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALFileManagerProxy}
      */
     public static ALFileManagerProxy createALFileManager(final String ip, final int port) {
@@ -174,10 +182,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALFrameManagerProxy}.
+     * NaoAbstraction module {@link ALFrameManagerProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALFrameManagerProxy}
      */
     public static ALFrameManagerProxy createALFrameManager(final String ip, final int port) {
@@ -186,10 +194,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALFsrProxy}.
+     * NaoAbstraction module {@link ALFsrProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALFsrProxy}
      */
     public static ALFsrProxy createALFsr(final String ip, final int port) {
@@ -198,10 +206,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALInfraredProxy}.
+     * NaoAbstraction module {@link ALInfraredProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALInfraredProxy}
      */
     public static ALInfraredProxy createALInfrared(final String ip, final int port) {
@@ -210,10 +218,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALLandMarkDetectionProxy}.
+     * NaoAbstraction module {@link ALLandMarkDetectionProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALLandMarkDetectionProxy}
      */
     public static ALLandMarkDetectionProxy createALLandMarkDetection(final String ip, final int port) {
@@ -222,10 +230,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALLaserProxy}.
+     * NaoAbstraction module {@link ALLaserProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALLaserProxy}
      */
     public static ALLaserProxy createALLaser(final String ip, final int port) {
@@ -234,10 +242,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALLauncherProxy}.
+     * NaoAbstraction module {@link ALLauncherProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALLauncherProxy}
      */
     public static ALLauncherProxy createALLauncher(final String ip, final int port) {
@@ -246,10 +254,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALLedsProxy}.
+     * NaoAbstraction module {@link ALLedsProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALLedsProxy}
      */
     public static ALLedsProxy createALLeds(final String ip, final int port) {
@@ -258,10 +266,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALLoggerProxy}.
+     * NaoAbstraction module {@link ALLoggerProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALLoggerProxy}
      */
     public static ALLoggerProxy createALLogger(final String ip, final int port) {
@@ -270,10 +278,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALMemoryProxy}.
+     * NaoAbstraction module {@link ALMemoryProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALMemoryProxy}
      */
     public static ALMemoryProxy createALMemory(final String ip, final int port) {
@@ -282,10 +290,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALMotionProxy}.
+     * NaoAbstraction module {@link ALMotionProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALMotionProxy}
      */
     public static ALMotionProxy createALMotion(final String ip, final int port) {
@@ -294,10 +302,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALMotionRecorderProxy}.
+     * NaoAbstraction module {@link ALMotionRecorderProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALMotionRecorderProxy}
      */
     public static ALMotionRecorderProxy createALMotionRecorder(final String ip, final int port) {
@@ -306,10 +314,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALPreferencesProxy}.
+     * NaoAbstraction module {@link ALPreferencesProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALPreferencesProxy}
      */
     public static ALPreferencesProxy createALPreferences(final String ip, final int port) {
@@ -318,10 +326,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALPythonBridgeProxy}.
+     * NaoAbstraction module {@link ALPythonBridgeProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALPythonBridgeProxy}
      */
     public static ALPythonBridgeProxy createALPythonBridge(final String ip, final int port) {
@@ -330,10 +338,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALRedBallDetectionProxy}.
+     * NaoAbstraction module {@link ALRedBallDetectionProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALRedBallDetectionProxy}
      */
     public static ALRedBallDetectionProxy createALRedBallDetection(final String ip, final int port) {
@@ -342,10 +350,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALRedBallTrackerProxy}.
+     * NaoAbstraction module {@link ALRedBallTrackerProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALRedBallTrackerProxy}
      */
     public static ALRedBallTrackerProxy createALRedBallTracker(final String ip, final int port) {
@@ -354,10 +362,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALResourceManagerProxy}.
+     * NaoAbstraction module {@link ALResourceManagerProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALResourceManagerProxy}
      */
     public static ALResourceManagerProxy createALResourceManager(final String ip, final int port) {
@@ -366,10 +374,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALRobotPoseProxy}.
+     * NaoAbstraction module {@link ALRobotPoseProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALRobotPoseProxy}
      */
     public static ALRobotPoseProxy createALRobotPose(final String ip, final int port) {
@@ -378,10 +386,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALSensorsProxy}.
+     * NaoAbstraction module {@link ALSensorsProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALSensorsProxy}
      */
     public static ALSensorsProxy createALSensors(final String ip, final int port) {
@@ -390,10 +398,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALSentinelProxy}.
+     * NaoAbstraction module {@link ALSentinelProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALSentinelProxy}
      */
     public static ALSentinelProxy createALSentinel(final String ip, final int port) {
@@ -402,10 +410,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALSonarProxy}.
+     * NaoAbstraction module {@link ALSonarProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALSonarProxy}
      */
     public static ALSonarProxy createALSonar(final String ip, final int port) {
@@ -414,10 +422,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALSoundDetectionProxy}.
+     * NaoAbstraction module {@link ALSoundDetectionProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALSoundDetectionProxy}
      */
     public static ALSoundDetectionProxy createALSoundDetection(final String ip, final int port) {
@@ -426,10 +434,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALSpeechRecognitionProxy}.
+     * NaoAbstraction module {@link ALSpeechRecognitionProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALSpeechRecognitionProxy}
      */
     public static ALSpeechRecognitionProxy createALSpeechRecognition(final String ip, final int port) {
@@ -438,10 +446,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALTextToSpeechProxy}.
+     * NaoAbstraction module {@link ALTextToSpeechProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALTextToSpeechProxy}
      */
     public static ALTextToSpeechProxy createALTextToSpeech(final String ip, final int port) {
@@ -450,10 +458,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALVideoDeviceProxy}.
+     * NaoAbstraction module {@link ALVideoDeviceProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALVideoDeviceProxy}
      */
     public static ALVideoDeviceProxy createALVideoDevice(final String ip, final int port) {
@@ -462,10 +470,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALVisionRecognitionProxy}.
+     * NaoAbstraction module {@link ALVisionRecognitionProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALVisionRecognitionProxy}
      */
     public static ALVisionRecognitionProxy createALVisionRecognition(final String ip, final int port) {
@@ -474,10 +482,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link ALVisionToolboxProxy}.
+     * NaoAbstraction module {@link ALVisionToolboxProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link ALVisionToolboxProxy}
      */
     public static ALVisionToolboxProxy createALVisionToolbox(final String ip, final int port) {
@@ -486,10 +494,10 @@ public class Nao {
 
     /**
      * Factory method for creating a new instance of the
-     * Nao module {@link DCMProxy}.
+     * NaoAbstraction module {@link DCMProxy}.
      *
-     * @param ip   The IP address of the 
-     * @param port The port where the Nao service is running.
+     * @param ip   The IP address of the
+     * @param port The port where the NaoAbstraction service is running.
      * @return a new instance of {@link DCMProxy}
      */
     public static DCMProxy createDCM(final String ip, final int port) {

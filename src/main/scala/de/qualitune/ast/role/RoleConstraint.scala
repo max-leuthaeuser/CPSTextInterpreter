@@ -22,9 +22,9 @@ import de.qualitune.ast.ASTElement
 abstract class RoleConstraint extends ASTElement {
   def source: String
 
-  def source_=(s: String): Unit
+  def source_=(s: String)
 
   def target: String
 
-  def target_=(s: String): Unit
+  def target_=(s: String)
 }
