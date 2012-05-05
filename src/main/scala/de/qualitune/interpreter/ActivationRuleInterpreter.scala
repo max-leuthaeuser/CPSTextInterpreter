@@ -43,7 +43,6 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
 
         // while around everything
         s + ("while(true) {\n")
-
         // get all core objects and filter
         s + ("val cores = Registry.cores.filter(e => " + ar.activateFor.map("e.hasRole(\"" + _.roleName + "\")").mkString(" || ") + ")\n")
         // calculate permutations
@@ -56,14 +55,14 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
         }.mkString(" && ") + ") {\n")
         // and now the inner loop to get all roles
         s + ("  for(" + ar.activateFor.view.zipWithIndex.map {
-          case (v, i) => v.variableName + " <- c_list(" + i + ").getRole(\"" + v.roleName + "\")"
+          case (v, i) => v.variableName + "_ <- c_list(" + i + ").getRole(\"" + v.roleName + "\")"
         }.mkString("; ") + ") {\n")
         // transform the context activation condition (apply casts)
         var cond = ar.when.replaceAll(" ", "")
-        val prefix = "(\\{|!|\\||&)"
+        val prefix = "(\\{|!|\\||&|\\()"
         ar.activateFor.foreach(e => {
           val pattern = e.variableName + "."
-          val replacment = e.variableName + ".asInstanceOf[" + e.roleName + "]."
+          val replacment = e.variableName + "_.asInstanceOf[" + e.roleName + "]."
           cond = StringUtils.replaceAllWithPrefix(cond, prefix, pattern, replacment)
         })
         // check the condition
@@ -72,10 +71,10 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
           // get the winner
           val i = ar.activateFor.indexWhere(_.variableName == e.variableName)
           // create new instance of role
-          "val new_" + e.variableName + "=new " + e.roleName + "(c_list(" + i + "))\n" +
+          "val new_" + e.variableName + " = new " + e.roleName + "(c_list(" + i + "))\n" +
             // update role mapping (name of role + instance)
             "c_list(" + i + ").addRole(new_" + e.variableName + ")\n" +
-            // make them globally in the current scope available
+            // make them globally available in the current scope
             e.variableName + " = " + "new_" + e.variableName + "\n" +
             // start role (its activator)
             e.variableName + ".start\n" +

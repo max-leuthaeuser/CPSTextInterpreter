@@ -34,7 +34,7 @@ class RoleInterpreter extends ASTElementInterpreter {
       case r: Role => data match {
         case d: List[Role] => {
           s + ("case object token_" + r.name + "\n")
-          s + "class " + r.name + " extends ComponentRole with Actor {\n"
+          s + "class " + r.name + "(core: Component) extends ComponentRole(core) with Actor {\n"
           // act method to start the behaviour method when the context the role belongs to gets activated
           s + buildActMethod("token_" + r.name)
 

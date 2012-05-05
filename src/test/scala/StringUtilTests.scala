@@ -37,8 +37,14 @@ class StringUtilTests extends FunSuite {
     val e11 = "xyz.bla()&b.bla()&b.bla()"
     val e12 = "xyz.bla()&&b.bla()&&b.bla()"
 
+    // opening bracket
+    val t13 = "(a.bla()&bla())"
+    val e13 = "(b.bla()&bla())"
+    val t14 = "(a.bla()&bla()||a.pla())"
+    val e14 = "(b.bla()&bla()||b.pla())"
+
     // parameters
-    val prefix = "(\\{|!|\\||&)"
+    val prefix = "(\\{|!|\\||&|\\()"
     val pattern = "a."
     val replacment = "b."
 
@@ -54,5 +60,7 @@ class StringUtilTests extends FunSuite {
     assert(e10 === StringUtils.replaceAllWithPrefix(t10, prefix, pattern, replacment))
     assert(e11 === StringUtils.replaceAllWithPrefix(t11, prefix, pattern, replacment))
     assert(e12 === StringUtils.replaceAllWithPrefix(t12, prefix, pattern, replacment))
+    assert(e13 === StringUtils.replaceAllWithPrefix(t13, prefix, pattern, replacment))
+    assert(e14 === StringUtils.replaceAllWithPrefix(t14, prefix, pattern, replacment))
   }
 }

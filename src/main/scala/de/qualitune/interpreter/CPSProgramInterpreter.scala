@@ -31,6 +31,7 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
         // imports
         // some standard imports first, they are always needed
         s + """import scala.actors.Actor
+      import de.qualitune.roles.Component
 			import de.qualitune.roles.ComponentRole
 			import de.qualitune.roles.ComponentCore
 			import de.qualitune.roles.players.Nao

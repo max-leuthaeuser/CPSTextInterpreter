@@ -23,7 +23,7 @@ context Football {
 
     context GoalShot {
         activate for {
-            Nao c;
+            GoodPlayer c;
         } when { c.foundTheBall() } with bindings {
             c -> Sender;
         } with settings {
