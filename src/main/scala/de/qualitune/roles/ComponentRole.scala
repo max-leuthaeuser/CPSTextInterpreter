@@ -1,11 +1,19 @@
 package de.qualitune.roles
 
+object ComponentRole {
+  def apply() = new ComponentRole(null)
+}
+
 /**
  * @author Max Leuthaeuser
  * @since 25.04.12
  */
-class ComponentRole(private val core: Component) extends Component {
+case class ComponentRole(private var core: Component) extends Component {
   def getName = this.getClass.getSimpleName
+
+  def setCore(core: Component) {
+    this.core = core
+  }
 
   override def addRole(spec: ComponentRole) {
     core.addRole(spec)

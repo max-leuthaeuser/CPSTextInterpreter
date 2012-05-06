@@ -6,7 +6,7 @@ import collection.mutable.{Map, LinkedList}
  * @author Max Leuthaeuser
  * @since 25.04.12
  */
-class ComponentCore extends Component {
+case class ComponentCore() extends Component {
   private val roles = Map[String, LinkedList[ComponentRole]]()
 
   override def addRole(spec: ComponentRole) {

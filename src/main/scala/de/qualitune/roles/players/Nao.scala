@@ -16,11 +16,19 @@ object Nao {
   val STANDARD_IP: String = "192.168.0.139"
   val STANDARD_PORT: Int = 8070
 
+  /**
+   * Create a new Nao compound object (core and role object).
+   *
+   * @param name
+   * @param ip
+   * @param port
+   * @return a Tuple containing the core and the role object (core, role)
+   */
   def createWithCore(name: String, ip: String, port: Int) = {
     val core = new ComponentCore()
     val robot = new Nao(name, ip, port, core)
     core.addRole(robot)
-    core
+    (core, robot)
   }
 }
 
