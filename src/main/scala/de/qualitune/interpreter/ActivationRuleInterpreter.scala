@@ -97,7 +97,7 @@ class ActivationRuleInterpreter extends ASTElementInterpreter {
         // end actor
         s + ("}\n")
         s
-        // fuck. I realy need templates or stuff.
+        // fuck. I really need templates or stuff.
       }
       case _ => throw new IllegalArgumentException("Unknown ActivationRule type!")
     }

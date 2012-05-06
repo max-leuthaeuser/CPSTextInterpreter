@@ -1,10 +1,9 @@
-package de.qualitune.ast.cps
+package de.qualitune.ast
 
 /**
- *
+ * Classes representing CPS devices.
  *
  * User: Max Leuthaeuser
  * Date: 06.05.12
  */
-
-object
+package object cps

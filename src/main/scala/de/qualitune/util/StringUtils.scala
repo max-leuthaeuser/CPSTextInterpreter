@@ -1,7 +1,7 @@
 package de.qualitune.util
 
-import util.matching.Regex
 import RegexUtils._
+import scala.util.matching.Regex
 
 private object RegexUtils {
 

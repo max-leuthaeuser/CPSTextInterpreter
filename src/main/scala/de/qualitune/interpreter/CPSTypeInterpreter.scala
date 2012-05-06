@@ -30,8 +30,9 @@ class CPSTypeInterpreter extends ASTElementInterpreter {
       case c: CPS => {
         c.cpsType match {
           case CPSType.Nao => {
-            s + ("@volatile var " + c.name + "._2 = Nao.createWithCore(\"" + c.name + "\", \"" + c.ip + "\", " + c.port + ")\n")
-            s += ("Registry.cores = " + c.name + "_1 :: Registry.cores")
+            s + ("val compound_" + c.name + " = Nao.createWithCore(\"" + c.name + "\", \"" + c.ip + "\", " + c.port + ")\n")
+            s + ("@volatile var " + c.name + " = compound_" + c.name + "._2\n")
+            s += ("Registry.cores = compound_" + c.name + "._1 :: Registry.cores")
           }
           case CPSType.Mindstorm => throw new IllegalArgumentException("Interpretation for CPSType Mindstorm is not implemented yet.")
         }

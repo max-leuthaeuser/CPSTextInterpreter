@@ -9,11 +9,48 @@
     <inceptionYear>2012</inceptionYear>
     <licenses>
         <license>
-            <name>GPL</name>
-            <url>http://....</url>
+            <name>GPL 3</name>
+            <url>http://www.gnu.org/licenses/gpl.html</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
+
+    <organization>
+        <name>TU Dresden - Chair for software technology - Project Qualitune</name>
+        <url>http://st.inf.tu-dresden.de</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>max</id>
+            <name>Max Leuthaeuser</name>
+            <email>max.leuthaeuser@gmail.com</email>
+            <url>http://max-leuthaeuser.de</url>
+            <organization>TU Dresden</organization>
+            <organizationUrl>http://st.inf.tu-dresden.de/</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <contributors>
+        <contributor>
+            <name>Max Leuthaeuser</name>
+            <email>max.leuthaeuser@gmail.com</email>
+            <organization>TU Dresden</organization>
+            <organizationUrl>http://st.inf.tu-dresden.de/</organizationUrl>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </contributor>
+    </contributors>
+
+    <scm>
+        <connection>scm:git:git://github.com/max-leuthaeuser/CPSTextInterpreter.git</connection>
+        <developerConnection>scm:git:https://github.com/max-leuthaeuser/CPSTextInterpreter.git</developerConnection>
+        <url>https://github.com/max-leuthaeuser/CPSTextInterpreter</url>
+    </scm>
 
     <properties>
         <maven.compiler.source>1.6</maven.compiler.source>
@@ -51,13 +88,13 @@
             <version>1.12.3</version>
         </dependency>
 
-        <!-- Test -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.8.1</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.scalatest</groupId>
             <artifactId>scalatest_2.9.0</artifactId>
@@ -160,13 +197,8 @@
                         </goals>
                     </execution>
                 </executions>
-                <!-- this is the standard way to configure maven-plugins: by adding "configuration"-tag -->
                 <configuration>
-                    <!-- tell the plugin where your classes are -->
                     <runpath>target/test-classes,target/classes</runpath>
-                    <!-- this just finds all Suites in mytestpackage-package of your test-classes
-               <wildcards>mytestpackage</wildcards>		  -->
-                    <!-- "W" means "Without color", it removes the ANSI-color-chars from the output -->
                     <stdout>WD</stdout>
                 </configuration>
             </plugin>
@@ -178,9 +210,6 @@
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
-                <configuration>
-                    <outputDirectory>doc</outputDirectory>
-                </configuration>
             </plugin>
         </plugins>
     </reporting>
