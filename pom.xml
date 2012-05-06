@@ -83,6 +83,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-compiler</artifactId>
+            <version>${scala.version}</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>com.aldebaran</groupId>
             <artifactId>jnaoqi</artifactId>
             <version>1.12.3</version>

@@ -28,7 +28,7 @@ case class Target(enabled: Boolean, depends: String)
 case class Debugging(override val enabled: Boolean, override val depends: String, path: String) extends Target(enabled, depends) {
   def write(text: String) {
     if (path == "stdout") {
-      println(text)
+      print(text + "\n")
     } else {
       // write to file
       val file = new File(path)

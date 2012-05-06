@@ -20,8 +20,9 @@ package de.qualitune.interpreter
 import de.qualitune.ast.CPSProgram
 import de.qualitune.parser.CPSTextParser
 import java.io.{InputStreamReader, BufferedReader, File}
-import de.qualitune.config.Configuration
 import de.qualitune.util.IOUtils
+import tools.nsc.Global
+import de.qualitune.config.{ConfigReporter, Configuration}
 
 /**
  * Interpreter for CPSText containing static methods for interpreting CPSText code and programs.
@@ -79,15 +80,18 @@ object CPSTextInterpreter {
 
         IOUtils.createDirectory(new File("temp"))
 
-        // TODO fix compile bug, which leads to infinite runtime sometimes
-        /**
-        val proc = Runtime.getRuntime().exec(compiler + " -d temp -cp CPSTextInterpreter.jar cpsprogram_Main.scala", null, new File("."))
+        val settings = new scala.tools.nsc.Settings(error)
+        settings.outdir.value = "temp"
+        settings.classpath.value = System.getProperty("java.class.path", ".");
+        settings.deprecation.value = true
+        settings.unchecked.value = true
+        val reporter = new ConfigReporter(settings, config)
+        val compiler = new Global(settings, reporter)
+        (new compiler.Run).compile(List("cpsprogram_Main.scala"))
+
         config.debugging.write("# Output of compilation process: \n")
-        val reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))
-        Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(config.debugging.write(_))
-        val exitCode = proc.waitFor()
-        config.debugging.write("# Finished. Exit code: " + exitCode)
-         */
+        reporter.printSummary()
+        config.debugging.write("# Finished. Exit code: " + (if (reporter.hasErrors) 1 else 0))
       }
     }
 
@@ -98,7 +102,7 @@ object CPSTextInterpreter {
         val reader = new BufferedReader(new InputStreamReader(proc.getInputStream))
         Stream.continually(reader.readLine()).takeWhile(_ != null).foreach(x => config.debugging.write(" > " + IOUtils.now + ": " + x))
         val exitCode = proc.waitFor()
-        config.debugging.write("# Finished. Exit code: " + exitCode)
+        config.debugging.write("\n# Finished. Exit code: " + exitCode)
       }
     }
 
