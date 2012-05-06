@@ -27,9 +27,9 @@ object Role {
     var ops: List[Operation] = Nil
 
     content.foreach(_ match {
-      case e: EmptyVariableDecl => variables = e.asInstanceOf[EmptyVariableDecl] :: variables
-      case e: InitVariableDecl => variables = e.asInstanceOf[InitVariableDecl] :: variables
-      case e: Operation => ops = e.asInstanceOf[Operation] :: ops
+      case e: EmptyVariableDecl => variables = e :: variables
+      case e: InitVariableDecl => variables = e :: variables
+      case e: Operation => ops = e :: ops
     })
 
     Role(name, behavior, variables, ops)
