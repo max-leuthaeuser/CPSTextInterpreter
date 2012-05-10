@@ -1,3 +1,5 @@
+package de.qualitune.checks
+
 /**
  * CPSTextInterpreter - parses and interprets the CPSText DSL.
  * Copyright (C) 2011 Max Leuthaeuser
@@ -15,13 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.qualitune.interpreter
-
 import de.qualitune.ast.{CPSProgram, Context}
 import de.qualitune.ast.variable.{InitVariableDecl, EmptyVariableDecl}
 import collection.mutable.Map
 import de.qualitune.ast.role._
 import exceptions._
+import de.qualitune.transformator.exceptions._
 
 /**
  * Object containing some methods for checking a CPSProgram statically.

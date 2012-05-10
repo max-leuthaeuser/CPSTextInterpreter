@@ -1,3 +1,5 @@
+package de.qualitune
+
 /**
  * CPSTextInterpreter - parses and interprets the CPSText DSL.
  * Copyright (C) 2011 Max Leuthaeuser
@@ -15,14 +17,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.qualitune.interpreter
-
 import de.qualitune.ast.CPSProgram
 import de.qualitune.parser.CPSTextParser
 import java.io.{InputStreamReader, BufferedReader, File}
 import de.qualitune.util.IOUtils
 import tools.nsc.Global
 import de.qualitune.config.{ConfigReporter, Configuration}
+import de.qualitune.checks.CPSChecks
+import transformator.{CPSProgramTransformator, ExecutableString}
 
 /**
  * Interpreter for CPSText containing static methods for interpreting CPSText code and programs.
@@ -30,15 +32,15 @@ import de.qualitune.config.{ConfigReporter, Configuration}
  * @author Max Leuthaeuser
  * @since 22.11.2011
  */
-object CPSTextInterpreter {
+object CPSTextRunner {
   /**
-   * Interprets a CPSProgram representing a piece of CPSText code.
+   * Runs a CPSProgram AST representing a piece of CPSText code.
    *
    * @param cst: the CPSProgram representing the concrete syntax tree
    * @param config: the current configuration
    */
 
-  def interpretCST(cst: CPSProgram, config: Configuration) {
+  def runCST(cst: CPSProgram, config: Configuration) {
     // Some static checks before starting the actual interpretation.
     if (config.debugging.enabled) {
       config.debugging.write("Running static checks...")
@@ -71,9 +73,9 @@ object CPSTextInterpreter {
 
     if (config.interpretation.enabled) {
       IOUtils.Time("Interpretation") {
-        val s = new EvaluableString()
+        val s = new ExecutableString()
         s + ("object cpsprogram_Main {\n")
-        new CPSProgramInterpreter().apply(s, cst, null)
+        new CPSProgramTransformator().apply(s, cst, null)
         s + ("def main(args: Array[String]) { " + s.getInPlace + "} \n}")
 
         IOUtils.writeToFile("cpsprogram_Main.scala", s.toString)
@@ -116,12 +118,12 @@ object CPSTextInterpreter {
   }
 
   /**
-   * Parses and interprets a String containing CPSText code.
+   * Parses and runs a String containing CPSText code.
    *
    * @param code: the piece of CPSText code you want to interpret.
    * @param config: the current configuration
    */
-  def interpretCode(code: String, config: Configuration) {
-    interpretCST(CPSTextParser.parse(code), config)
+  def runCode(code: String, config: Configuration) {
+    runCST(CPSTextParser.parse(code), config)
   }
 }

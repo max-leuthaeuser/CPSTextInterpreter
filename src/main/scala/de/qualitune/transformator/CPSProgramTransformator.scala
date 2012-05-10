@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.qualitune.interpreter
+package de.qualitune.transformator
 
 import de.qualitune.ast.{ASTElement, CPSProgram}
 
@@ -24,8 +24,8 @@ import de.qualitune.ast.{ASTElement, CPSProgram}
  * @author Max Leuthaeuser
  * @since 19.01.12
  */
-class CPSProgramInterpreter extends ASTElementInterpreter {
-  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
+class CPSProgramTransformator extends ASTElementTransformator {
+  override def apply[E <: ASTElement, T <: AnyRef](s: ExecutableString, elem: E, data: T) = {
     elem match {
       case c: CPSProgram => {
         // imports
@@ -44,7 +44,7 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
 
         // cps
         s + "object CPS {"
-        c.robots.foreach(new CPSTypeInterpreter()(s, _, null))
+        c.robots.foreach(new CPSTypeTransformator()(s, _, null))
         s + "}\n import CPS._\n"
 
         // global registry for core object with their roles
@@ -55,7 +55,7 @@ class CPSProgramInterpreter extends ASTElementInterpreter {
 
         // contexts
         val allRoles = c.getAllRoles()
-        c.contexts.foreach(x => new ContextInterpreter()(s, x, allRoles))
+        c.contexts.foreach(x => new ContextTransformator()(s, x, allRoles))
 
         // control flow, start contexts
         c.getContextPaths().foreach(x => {

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.qualitune.interpreter
+package de.qualitune.transformator
 
 import de.qualitune.ast.role.{Role, EquivalenceConstraint, ImplicationConstraint, ProhibitionConstraint}
 import de.qualitune.ast.ASTElement
@@ -24,12 +24,12 @@ import de.qualitune.ast.ASTElement
  * @author Max Leuthaeuser
  * @since 18.01.12
  */
-class RoleInterpreter extends ASTElementInterpreter {
+class RoleTransformator extends ASTElementTransformator {
   private def buildActMethod(name: String) = {
     "def act() { while (true) { receive { case " + name + " => behavior() } } }\n"
   }
 
-  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
+  override def apply[E <: ASTElement, T <: AnyRef](s: ExecutableString, elem: E, data: T) = {
     elem match {
       case r: Role => data match {
         case d: List[Role] => {
@@ -39,11 +39,11 @@ class RoleInterpreter extends ASTElementInterpreter {
           s + buildActMethod("token_" + r.name)
 
           // variables:
-          r.variables.foreach(new VariableInterpreter()(s, _, null))
+          r.variables.foreach(new VariableTransformator()(s, _, null))
           // behavior:
-          new CallableInterpreter()(s, r.behavior, null)
+          new CallableTransformator()(s, r.behavior, null)
           // methods:
-          r.operations.foreach(new CallableInterpreter()(s, _, null))
+          r.operations.foreach(new CallableTransformator()(s, _, null))
           s + "\n}\n"
         }
       }

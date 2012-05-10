@@ -4,7 +4,7 @@ import java.io.File
 import de.qualitune.util.IOUtils
 
 /**
- * Configuration classes representing a config for CPSText interpreter.
+ * Configuration classes representing a config for CPSText transformation and execution phase.
  *
  * @author Max Leuthaeuser
  * @since 11.03.2012

@@ -19,9 +19,9 @@ object Nao {
   /**
    * Create a new Nao compound object (core and role object).
    *
-   * @param name
-   * @param ip
-   * @param port
+   * @param name The Name of the Nao as String
+   * @param ip The IP of the Nao as String
+   * @param port The Port of the Nao as String
    * @return a Tuple containing the core and the role object (core, role)
    */
   def createWithCore(name: String, ip: String, port: Int) = {

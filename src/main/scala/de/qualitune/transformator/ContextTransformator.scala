@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.qualitune.interpreter
+package de.qualitune.transformator
 
 import de.qualitune.ast.rule.ActivationRule
 import de.qualitune.ast.{ASTElement, Context}
@@ -26,32 +26,32 @@ import de.qualitune.ast.role.Role
  * @since 22.11.2011
  */
 // TODO check constraints
-class ContextInterpreter extends ASTElementInterpreter {
+class ContextTransformator extends ASTElementTransformator {
   private def buildStartMethod(a: List[ActivationRule]) = {
     "def start {" + a.map("context_activator_" + _.name + ".start").mkString("\n") + "}\n"
   }
 
-  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
+  override def apply[E <: ASTElement, T <: AnyRef](s: ExecutableString, elem: E, data: T) = {
     elem match {
       case c: Context => data match {
         case d: List[Role] => {
           s + ("class Context_" + c.name + " {\n")
           c.activations.foreach(a => {
-            new ActivationRuleInterpreter()(s, a, null)
+            new ActivationRuleTransformator()(s, a, null)
           })
           s + buildStartMethod(c.activations)
 
           // constraints
-          c.constraints.foreach(new RoleInterpreter()(s, _, null))
+          c.constraints.foreach(new RoleTransformator()(s, _, null))
 
           // variables
-          c.variables.foreach(new VariableInterpreter()(s, _, null))
+          c.variables.foreach(new VariableTransformator()(s, _, null))
 
           // roles
-          c.roles.foreach(x => new RoleInterpreter()(s, x, d))
+          c.roles.foreach(x => new RoleTransformator()(s, x, d))
 
           // inner contexts
-          c.inner.foreach(x => new ContextInterpreter()(s, x, d))
+          c.inner.foreach(x => new ContextTransformator()(s, x, d))
 
           s + "\n}\n"
         }

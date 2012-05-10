@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.qualitune.interpreter
+package de.qualitune.transformator
 
 import de.qualitune.ast.variable.{EmptyVariableDecl, InitVariableDecl}
 import de.qualitune.ast.variable.VariableDeclAccessType
@@ -26,7 +26,7 @@ import de.qualitune.ast.ASTElement
  * @author Max Leuthaeuser
  * @since 18.01.12
  */
-class VariableInterpreter extends ASTElementInterpreter {
+class VariableTransformator extends ASTElementTransformator {
   private def getAccessTypeModifier(t: VariableDeclAccessType): String = {
     t match {
       // we using the volatile annotation by default here because
@@ -37,7 +37,7 @@ class VariableInterpreter extends ASTElementInterpreter {
     }
   }
 
-  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
+  override def apply[E <: ASTElement, T <: AnyRef](s: ExecutableString, elem: E, data: T) = {
     elem match {
       case ev: EmptyVariableDecl => s + (getAccessTypeModifier(ev.accessType) + ev.name + ":" + ev.typ + "=_\n")
       case iv: InitVariableDecl => s + (getAccessTypeModifier(iv.accessType) + iv.name + ":" + iv.typ + "=" + iv.value + "\n")

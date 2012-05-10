@@ -19,7 +19,7 @@ package de.qualitune
 
 import config.{Configuration, ConfigReader}
 import scala.io.Source._
-import de.qualitune.interpreter.CPSTextInterpreter
+import de.qualitune.transformator.CPSTextRunner
 import de.qualitune.parser.CPSTextParser
 import java.io.FileNotFoundException
 
@@ -50,7 +50,7 @@ object Main {
         } catch {
           case e: FileNotFoundException => println("Configuration not found!")
         }
-        CPSTextInterpreter.interpretCode(fromFile(args.toList(1)).mkString, config)
+        CPSTextRunner.runCode(fromFile(args.toList(1)).mkString, config)
       }
       case _ => println(help)
     }

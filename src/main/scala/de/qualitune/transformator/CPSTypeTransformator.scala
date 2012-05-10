@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.qualitune.interpreter
+package de.qualitune.transformator
 
 import de.qualitune.ast.cps.{CPS, CPSType}
 import de.qualitune.ast.ASTElement
@@ -24,8 +24,8 @@ import de.qualitune.ast.ASTElement
  * @author Max Leuthaeuser
  * @since 18.01.12
  */
-class CPSTypeInterpreter extends ASTElementInterpreter {
-  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
+class CPSTypeTransformator extends ASTElementTransformator {
+  override def apply[E <: ASTElement, T <: AnyRef](s: ExecutableString, elem: E, data: T) = {
     elem match {
       case c: CPS => {
         c.cpsType match {

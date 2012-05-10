@@ -1,4 +1,4 @@
-package de.qualitune.interpreter.exceptions
+package de.qualitune.checks.exceptions
 
 /**
  * CPSTextInterpreter - parses and interprets the CPSText DSL.
@@ -17,4 +17,4 @@ package de.qualitune.interpreter.exceptions
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-case class DuplicateNameException(errorMsg: String) extends Exception(errorMsg)
+case class DuplicateImportException(errorMsg: String) extends Exception(errorMsg)

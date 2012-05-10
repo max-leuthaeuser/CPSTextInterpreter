@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.qualitune.interpreter
+package de.qualitune.transformator
 
 import de.qualitune.ast.rule.ActivationRule
 import de.qualitune.ast.ASTElement
@@ -25,9 +25,9 @@ import de.qualitune.util.StringUtils
  * @author Max Leuthaeuser
  * @since 22.11.2011
  */
-class ActivationRuleInterpreter extends ASTElementInterpreter {
+class ActivationRuleTransformator extends ASTElementTransformator {
   // TODO make it possible to bind a variable to more than one role
-  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
+  override def apply[E <: ASTElement, T <: AnyRef](s: ExecutableString, elem: E, data: T) = {
     elem match {
       case ar: ActivationRule => {
         // create variables for all bindings

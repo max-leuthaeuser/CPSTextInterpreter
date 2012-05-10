@@ -15,7 +15,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.qualitune.interpreter
+package de.qualitune.transformator
 
 /**
  * Represents an evaluable String that are generated from CPSText program.
@@ -25,7 +25,7 @@ package de.qualitune.interpreter
  * @author Max Leuthaeuser
  * @since 18.01.2012
  */
-class EvaluableString {
+class ExecutableString {
   lazy private val wrapped = new StringBuilder()
   private val inPlace = new StringBuilder()
 
@@ -35,7 +35,7 @@ class EvaluableString {
    * @param s: the String to add
    * @return this
    */
-  def +(s: String): EvaluableString = {
+  def +(s: String): ExecutableString = {
     wrapped.append(s)
     this
   }
@@ -46,7 +46,7 @@ class EvaluableString {
    * @param s: the String to add
    * @return this
    */
-  def +=(s: String): EvaluableString = {
+  def +=(s: String): ExecutableString = {
     inPlace.append(s + ";")
     this
   }
@@ -58,7 +58,7 @@ class EvaluableString {
    * @param l: the List of Strings to add
    * @return this
    */
-  def ++(l: List[String]): EvaluableString = {
+  def ++(l: List[String]): ExecutableString = {
     l.foreach(wrapped.append(_))
     this
   }
@@ -69,7 +69,7 @@ class EvaluableString {
    * @param l: the List of Strings to add
    * @return this
    */
-  def ++=(l: List[String]): EvaluableString = {
+  def ++=(l: List[String]): ExecutableString = {
     l.foreach(x => inPlace.append(x + ";"))
     this
   }

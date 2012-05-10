@@ -15,24 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package de.qualitune.interpreter
+package de.qualitune.transformator
 
-import de.qualitune.ast.callable.{Callable, Behavior, Operation}
 import de.qualitune.ast.ASTElement
-
 
 /**
  * @author Max Leuthaeuser
  * @since 22.11.2011
  */
-class CallableInterpreter extends ASTElementInterpreter {
-  private def callableToString(c: Callable) = "def " + c.toString.replaceAll("\t", "") + "\n"
-
-  override def apply[E <: ASTElement, T <: AnyRef](s: EvaluableString, elem: E, data: T) = {
-    elem match {
-      case b: Behavior => s + callableToString(b)
-      case o: Operation => s + callableToString(o)
-      case _ => throw new IllegalArgumentException("Unknown Callable type!")
-    }
-  }
+abstract class ASTElementTransformator {
+  def apply[E <: ASTElement, T <: AnyRef](s: ExecutableString, elem: E, data: T): ExecutableString
 }

@@ -1,7 +1,7 @@
 package de.qualitune
 
 /**
- * All interpreter classes that will generate the intermediate Scala code from CPSText code.
+ * All transformator classes that will generate the intermediate Scala code from CPSText code.
  *
  * User: Max Leuthaeuser
  * Date: 06.05.12
