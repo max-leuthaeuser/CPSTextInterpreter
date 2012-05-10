@@ -19,7 +19,6 @@ package de.qualitune
 
 import config.{Configuration, ConfigReader}
 import scala.io.Source._
-import de.qualitune.transformator.CPSTextRunner
 import de.qualitune.parser.CPSTextParser
 import java.io.FileNotFoundException
 

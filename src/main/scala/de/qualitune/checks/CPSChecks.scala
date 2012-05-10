@@ -21,8 +21,7 @@ import de.qualitune.ast.{CPSProgram, Context}
 import de.qualitune.ast.variable.{InitVariableDecl, EmptyVariableDecl}
 import collection.mutable.Map
 import de.qualitune.ast.role._
-import exceptions._
-import de.qualitune.transformator.exceptions._
+import de.qualitune.checks.exceptions._
 
 /**
  * Object containing some methods for checking a CPSProgram statically.
