@@ -26,7 +26,7 @@ import de.qualitune.ast.ASTElement
  */
 class RoleTransformator extends ASTElementTransformator {
   private def buildActMethod(name: String) = {
-    "def act() { while (true) { receive { case " + name + " => behavior() } } }\n"
+    "def act() { while (true) { receive { case " + name + " => {behavior(); exit()} } } }\n"
   }
 
   override def apply[E <: ASTElement, T <: AnyRef](s: ExecutableString, elem: E, data: T) = {
@@ -34,7 +34,8 @@ class RoleTransformator extends ASTElementTransformator {
       case r: Role => data match {
         case d: List[Role] => {
           s + ("case object token_" + r.name + "\n")
-          s + "class " + r.name + "(core: Component) extends ComponentRole(core) with Actor {\n"
+          val si = if (r.singleton) ", true" else ""
+          s + "class " + r.name + "(core: Component) extends ComponentRole(core" + si + ") with Actor {\n"
           // act method to start the behaviour method when the context the role belongs to gets activated
           s + buildActMethod("token_" + r.name)
 

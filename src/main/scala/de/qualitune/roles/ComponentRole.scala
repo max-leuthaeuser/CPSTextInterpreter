@@ -8,7 +8,7 @@ object ComponentRole {
  * @author Max Leuthaeuser
  * @since 25.04.12
  */
-case class ComponentRole(private var core: Component) extends Component {
+case class ComponentRole(private var core: Component, val singleton: Boolean = false) extends Component {
   def getName = this.getClass.getSimpleName
 
   def setCore(core: Component) {

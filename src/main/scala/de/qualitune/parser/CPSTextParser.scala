@@ -26,6 +26,7 @@ import de.qualitune.ast.variable.{VariableDeclAccessType, EmptyVariableDecl, Ini
 import de.qualitune.ast.rule.{ActivationRuleBinding, ActivationRuleVariable, ActivationRule, Settings}
 import de.qualitune.ast.role._
 import de.qualitune.ast.callable.{Behavior, Operation}
+import scala.ScalaObject
 
 /**
  * Parser for parsing CPSText and creating an instance of the corresponding AST.
@@ -113,22 +114,26 @@ object CPSTextParser extends JavaTokenParsers {
     case "activate for {" ~ av ~ "} when" ~ "{" ~ c ~ "} with bindings {" ~ ab ~ "}" ~ s => ActivationRule(av, c, ab, s)
   }
 
-  def settings: Parser[Settings] = "with settings {" ~> (settingA | settingB) <~ "}"
+  def settings: Parser[Settings] = "with settings {" ~> setting <~ "}"
 
-  def settingA: Parser[Settings] = interval ~ timeout ^^ {
-    case i ~ t => Settings(i, t)
-  }
-
-  def settingB: Parser[Settings] = timeout ~ interval ^^ {
-    case t ~ i => Settings(i, t)
+  def setting: Parser[Settings] = interval ~ after ~ continuously ^^ {
+    case i ~ t ~ c => Settings(i, t, c)
   }
 
   def interval: Parser[Int] = opt("interval " ~> decimalNumber <~ ";") ^^ {
     _.getOrElse("100").toInt
   }
 
-  def timeout: Parser[Int] = opt("timeout " ~> decimalNumber <~ ";") ^^ {
+  def after: Parser[Int] = opt("after " ~> decimalNumber <~ ";") ^^ {
     _.getOrElse("0").toInt
+  }
+
+  def continuously: Parser[Boolean] = opt("continuously " ~> ident <~ ";") ^^ {
+    _.getOrElse("false") match {
+      case "true" => true
+      case "false" => false
+      case _ => throw new IllegalArgumentException("Setting \"continuously\" can only be \"true\" or \"false\"!")
+    }
   }
 
   def context: Parser[Context] = "context" ~ ident ~ "{" ~ rep1(activationRule) ~ contextContent ~ "}" ^^ {
@@ -183,9 +188,11 @@ object CPSTextParser extends JavaTokenParsers {
     _.getOrElse(List[Operation]())
   }
 
-  def role: Parser[Role] = "role" ~ ident ~ "{" ~ behavior ~ roleContent ~ "}" ^^ {
-    case "role" ~ n ~ "{" ~ b ~ c ~ "}" => Role.build(n, b, c)
+  def role: Parser[Role] = opt(singleton) ~ "role" ~ ident ~ "{" ~ behavior ~ roleContent ~ "}" ^^ {
+    case s ~ "role" ~ n ~ "{" ~ b ~ c ~ "}" => Role.build(s.getOrElse(false), n, b, c)
   }
+
+  def singleton: Parser[Boolean] = "singleton" ^^^ true
 
   def roleContent: Parser[List[ScalaObject]] = rep((variableDecl <~ ";") | method)
 

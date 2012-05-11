@@ -8,7 +8,7 @@ context Football {
 		a -> GoodPlayer; b -> BadPlayer;
 	} with settings {
         interval 500;
-        // timeout can be left out, standard is 0
+        // after can be left out, standard is 0
     }
 
     activate for {
@@ -18,7 +18,7 @@ context Football {
     } with settings {
         interval 500;
         /* stop immediately after 10sec */
-        timeout 10000;
+        after 10000;
     }
 
     context GoalShot {
@@ -28,7 +28,7 @@ context Football {
             c -> Sender;
         } with settings {
             interval 500;
-            timeout 1000;
+            after 1000;
         }
 
         role Sender {

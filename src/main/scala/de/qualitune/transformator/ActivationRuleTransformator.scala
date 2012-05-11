@@ -38,8 +38,8 @@ class ActivationRuleTransformator extends ASTElementTransformator {
         s + ("class " + actorName + " extends Actor {\ndef act() {\n")
 
         // timeout
-        if (ar.settings.timeout > 0)
-          s + ("Thread.sleep(" + ar.settings.timeout + ")\n")
+        if (ar.settings.after > 0)
+          s + ("Thread.sleep(" + ar.settings.after + ")\n")
 
         // while around everything
         s + ("while(true) {\n")
@@ -83,7 +83,12 @@ class ActivationRuleTransformator extends ASTElementTransformator {
         }).mkString("\n"))
 
         // end if
-        s + ("\n   exit() }\n")
+        // we only exit the context activator iff it should not
+        // check the condition continuously
+        if (!ar.settings.continuously)
+          s + ("\n   exit() }\n")
+        else
+          s + ("\n }\n")
         // end for
         s + ("  }\n")
         // end if

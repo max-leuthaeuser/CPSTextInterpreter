@@ -19,7 +19,7 @@ package de.qualitune.ast.rule
 
 import de.qualitune.ast.ASTElement
 
-case class Settings(interval: Int, timeout: Int)
+case class Settings(interval: Int, after: Int, continuously: Boolean)
 
 case class ActivationRule(activateFor: List[ActivationRuleVariable], when: String, bindings: List[ActivationRuleBinding], settings: Settings) extends ASTElement {
   def prettyPrint(identLevel: Int): String = {
@@ -32,7 +32,10 @@ case class ActivationRule(activateFor: List[ActivationRuleVariable], when: Strin
       activateFor.map(_.toString).mkString("\t\t" + ident, "\n\t\t" + ident, "\n\t" + ident) +
       "} when { " + when + " } with bindings {\n" +
       bindings.map(_.toString).mkString("\t\t" + ident, "\n\t\t" + ident, "\n\t" + ident) +
-      "} with settings {" + "\n\t\t" + ident + "interval " + settings.interval + ";\n\t\t" + ident + "timeout " + settings.timeout + ";\n\t" + ident + "}"
+      "} with settings {" + "\n\t\t" + ident +
+      "interval " + settings.interval + ";\n\t\t" + ident +
+      "after " + settings.after + ";\n\t\t" +
+      "continuously " + settings.continuously + ";\n\t" + ident + "}"
   }
 
   override def toString = {

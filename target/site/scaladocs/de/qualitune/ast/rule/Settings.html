@@ -25,7 +25,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">Settings</span><span class="params">(<span name="interval">interval: <span name="scala.Int" class="extype">Int</span></span>, <span name="timeout">timeout: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result"> extends <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
+        <span class="name">Settings</span><span class="params">(<span name="interval">interval: <span name="scala.Int" class="extype">Int</span></span>, <span name="after">after: <span name="scala.Int" class="extype">Int</span></span>, <span name="continuously">continuously: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span><span class="result"> extends <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
       </span>
       </h4>
       
@@ -65,7 +65,7 @@
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">Settings</span><span class="params">(<span name="interval">interval: <span name="scala.Int" class="extype">Int</span></span>, <span name="timeout">timeout: <span name="scala.Int" class="extype">Int</span></span>)</span>
+        <span class="name">Settings</span><span class="params">(<span name="interval">interval: <span name="scala.Int" class="extype">Int</span></span>, <span name="after">after: <span name="scala.Int" class="extype">Int</span></span>, <span name="continuously">continuously: <span name="scala.Boolean" class="extype">Boolean</span></span>)</span>
       </span>
       </h4>
       
@@ -138,6 +138,18 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
+    </li><li visbl="pub" name="de.qualitune.ast.rule.Settings#after" data-isabs="false">
+      <a id="after:Int"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">after</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -177,6 +189,18 @@
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
+    </li><li visbl="pub" name="de.qualitune.ast.rule.Settings#continuously" data-isabs="false">
+      <a id="continuously:Boolean"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">val</span>
+      </span>
+      <span class="symbol">
+        <span class="name">continuously</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+      </span>
+      </h4>
+      
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -360,18 +384,6 @@
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="de.qualitune.ast.rule.Settings#timeout" data-isabs="false">
-      <a id="timeout:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">val</span>
-      </span>
-      <span class="symbol">
-        <span class="name">timeout</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      
     </li><li visbl="pub" name="de.qualitune.ast.rule.Settings#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">

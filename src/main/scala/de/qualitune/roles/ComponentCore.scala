@@ -11,6 +11,8 @@ case class ComponentCore() extends Component {
 
   override def addRole(spec: ComponentRole) {
     if (roles.contains(spec.getName)) {
+      if (spec.singleton)
+        roles(spec.getName) = roles.get(spec.getName).get.filter(_.getName != spec.getName)
       roles(spec.getName) = roles.get(spec.getName).get :+ spec
     } else {
       roles(spec.getName) = LinkedList(spec)
