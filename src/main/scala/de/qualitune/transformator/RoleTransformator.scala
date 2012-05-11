@@ -35,7 +35,7 @@ class RoleTransformator extends ASTElementTransformator {
         case d: List[Role] => {
           s + ("case object token_" + r.name + "\n")
           val si = if (r.singleton) ", true" else ""
-          s + "class " + r.name + "(core: Component) extends ComponentRole(core" + si + ") with Actor {\n"
+          s + "class " + r.name + "(core: Component) extends ComponentRole(core" + si + ") with DaemonActor {\n"
           // act method to start the behaviour method when the context the role belongs to gets activated
           s + buildActMethod("token_" + r.name)
 

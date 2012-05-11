@@ -71,7 +71,7 @@ class ActivationRuleTransformator extends ASTElementTransformator {
           // get the winner
           val i = ar.activateFor.indexWhere(_.variableName == e.variableName)
           // create new instance of role
-          "val new_" + e.variableName + " = new " + e.roleName + "(c_list(" + i + "))\n" +
+          ("val new_" + e.variableName + " = new " + e.roleName + "(c_list(" + i + "))\n" +
             // update role mapping (name of role + instance)
             "c_list(" + i + ").addRole(new_" + e.variableName + ")\n" +
             // make them globally available in the current scope
@@ -79,7 +79,7 @@ class ActivationRuleTransformator extends ASTElementTransformator {
             // start role (its activator)
             e.variableName + ".start\n" +
             // activate role
-            e.variableName + " ! token_" + e.roleName
+            e.variableName + " ! token_" + e.roleName)
         }).mkString("\n"))
 
         // end if

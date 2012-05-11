@@ -30,7 +30,8 @@ class CPSProgramTransformator extends ASTElementTransformator {
       case c: CPSProgram => {
         // imports
         // some standard imports first, they are always needed
-        s + """import scala.actors.Actor
+        s + """import scala.actors.DaemonActor
+      import scala.actors.Actor
       import de.qualitune.roles.Component
 			import de.qualitune.roles.ComponentRole
 			import de.qualitune.roles.ComponentCore
@@ -38,7 +39,7 @@ class CPSProgramTransformator extends ASTElementTransformator {
 			import de.qualitune.roles.players.Nao._
 			import collection.mutable.Map
 			import de.qualitune.util.ListUtils
-			"""
+            			"""
 
         s ++ c.imports.map("import " + _ + "\n") + "\n"
 
