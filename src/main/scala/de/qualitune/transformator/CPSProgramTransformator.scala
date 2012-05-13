@@ -55,8 +55,7 @@ class CPSProgramTransformator extends ASTElementTransformator {
 
 
         // contexts
-        val allRoles = c.getAllRoles()
-        c.contexts.foreach(x => new ContextTransformator()(s, x, allRoles))
+        c.contexts.foreach(new ContextTransformator()(s, _, c.getAllRoles()))
 
         // control flow, start contexts
         c.getContextPaths().foreach(x => {

@@ -36,9 +36,7 @@ class ContextTransformator extends ASTElementTransformator {
       case c: Context => data match {
         case d: List[Role] => {
           s + ("class Context_" + c.name + " {\n")
-          c.activations.foreach(a => {
-            new ActivationRuleTransformator()(s, a, null)
-          })
+          c.activations.foreach(new ActivationRuleTransformator()(s, _, null))
           s + buildStartMethod(c.activations)
 
           // constraints
@@ -48,10 +46,10 @@ class ContextTransformator extends ASTElementTransformator {
           c.variables.foreach(new VariableTransformator()(s, _, null))
 
           // roles
-          c.roles.foreach(x => new RoleTransformator()(s, x, d))
+          c.roles.foreach(new RoleTransformator()(s, _, d))
 
           // inner contexts
-          c.inner.foreach(x => new ContextTransformator()(s, x, d))
+          c.inner.foreach(new ContextTransformator()(s, _, d))
 
           s + "\n}\n"
         }

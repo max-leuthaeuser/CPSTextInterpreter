@@ -56,17 +56,15 @@ object CPSTextRunner {
     if (config.debugging.enabled) config.debugging.write("\t5) Checking role constrains")
     CPSChecks.checkConstrains(cst)
 
-    var compiler = "scalac"
     var jre = "java"
     var removeFile = "rm cpsprogram_Main.scala"
-    var removeClasses = "rm temp/*.class"
+    var removeClasses = "rm -rf temp"
     val sep = System.getProperties.getProperty("path.separator");
 
     if (IOUtils.isWindows) {
-      compiler = "cmd.exe /C " + compiler
       jre = "cmd.exe /C " + jre
       removeFile = "cmd.exe /C del /S cpsprogram_Main.scala"
-      removeClasses = "cmd.exe /C cd temp && del *.class"
+      removeClasses = "cmd.exe /C RD /S /q temp"
     }
 
     config.debugging.write("# Starting")
