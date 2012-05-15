@@ -40,7 +40,8 @@ The following is assumed to be installed on the build machine:
 
 - A Java runtime environment (JRE) or SDK 1.7 or above.
 - Maven
-- Scalatest plugin from here: http://github.com/teigen/maven-scalatest-plugin if you want to run the tests.
+- Scalatest plugin from here: http://github.com/teigen/maven-scalatest-plugin
+- install the jnaoqi libs for Maven: ``mvn install:install-file -Dfile=CPSTextInterpreter/lib/jnaoqi.jar -DgroupId=com.aldebaran -DartifactId=jnaoqi -Dversion=1.12.3 -Dpackaging=jar``
 
 The following is assumed to be installed on the machine you want to run
 CPSTextInterpreter:
