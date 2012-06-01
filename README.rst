@@ -3,8 +3,8 @@
 ################################################################################
 
 This document describes the CPSTextInterpreter repository and how to build and
-use it. For information about CPSText as a language itself, you can visit
-the wiki (coming soon).
+use it. For information about CPSText (previously NaoText) as a language itself, you can read
+the publications (coming soon).
 
 Part I. The repository layout
 --------------------------------------------------------------------------------                            
@@ -46,14 +46,14 @@ The following is assumed to be installed on the build machine:
 The following is assumed to be installed on the machine you want to run
 CPSTextInterpreter:
 
-- A Java runtime environment (JRE) or SDK 1.7 or above. (needs to be in the PATH)
+- A Java runtime environment (JRE) or SDK 1.7 or above.
 
 
 Part IV. Contributing to CPSTextInterpreter
 --------------------------------------------------------------------------------
 
 If you wish to contribute, you can find all of the necessary information here on 
-GitHub (see the projects wiki, coming soon)
+GitHub.
 
 
 Part V. Publications
