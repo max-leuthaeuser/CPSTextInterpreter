@@ -48,6 +48,8 @@ CPSTextInterpreter:
 
 - A Java runtime environment (JRE) or SDK 1.7 or above.
 
+If you want to run the benchmark suite you need Python 3.x additionally.
+
 
 Part IV. Contributing to CPSTextInterpreter
 --------------------------------------------------------------------------------
